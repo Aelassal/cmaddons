@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_filestore_sweep_run_list" model="ir.ui.view">
+        <field name="name">cm_sa.filestore.sweep.run.list</field>
+        <field name="model">cm_sa.filestore.sweep.run</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0">
+                <field name="started_at"/>
+                <field name="completed_at"/>
+                <field name="triggered_by"/>
+                <field name="dry_run"/>
+                <field name="total_scanned"/>
+                <field name="orphan_count"/>
+                <field name="orphan_size_mb"/>
+                <field name="deleted_count"/>
+                <field name="deleted_size_mb"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_filestore_sweep_run_form" model="ir.ui.view">
+        <field name="name">cm_sa.filestore.sweep.run.form</field>
+        <field name="model">cm_sa.filestore.sweep.run</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="started_at"/>
+                            <field name="completed_at"/>
+                            <field name="triggered_by"/>
+                            <field name="dry_run"/>
+                        </group>
+                        <group>
+                            <field name="total_scanned"/>
+                            <field name="orphan_count"/>
+                            <field name="orphan_size_mb"/>
+                            <field name="deleted_count"/>
+                            <field name="deleted_size_mb"/>
+                        </group>
+                    </group>
+                    <group string="Notes" invisible="not notes">
+                        <field name="notes" nolabel="1" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_filestore_sweep_run" model="ir.actions.act_window">
+        <field name="name">Sweep History</field>
+        <field name="res_model">cm_sa.filestore.sweep.run</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

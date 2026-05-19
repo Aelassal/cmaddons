@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_cascade_wizard_form" model="ir.ui.view">
+        <field name="name">cm_sa.cascade.wizard.form</field>
+        <field name="model">cm_sa.cascade.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Cascade to Contacts">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Cascade to Contacts</h1>
+                        <p>Preview the changes and pick which contacts to update.</p>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="summary" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Children to update">
+                        <field name="affected_partner_ids" nolabel="1"
+                               widget="many2many_tags"
+                               options="{'no_create': True}"/>
+                    </group>
+                    <group string="Preview">
+                        <field name="changes_preview" nolabel="1"
+                               widget="text" readonly="1"
+                               style="font-family: monospace; min-height: 240px; white-space: pre;"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_apply" type="object"
+                            string="Apply Cascade" class="btn-primary"
+                            confirm="This will overwrite the watched fields on every selected child contact. Continue?"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_cascade_wizard" model="ir.actions.act_window">
+        <field name="name">Cascade to Contacts</field>
+        <field name="res_model">cm_sa.cascade.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

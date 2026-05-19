@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_vendor_scorecard_config_list" model="ir.ui.view">
+        <field name="name">cm_sa.vendor_scorecard.config.list</field>
+        <field name="model">cm_sa.vendor_scorecard.config</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="window_days"/>
+                <field name="band_a_min"/>
+                <field name="band_b_min"/>
+                <field name="band_c_min"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_vendor_scorecard_config_form" model="ir.ui.view">
+        <field name="name">cm_sa.vendor_scorecard.config.form</field>
+        <field name="model">cm_sa.vendor_scorecard.config</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
+                            invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Windows">
+                            <field name="window_days"/>
+                            <field name="price_reference_days"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group string="Metric Weights (relative)">
+                        <group>
+                            <field name="weight_on_time"/>
+                            <field name="weight_price_variance"/>
+                        </group>
+                        <group>
+                            <field name="weight_bill_dispute"/>
+                        </group>
+                    </group>
+                    <group string="Band Cutoffs">
+                        <group>
+                            <field name="band_a_min"/>
+                            <field name="band_b_min"/>
+                        </group>
+                        <group>
+                            <field name="band_c_min"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="alert">
+                        <strong>How it works.</strong> A monthly cron rolls up
+                        receipts, purchase-line prices, and bill disputes per
+                        vendor. Each metric becomes 0-100 points; the weighted
+                        average is the score. You can also recompute ad-hoc
+                        from the vendor form.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_vendor_scorecard_config" model="ir.actions.act_window">
+        <field name="name">Vendor Scorecard Settings</field>
+        <field name="res_model">cm_sa.vendor_scorecard.config</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

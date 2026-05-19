@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_stale_opp_log_list" model="ir.ui.view">
+        <field name="name">cm_sa.stale.opportunity.log.list</field>
+        <field name="model">cm_sa.stale.opportunity.log</field>
+        <field name="arch" type="xml">
+            <list string="Stale Opportunity Log" create="false">
+                <field name="create_date" string="When"/>
+                <field name="action"/>
+                <field name="lead_id"/>
+                <field name="partner_id"/>
+                <field name="user_id"/>
+                <field name="rule_id"/>
+                <field name="reference_date" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_stale_opp_log_form" model="ir.ui.view">
+        <field name="name">cm_sa.stale.opportunity.log.form</field>
+        <field name="model">cm_sa.stale.opportunity.log</field>
+        <field name="arch" type="xml">
+            <form string="Stale Opportunity Log" create="false" edit="false">
+                <header>
+                    <button name="action_open_lead" type="object"
+                            string="Open Opportunity" class="btn-primary"
+                            invisible="not lead_id"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="create_date" string="When"/>
+                            <field name="action"/>
+                            <field name="rule_id"/>
+                        </group>
+                        <group>
+                            <field name="lead_id"/>
+                            <field name="partner_id"/>
+                            <field name="user_id"/>
+                            <field name="reference_date"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_stale_opp_log_search" model="ir.ui.view">
+        <field name="name">cm_sa.stale.opportunity.log.search</field>
+        <field name="model">cm_sa.stale.opportunity.log</field>
+        <field name="arch" type="xml">
+            <search string="Stale Opportunity Log">
+                <field name="rule_id"/>
+                <field name="lead_id"/>
+                <field name="partner_id"/>
+                <field name="user_id"/>
+                <filter name="filter_warned" string="Warned"
+                        domain="[('action', '=', 'warned')]"/>
+                <filter name="filter_closed" string="Closed"
+                        domain="[('action', '=', 'closed')]"/>
+                <group>
+                    <filter name="group_action" string="Action"
+                            context="{'group_by': 'action'}"/>
+                    <filter name="group_rule" string="Rule"
+                            context="{'group_by': 'rule_id'}"/>
+                    <filter name="group_user" string="Salesperson"
+                            context="{'group_by': 'user_id'}"/>
+                    <filter name="group_month" string="Month"
+                            context="{'group_by': 'create_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_stale_opp_log" model="ir.actions.act_window">
+        <field name="name">Stale Opportunity Log</field>
+        <field name="res_model">cm_sa.stale.opportunity.log</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

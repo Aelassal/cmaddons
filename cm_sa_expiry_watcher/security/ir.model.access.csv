@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_expiry_rule_admin,cm_sa.expiry.rule.admin,model_cm_sa_expiry_rule,base.group_system,1,1,1,1
+access_expiry_rule_user,cm_sa.expiry.rule.user,model_cm_sa_expiry_rule,base.group_user,1,0,0,0
+access_expiry_log_admin,cm_sa.expiry.log.admin,model_cm_sa_expiry_log,base.group_system,1,1,1,1
+access_expiry_log_user,cm_sa.expiry.log.user,model_cm_sa_expiry_log,base.group_user,1,0,0,0

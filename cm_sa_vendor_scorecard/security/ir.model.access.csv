@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vendor_scorecard_config_admin,cm_sa.vendor_scorecard.config.admin,model_cm_sa_vendor_scorecard_config,base.group_system,1,1,1,1
+access_vendor_scorecard_config_user,cm_sa.vendor_scorecard.config.user,model_cm_sa_vendor_scorecard_config,base.group_user,1,0,0,0
+access_vendor_scorecard_snapshot_admin,cm_sa.vendor_scorecard.snapshot.admin,model_cm_sa_vendor_scorecard_snapshot,base.group_system,1,1,1,1
+access_vendor_scorecard_snapshot_user,cm_sa.vendor_scorecard.snapshot.user,model_cm_sa_vendor_scorecard_snapshot,base.group_user,1,0,0,0

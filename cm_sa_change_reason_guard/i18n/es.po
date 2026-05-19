@@ -1,0 +1,17 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#   * cm_sa_change_reason_guard
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0.1.0.0\n"
+"Report-Msgid-Bugs-To: contact@cm.sa\n"
+"POT-Creation-Date: 2026-04-24 08:18+0000\n"
+"PO-Revision-Date: 2026-04-24 08:18+0000\n"
+"Last-Translator: Cube Master <contact@cm.sa>\n"
+"Language-Team: Spanish\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="cat_damaged" model="cm_sa.return.reason.category">
+        <field name="name">Damaged</field>
+        <field name="sequence">10</field>
+        <field name="color">1</field>
+    </record>
+    <record id="cat_wrong_item" model="cm_sa.return.reason.category">
+        <field name="name">Wrong Item</field>
+        <field name="sequence">20</field>
+        <field name="color">2</field>
+    </record>
+    <record id="cat_wrong_size" model="cm_sa.return.reason.category">
+        <field name="name">Wrong Size</field>
+        <field name="sequence">30</field>
+        <field name="color">3</field>
+    </record>
+    <record id="cat_customer_change_of_mind" model="cm_sa.return.reason.category">
+        <field name="name">Customer Change of Mind</field>
+        <field name="sequence">40</field>
+        <field name="color">4</field>
+    </record>
+    <record id="cat_late_delivery" model="cm_sa.return.reason.category">
+        <field name="name">Late Delivery</field>
+        <field name="sequence">50</field>
+        <field name="color">5</field>
+    </record>
+    <record id="cat_other" model="cm_sa.return.reason.category">
+        <field name="name">Other</field>
+        <field name="sequence">100</field>
+        <field name="color">6</field>
+    </record>
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_attach_root"
+              name="Attachment Enforcer"
+              web_icon="cm_sa_attachment_enforcer,static/description/icon.png"
+              sequence="85"/>
+    <menuitem id="menu_attach_rules"
+              name="Rules"
+              parent="menu_attach_root"
+              action="action_attach_rule"
+              sequence="10"/>
+    <menuitem id="menu_attach_logs"
+              name="Bypass Log"
+              parent="menu_attach_root"
+              action="action_attach_log"
+              sequence="20"/>
+</odoo>

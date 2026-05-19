@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_delegation_log"
+              name="Delegation Log"
+              parent="base.menu_users"
+              action="action_delegation_log"
+              sequence="80"/>
+</odoo>

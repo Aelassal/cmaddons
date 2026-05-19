@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dormant_archive_wizard_form" model="ir.ui.view">
+        <field name="name">cm_sa.dormant.archive.wizard.form</field>
+        <field name="model">cm_sa.dormant.archive.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Archive Dormant Users">
+                <sheet>
+                    <group>
+                        <field name="reason"/>
+                    </group>
+                    <group string="Users to Archive">
+                        <field name="user_ids" nolabel="1" colspan="2">
+                            <list>
+                                <field name="name"/>
+                                <field name="login"/>
+                                <field name="login_date"/>
+                            </list>
+                        </field>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_archive" type="object" string="Archive"
+                            class="btn-primary"
+                            confirm="Archive the selected users? They will lose access immediately."/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dormant_archive_wizard" model="ir.actions.act_window">
+        <field name="name">Archive Dormant Users</field>
+        <field name="res_model">cm_sa.dormant.archive.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

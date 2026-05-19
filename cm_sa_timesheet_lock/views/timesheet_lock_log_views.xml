@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ts_lock_log_list" model="ir.ui.view">
+        <field name="name">cm_sa.timesheet.lock.log.list</field>
+        <field name="model">cm_sa.timesheet.lock.log</field>
+        <field name="arch" type="xml">
+            <list string="Timesheet Bypass Log" create="false">
+                <field name="create_date" string="When"/>
+                <field name="user_id"/>
+                <field name="rule_id"/>
+                <field name="entry_date"/>
+                <field name="window_days"/>
+                <field name="source"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_ts_lock_log_search" model="ir.ui.view">
+        <field name="name">cm_sa.timesheet.lock.log.search</field>
+        <field name="model">cm_sa.timesheet.lock.log</field>
+        <field name="arch" type="xml">
+            <search string="Bypass Log">
+                <field name="user_id"/>
+                <field name="rule_id"/>
+                <group>
+                    <filter name="group_user" string="User"
+                            context="{'group_by': 'user_id'}"/>
+                    <filter name="group_month" string="Month"
+                            context="{'group_by': 'create_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="action_ts_lock_log" model="ir.actions.act_window">
+        <field name="name">Bypass Log</field>
+        <field name="res_model">cm_sa.timesheet.lock.log</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

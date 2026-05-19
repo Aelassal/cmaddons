@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_reason_rule_list" model="ir.ui.view">
+        <field name="name">cm_sa.reason.rule.list</field>
+        <field name="model">cm_sa.reason.rule</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="field_ids" widget="many2many_tags" optional="show"/>
+                <field name="reason_category_ids" widget="many2many_tags" optional="show"/>
+                <field name="require_note"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_reason_rule_form" model="ir.ui.view">
+        <field name="name">cm_sa.reason.rule.form</field>
+        <field name="model">cm_sa.reason.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
+                            invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Credit-limit change reason"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="model_id" options="{'no_create': True}"/>
+                            <field name="model_name" invisible="1"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="require_note"/>
+                            <field name="min_note_chars"
+                                   invisible="not require_note"
+                                   required="require_note"/>
+                        </group>
+                    </group>
+                    <group string="Guarded Fields">
+                        <field name="field_ids" nolabel="1"
+                               widget="many2many_tags"
+                               domain="[('model_id', '=', model_id), ('readonly', '=', False)]"
+                               options="{'no_create': True}"/>
+                    </group>
+                    <group string="Allowed Reason Categories">
+                        <field name="reason_category_ids" nolabel="1"
+                               widget="many2many_tags"/>
+                    </group>
+                    <div class="alert alert-info" role="alert">
+                        Once saved, this rule installs a contextual
+                        <b>Change with Reason</b> action on the target model
+                        (visible in the list/form cog menu). Opening it lets
+                        users propose a new value, pick a category, and apply.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_reason_rule" model="ir.actions.act_window">
+        <field name="name">Reason Rules</field>
+        <field name="res_model">cm_sa.reason.rule</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

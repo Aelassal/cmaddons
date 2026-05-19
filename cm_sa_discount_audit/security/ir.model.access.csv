@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_discount_config_mgr,cm_sa.discount.audit.config manager,model_cm_sa_discount_audit_config,sales_team.group_sale_manager,1,1,1,1
+access_discount_config_user,cm_sa.discount.audit.config user,model_cm_sa_discount_audit_config,sales_team.group_sale_salesman,1,0,0,0
+access_discount_log_mgr,cm_sa.discount.audit.log manager,model_cm_sa_discount_audit_log,sales_team.group_sale_manager,1,1,1,1
+access_discount_log_user,cm_sa.discount.audit.log user,model_cm_sa_discount_audit_log,sales_team.group_sale_salesman,1,1,1,0

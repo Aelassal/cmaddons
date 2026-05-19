@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_delegation_log_list" model="ir.ui.view">
+        <field name="name">cm_sa.delegation.log.list</field>
+        <field name="model">cm_sa.delegation.log</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0">
+                <field name="started_at"/>
+                <field name="from_user_id"/>
+                <field name="to_user_id"/>
+                <field name="reassigned_activity_count"/>
+                <field name="reassigned_approval_count"/>
+                <field name="ended_at"/>
+                <field name="auto_reversed"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_delegation_log_form" model="ir.ui.view">
+        <field name="name">cm_sa.delegation.log.form</field>
+        <field name="model">cm_sa.delegation.log</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="from_user_id"/>
+                            <field name="to_user_id"/>
+                            <field name="started_at"/>
+                            <field name="ended_at"/>
+                        </group>
+                        <group>
+                            <field name="reassigned_activity_count"/>
+                            <field name="reassigned_approval_count"/>
+                            <field name="auto_reversed"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Reassigned Items">
+                            <field name="item_ids">
+                                <list>
+                                    <field name="model"/>
+                                    <field name="res_id"/>
+                                    <field name="original_user_id"/>
+                                    <field name="delegate_user_id"/>
+                                    <field name="reverted" widget="boolean_toggle"/>
+                                    <field name="reverted_at"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_delegation_log" model="ir.actions.act_window">
+        <field name="name">Delegation Log</field>
+        <field name="res_model">cm_sa.delegation.log</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

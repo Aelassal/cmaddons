@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_stage_velocity_root"
+              name="Stage Velocity"
+              web_icon="cm_sa_stage_velocity,static/description/icon.png"
+              sequence="85"/>
+    <menuitem id="menu_stage_history"
+              name="Stage History"
+              parent="menu_stage_velocity_root"
+              action="action_stage_history"
+              sequence="10"/>
+    <menuitem id="menu_stage_stuck"
+              name="Stuck Deals (&gt;14d)"
+              parent="menu_stage_velocity_root"
+              action="action_stage_history_stuck"
+              sequence="20"/>
+</odoo>

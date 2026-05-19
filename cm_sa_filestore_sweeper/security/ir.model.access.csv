@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_filestore_sweep_run_admin,cm_sa.filestore.sweep.run.admin,model_cm_sa_filestore_sweep_run,base.group_system,1,1,1,1
+access_filestore_sweep_wizard_admin,cm_sa.filestore.sweep.wizard.admin,model_cm_sa_filestore_sweep_wizard,base.group_system,1,1,1,1

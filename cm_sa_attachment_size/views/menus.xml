@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_att_size_root"
+              name="Attachment Size"
+              web_icon="cm_sa_attachment_size,static/description/icon.png"
+              sequence="85"
+              groups="base.group_system"/>
+    <menuitem id="menu_att_size_rules"
+              name="Size Rules"
+              parent="menu_att_size_root"
+              action="action_att_size_rule"
+              sequence="10"/>
+    <menuitem id="menu_att_size_log"
+              name="Bypass Log"
+              parent="menu_att_size_root"
+              action="action_att_size_log"
+              sequence="20"/>
+</odoo>

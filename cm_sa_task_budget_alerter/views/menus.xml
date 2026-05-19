@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_task_budget_root"
+              name="Task Budget"
+              web_icon="cm_sa_task_budget_alerter,static/description/icon.png"
+              sequence="85"/>
+    <menuitem id="menu_task_budget_rules"
+              name="Rules"
+              parent="menu_task_budget_root"
+              action="action_task_budget_rule"
+              sequence="10"/>
+    <menuitem id="menu_task_budget_log"
+              name="Alert Log"
+              parent="menu_task_budget_root"
+              action="action_task_budget_log"
+              sequence="20"/>
+</odoo>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_res_config_settings_dedup" model="ir.ui.view">
+        <field name="name">res.config.settings.dedup</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='account']" position="inside">
+                <block title="Duplicate Vendor Bill Warner"
+                       id="cm_sa_bill_dedup_section">
+                    <setting string="Threshold"
+                             help="Combined match score (0.0-1.0) at which a warning is shown.">
+                        <field name="cm_sa_dedup_threshold"/>
+                    </setting>
+                    <setting string="Lookback window (days)"
+                             help="Only compare against bills within this many days.">
+                        <field name="cm_sa_dedup_window_days"/>
+                    </setting>
+                    <setting string="Amount tolerance"
+                             help="Fraction difference still considered the same amount. 0.01 = 1%.">
+                        <field name="cm_sa_dedup_amount_tolerance"/>
+                    </setting>
+                    <setting string="Date tolerance (days)"
+                             help="Max days between two bills still considered 'same date'.">
+                        <field name="cm_sa_dedup_date_tolerance_days"/>
+                    </setting>
+                    <setting>
+                        <field name="cm_sa_dedup_check_amount"/>
+                        <label for="cm_sa_dedup_check_amount"
+                               string="Weight amount similarity"/>
+                    </setting>
+                    <setting>
+                        <field name="cm_sa_dedup_check_date"/>
+                        <label for="cm_sa_dedup_check_date"
+                               string="Weight date similarity"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

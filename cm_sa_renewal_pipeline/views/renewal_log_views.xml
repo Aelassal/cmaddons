@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_renewal_log_list" model="ir.ui.view">
+        <field name="name">cm_sa.renewal.log.list</field>
+        <field name="model">cm_sa.renewal.log</field>
+        <field name="arch" type="xml">
+            <list string="Renewal Log" create="false">
+                <field name="create_date" string="Generated"/>
+                <field name="rule_id"/>
+                <field name="record_name" string="Source"/>
+                <field name="res_model" optional="show"/>
+                <field name="partner_id"/>
+                <field name="end_date"/>
+                <field name="expected_revenue" sum="Total"/>
+                <field name="lead_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_renewal_log_form" model="ir.ui.view">
+        <field name="name">cm_sa.renewal.log.form</field>
+        <field name="model">cm_sa.renewal.log</field>
+        <field name="arch" type="xml">
+            <form string="Renewal Log" create="false" edit="false">
+                <header>
+                    <button name="action_open_source" type="object"
+                            string="Open Source" class="btn-secondary"/>
+                    <button name="action_open_lead" type="object"
+                            string="Open Opportunity" class="btn-primary"
+                            invisible="not lead_id"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="rule_id"/>
+                            <field name="res_model"/>
+                            <field name="res_id"/>
+                            <field name="record_name"/>
+                            <field name="partner_id"/>
+                        </group>
+                        <group>
+                            <field name="end_date"/>
+                            <field name="expected_revenue"/>
+                            <field name="lead_id"/>
+                            <field name="quote_template_id"/>
+                            <field name="create_date" string="Generated"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_renewal_log_search" model="ir.ui.view">
+        <field name="name">cm_sa.renewal.log.search</field>
+        <field name="model">cm_sa.renewal.log</field>
+        <field name="arch" type="xml">
+            <search string="Renewal Log">
+                <field name="rule_id"/>
+                <field name="record_name"/>
+                <field name="partner_id"/>
+                <field name="res_model"/>
+                <group>
+                    <filter name="group_rule" string="Rule"
+                            context="{'group_by': 'rule_id'}"/>
+                    <filter name="group_model" string="Source Model"
+                            context="{'group_by': 'res_model'}"/>
+                    <filter name="group_partner" string="Customer"
+                            context="{'group_by': 'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_renewal_log" model="ir.actions.act_window">
+        <field name="name">Renewal Log</field>
+        <field name="res_model">cm_sa.renewal.log</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

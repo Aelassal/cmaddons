@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_escalation_root"
+              name="Approval Escalation"
+              web_icon="cm_sa_approval_escalation_engine,static/description/icon.png"
+              sequence="90"/>
+
+    <menuitem id="menu_escalation_rules"
+              name="Rules"
+              parent="menu_escalation_root"
+              action="action_escalation_rule"
+              sequence="10"/>
+
+    <menuitem id="menu_escalation_log"
+              name="Log"
+              parent="menu_escalation_root"
+              action="action_escalation_log"
+              sequence="20"/>
+</odoo>

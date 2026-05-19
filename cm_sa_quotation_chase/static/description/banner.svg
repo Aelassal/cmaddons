@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 280" width="560" height="280">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0e1a3a"/>
+      <stop offset="100%" stop-color="#1e3a8a"/>
+    </linearGradient>
+  </defs>
+  <rect width="560" height="280" fill="url(#bg)"/>
+  <rect y="0" width="560" height="6" fill="#f8b73c"/>
+  <text x="40" y="68" font-family="Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#cfd8e3" letter-spacing="2">CUBE MASTER</text>
+  <text x="40" y="130" font-family="Helvetica,Arial,sans-serif" font-size="34" font-weight="800" fill="#ffffff">Quotation Chase</text>
+  <text x="40" y="168" font-family="Helvetica,Arial,sans-serif" font-size="18" fill="#cfd8e3">Auto-remind, stop on reply.</text>
+  <rect x="40" y="200" width="64" height="4" fill="#f8b73c" rx="2"/>
+  <text x="40" y="234" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#9fb3cc">apps.odoo.com  ·  cm.sa</text>
+  <g transform="translate(370 60) scale(2.1)">
+    <circle cx="36" cy="44" r="26" fill="#f8b73c"/><rect x="22" y="6" width="28" height="6" rx="2" fill="#f8763a"/><rect x="32" y="10" width="8" height="8" rx="1" fill="#f8763a"/><rect x="32" y="38" width="38" height="22" rx="2" fill="#8e447e"/><path d="M32 38l19 12 19-12v3l-19 12-19-12z" fill="#d23f8e"/>
+  </g>
+</svg>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Settings > Users & Companies > Dormant Users -->
+    <menuitem id="menu_users_dormant"
+              name="Dormant Users"
+              parent="base.menu_users"
+              action="action_users_dormant"
+              sequence="50"/>
+</odoo>

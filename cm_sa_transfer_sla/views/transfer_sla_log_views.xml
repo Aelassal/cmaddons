@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_transfer_sla_log_list" model="ir.ui.view">
+        <field name="name">cm_sa.transfer.sla.log.list</field>
+        <field name="model">cm_sa.transfer.sla.log</field>
+        <field name="arch" type="xml">
+            <list string="Transfer SLA Alert Log" create="false">
+                <field name="create_date" string="When"/>
+                <field name="picking_id"/>
+                <field name="picking_type_id"/>
+                <field name="location_id" optional="show"/>
+                <field name="location_dest_id" optional="show"/>
+                <field name="days_overdue"/>
+                <field name="bucket_key"/>
+                <field name="rule_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_transfer_sla_log_form" model="ir.ui.view">
+        <field name="name">cm_sa.transfer.sla.log.form</field>
+        <field name="model">cm_sa.transfer.sla.log</field>
+        <field name="arch" type="xml">
+            <form string="Transfer SLA Alert" create="false" edit="false">
+                <header>
+                    <button name="action_open_picking" type="object"
+                            string="Open Picking" class="btn-primary"
+                            invisible="not picking_id"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="create_date" string="When"/>
+                            <field name="rule_id"/>
+                            <field name="days_overdue"/>
+                            <field name="bucket_key"/>
+                        </group>
+                        <group>
+                            <field name="picking_id"/>
+                            <field name="picking_type_id"/>
+                            <field name="location_id"/>
+                            <field name="location_dest_id"/>
+                            <field name="scheduled_date"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_transfer_sla_log_search" model="ir.ui.view">
+        <field name="name">cm_sa.transfer.sla.log.search</field>
+        <field name="model">cm_sa.transfer.sla.log</field>
+        <field name="arch" type="xml">
+            <search string="Transfer SLA Log">
+                <field name="picking_id"/>
+                <field name="picking_type_id"/>
+                <field name="rule_id"/>
+                <filter name="f5plus" string="5d+" domain="[('days_overdue', '&gt;=', 5)]"/>
+                <filter name="f10plus" string="10d+" domain="[('days_overdue', '&gt;=', 10)]"/>
+                <filter name="f20plus" string="20d+" domain="[('days_overdue', '&gt;=', 20)]"/>
+                <group>
+                    <filter name="group_rule" string="Rule"
+                            context="{'group_by': 'rule_id'}"/>
+                    <filter name="group_type" string="Operation Type"
+                            context="{'group_by': 'picking_type_id'}"/>
+                    <filter name="group_month" string="Month"
+                            context="{'group_by': 'create_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_transfer_sla_log" model="ir.actions.act_window">
+        <field name="name">SLA Alert Log</field>
+        <field name="res_model">cm_sa.transfer.sla.log</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

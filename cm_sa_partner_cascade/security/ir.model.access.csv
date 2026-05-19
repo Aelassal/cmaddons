@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cascade_setting_admin,cm_sa.cascade.setting.admin,model_cm_sa_cascade_setting,base.group_system,1,1,1,1
+access_cascade_setting_user,cm_sa.cascade.setting.user,model_cm_sa_cascade_setting,base.group_user,1,0,0,0
+access_cascade_log_admin,cm_sa.cascade.log.admin,model_cm_sa_cascade_log,base.group_system,1,1,1,1
+access_cascade_log_user,cm_sa.cascade.log.user,model_cm_sa_cascade_log,base.group_user,1,0,0,0
+access_cascade_wizard_admin,cm_sa.cascade.wizard.admin,model_cm_sa_cascade_wizard,base.group_system,1,1,1,1
+access_cascade_wizard_user,cm_sa.cascade.wizard.user,model_cm_sa_cascade_wizard,base.group_user,1,1,1,1

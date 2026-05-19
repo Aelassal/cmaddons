@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_bulk_media_wizard_form" model="ir.ui.view">
+        <field name="name">bulk.media.wizard.form</field>
+        <field name="model">bulk.media.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="upload,preview,done"/>
+                </header>
+                <sheet>
+                    <group invisible="state != 'upload'">
+                        <field name="upload_archive" filename="archive_filename" required="1"/>
+                        <field name="archive_filename" invisible="1"/>
+                        <field name="fuzzy_threshold"/>
+                        <field name="apply_to_variants"/>
+                    </group>
+                    <group invisible="state != 'preview'">
+                        <p colspan="2">
+                            <b>Preview</b> — review the match plan. JSON format:
+                            <code>matched</code> shows files that will land on a product;
+                            <code>unmatched</code> lists files that won't.
+                        </p>
+                        <field name="preview_json" nolabel="1" colspan="2" widget="text"
+                               style="font-family: monospace; min-height: 400px;"/>
+                    </group>
+                    <group invisible="state != 'done'">
+                        <field name="result_summary" nolabel="1" colspan="2" widget="text"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_preview" type="object" string="Preview matches"
+                            class="btn-primary" invisible="state != 'upload'"/>
+                    <button name="action_apply" type="object" string="Apply"
+                            class="btn-primary" invisible="state != 'preview'"/>
+                    <button name="action_reset" type="object" string="Start over"
+                            invisible="state == 'upload'"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_bulk_media_wizard" model="ir.actions.act_window">
+        <field name="name">Bulk Product Media Drop</field>
+        <field name="res_model">bulk.media.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

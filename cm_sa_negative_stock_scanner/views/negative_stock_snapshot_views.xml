@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_negstock_snapshot_list" model="ir.ui.view">
+        <field name="name">cm_sa.negative.stock.snapshot.list</field>
+        <field name="model">cm_sa.negative.stock.snapshot</field>
+        <field name="arch" type="xml">
+            <list string="Negative Stock Snapshots" create="false">
+                <field name="scan_date"/>
+                <field name="triggered_by"/>
+                <field name="line_count"/>
+                <field name="location_count"/>
+                <field name="total_quantity" sum="Total"/>
+                <field name="max_aging_days"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_negstock_snapshot_form" model="ir.ui.view">
+        <field name="name">cm_sa.negative.stock.snapshot.form</field>
+        <field name="model">cm_sa.negative.stock.snapshot</field>
+        <field name="arch" type="xml">
+            <form string="Negative Stock Snapshot" create="false">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="scan_date"/>
+                            —
+                            <field name="triggered_by"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="config_id"/>
+                            <field name="scan_date"/>
+                            <field name="triggered_by"/>
+                        </group>
+                        <group>
+                            <field name="line_count"/>
+                            <field name="location_count"/>
+                            <field name="total_quantity"/>
+                            <field name="max_aging_days"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Lines" name="lines">
+                            <field name="line_ids">
+                                <list create="false" edit="false">
+                                    <field name="location_id"/>
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
+                                    <field name="aging_days"/>
+                                    <field name="write_date_first"/>
+                                    <button name="action_open_quant"
+                                            type="object"
+                                            string="Open Quant"
+                                            icon="fa-external-link-square"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_negstock_line_pivot" model="ir.ui.view">
+        <field name="name">cm_sa.negative.stock.line.pivot</field>
+        <field name="model">cm_sa.negative.stock.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Negative Stock Lines">
+                <field name="location_id" type="row"/>
+                <field name="product_id" type="col"/>
+                <field name="quantity" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_negstock_snapshot_search" model="ir.ui.view">
+        <field name="name">cm_sa.negative.stock.snapshot.search</field>
+        <field name="model">cm_sa.negative.stock.snapshot</field>
+        <field name="arch" type="xml">
+            <search string="Snapshots">
+                <field name="scan_date"/>
+                <filter name="filter_manual" string="Manual"
+                        domain="[('triggered_by', '=', 'manual')]"/>
+                <filter name="filter_cron" string="Cron"
+                        domain="[('triggered_by', '=', 'cron')]"/>
+                <group>
+                    <filter name="group_month" string="Month"
+                            context="{'group_by': 'scan_date:month'}"/>
+                    <filter name="group_trigger" string="Trigger"
+                            context="{'group_by': 'triggered_by'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_negstock_snapshot" model="ir.actions.act_window">
+        <field name="name">Snapshots</field>
+        <field name="res_model">cm_sa.negative.stock.snapshot</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_stock_return_picking_form_inherit" model="ir.ui.view">
+        <field name="name">stock.return.picking.form.reason</field>
+        <field name="model">stock.return.picking</field>
+        <field name="inherit_id" ref="stock.view_stock_return_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_return_moves']" position="before">
+                <field name="cm_sa_min_reason_length" invisible="1"/>
+                <field name="cm_sa_require_category" invisible="1"/>
+                <group string="Return Reason">
+                    <field name="cm_sa_return_category_id"
+                           options="{'no_create': True}"
+                           required="cm_sa_require_category"/>
+                    <field name="cm_sa_return_reason"
+                           required="1"
+                           placeholder="Required. Explain why these items are being returned (for QA analytics)."/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

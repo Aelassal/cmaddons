@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dedup_review_log_list" model="ir.ui.view">
+        <field name="name">cm_sa.dedup.review.log.list</field>
+        <field name="model">cm_sa.dedup.review.log</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="create_date"/>
+                <field name="checked_move_id"/>
+                <field name="candidate_move_id"/>
+                <field name="score"/>
+                <field name="review_status" widget="badge"
+                       decoration-info="review_status == 'pending'"
+                       decoration-success="review_status == 'false_positive'"
+                       decoration-danger="review_status == 'confirmed_duplicate'"
+                       decoration-muted="review_status == 'resolved'"/>
+                <field name="reviewed_by" optional="show"/>
+                <field name="reviewed_at" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dedup_review_log_form" model="ir.ui.view">
+        <field name="name">cm_sa.dedup.review.log.form</field>
+        <field name="model">cm_sa.dedup.review.log</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button type="object" name="action_mark_false_positive"
+                            string="Mark False Positive" class="btn-secondary"
+                            invisible="review_status != 'pending'"/>
+                    <button type="object" name="action_mark_confirmed_duplicate"
+                            string="Confirm Duplicate" class="btn-danger"
+                            invisible="review_status != 'pending'"/>
+                    <button type="object" name="action_mark_resolved"
+                            string="Mark Resolved" class="btn-primary"
+                            invisible="review_status == 'resolved'"/>
+                    <field name="review_status" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="checked_move_id"/>
+                            <field name="candidate_move_id"/>
+                            <field name="score"/>
+                        </group>
+                        <group>
+                            <field name="reviewed_by"/>
+                            <field name="reviewed_at"/>
+                        </group>
+                    </group>
+                    <group string="Notes">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dedup_review_log_search" model="ir.ui.view">
+        <field name="name">cm_sa.dedup.review.log.search</field>
+        <field name="model">cm_sa.dedup.review.log</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="checked_move_id"/>
+                <field name="candidate_move_id"/>
+                <filter name="filter_pending" string="Pending"
+                        domain="[('review_status', '=', 'pending')]"/>
+                <filter name="filter_confirmed" string="Confirmed"
+                        domain="[('review_status', '=', 'confirmed_duplicate')]"/>
+                <filter name="filter_false" string="False positive"
+                        domain="[('review_status', '=', 'false_positive')]"/>
+                <group>
+                    <filter name="group_status" string="Status"
+                            context="{'group_by': 'review_status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dedup_review_log" model="ir.actions.act_window">
+        <field name="name">Duplicate Bill Review</field>
+        <field name="res_model">cm_sa.dedup.review.log</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

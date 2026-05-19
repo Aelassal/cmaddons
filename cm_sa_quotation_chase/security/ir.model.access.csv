@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_chase_schedule_user,chase.schedule.user,model_cm_sa_chase_schedule,sales_team.group_sale_salesman,1,0,0,0
+access_chase_schedule_manager,chase.schedule.manager,model_cm_sa_chase_schedule,sales_team.group_sale_manager,1,1,1,1
+access_chase_step_user,chase.step.user,model_cm_sa_chase_step,sales_team.group_sale_salesman,1,0,0,0
+access_chase_step_manager,chase.step.manager,model_cm_sa_chase_step,sales_team.group_sale_manager,1,1,1,1

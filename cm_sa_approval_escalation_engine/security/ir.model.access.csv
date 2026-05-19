@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_escalation_rule_manager,escalation.rule.manager,model_approval_escalation_rule,group_escalation_manager,1,1,1,1
+access_escalation_rule_user,escalation.rule.user,model_approval_escalation_rule,base.group_user,1,0,0,0
+access_escalation_step_manager,escalation.step.manager,model_approval_escalation_step,group_escalation_manager,1,1,1,1
+access_escalation_step_user,escalation.step.user,model_approval_escalation_step,base.group_user,1,0,0,0
+access_escalation_log_manager,escalation.log.manager,model_approval_escalation_log,group_escalation_manager,1,1,1,1
+access_escalation_log_user,escalation.log.user,model_approval_escalation_log,base.group_user,1,0,0,0

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dq_scan_list" model="ir.ui.view">
+        <field name="name">cm_sa.dq.scan.list</field>
+        <field name="model">cm_sa.dq.scan</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0">
+                <field name="started_at"/>
+                <field name="completed_at" optional="show"/>
+                <field name="duration_seconds"/>
+                <field name="rules_run"/>
+                <field name="records_scanned"/>
+                <field name="findings_info"/>
+                <field name="findings_warn"/>
+                <field name="findings_fail"/>
+                <field name="triggered_by"/>
+                <field name="notes" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dq_scan_form" model="ir.ui.view">
+        <field name="name">cm_sa.dq.scan.form</field>
+        <field name="model">cm_sa.dq.scan</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="started_at"/>
+                            <field name="completed_at"/>
+                            <field name="duration_seconds"/>
+                            <field name="triggered_by"/>
+                        </group>
+                        <group>
+                            <field name="rules_run"/>
+                            <field name="records_scanned"/>
+                            <field name="findings_info"/>
+                            <field name="findings_warn"/>
+                            <field name="findings_fail"/>
+                            <field name="notes"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dq_scan" model="ir.actions.act_window">
+        <field name="name">Scan History</field>
+        <field name="res_model">cm_sa.dq.scan</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

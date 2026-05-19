@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_chase" model="ir.ui.view">
+        <field name="name">sale.order.form.chase</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Chase" name="chase">
+                    <group>
+                        <group>
+                            <field name="chase_schedule_id"
+                                   options="{'no_create': True}"/>
+                            <field name="chase_paused"/>
+                        </group>
+                        <group>
+                            <field name="chase_step" readonly="1"/>
+                            <field name="chase_last_sent" readonly="1"/>
+                        </group>
+                    </group>
+                    <div>
+                        <button name="action_chase_run_now"
+                                type="object"
+                                string="Run Chase Now"
+                                class="btn-secondary"
+                                invisible="not chase_schedule_id or state in ('sale', 'done', 'cancel')"/>
+                    </div>
+                    <p class="text-muted">
+                        Chasing runs hourly via cron. It stops automatically when the quotation
+                        is confirmed, locked, cancelled, or when the customer replies on this
+                        order's chatter by email.
+                    </p>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

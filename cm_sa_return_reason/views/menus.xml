@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_return_reason_root"
+              name="Return Reasons"
+              web_icon="cm_sa_return_reason,static/description/icon.png"
+              sequence="85"/>
+    <menuitem id="menu_return_reason_log"
+              name="Return Log"
+              parent="menu_return_reason_root"
+              action="action_return_log"
+              sequence="10"/>
+    <menuitem id="menu_return_reason_pivot"
+              name="By Product"
+              parent="menu_return_reason_root"
+              action="action_return_log_lines"
+              sequence="20"/>
+    <menuitem id="menu_return_reason_cat"
+              name="Categories"
+              parent="menu_return_reason_root"
+              action="action_return_cat"
+              sequence="80"/>
+    <menuitem id="menu_return_reason_config"
+              name="Settings"
+              parent="menu_return_reason_root"
+              action="action_return_config"
+              sequence="90"/>
+</odoo>

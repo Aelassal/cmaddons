@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_expiry_rule_list" model="ir.ui.view">
+        <field name="name">cm_sa.expiry.rule.list</field>
+        <field name="model">cm_sa.expiry.rule</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="date_field_id"/>
+                <field name="lead_days"/>
+                <field name="notify_user_ids" widget="many2many_tags" optional="show"/>
+                <field name="log_count"/>
+                <field name="last_run" optional="show"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_expiry_rule_form" model="ir.ui.view">
+        <field name="name">cm_sa.expiry.rule.form</field>
+        <field name="model">cm_sa.expiry.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button type="object" name="action_run_now"
+                            string="Run Now" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object" name="action_view_logs"
+                                class="oe_stat_button" icon="fa-bell"
+                                invisible="not log_count">
+                            <field name="log_count" widget="statinfo" string="Alerts"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
+                            invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Contract expiry - 30 days notice"/></h1>
+                    </div>
+                    <group>
+                        <group string="Target">
+                            <field name="model_id" options="{'no_create': True}"/>
+                            <field name="model_name" invisible="1"/>
+                            <field name="date_field_id"
+                                   options="{'no_create': True}"
+                                   domain="[('model_id', '=', model_id), ('ttype', 'in', ['date', 'datetime'])]"/>
+                            <field name="date_field_name" invisible="1"/>
+                            <field name="extra_domain"/>
+                        </group>
+                        <group string="Alert">
+                            <field name="lead_days"/>
+                            <field name="name_expression"/>
+                            <field name="last_run" readonly="1"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Notification">
+                        <field name="notify_user_ids" widget="many2many_tags"
+                               options="{'no_create': True}"/>
+                        <field name="email_template_id" options="{'no_create': True}"/>
+                    </group>
+                    <div class="alert alert-info" role="alert">
+                        <strong>How it works.</strong> A daily cron scans each active
+                        rule, matches records whose date field is within the lead
+                        window, posts to chatter, emails notifiers, and logs each hit
+                        exactly once per (rule, record, expiry-date).
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_expiry_rule_search" model="ir.ui.view">
+        <field name="name">cm_sa.expiry.rule.search</field>
+        <field name="model">cm_sa.expiry.rule</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="model_id"/>
+                <filter name="filter_active" string="Active"
+                        domain="[('active', '=', True)]"/>
+                <filter name="filter_archived" string="Archived"
+                        domain="[('active', '=', False)]"/>
+                <group>
+                    <filter name="group_model" string="Model"
+                            context="{'group_by': 'model_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_expiry_rule" model="ir.actions.act_window">
+        <field name="name">Expiry Rules</field>
+        <field name="res_model">cm_sa.expiry.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first expiry rule</p>
+            <p>Pick a model and a date/datetime field, set a lead time
+               (e.g. 30 days), pick who to notify, and you're done.</p>
+        </field>
+    </record>
+</odoo>

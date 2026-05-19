@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_stage_hist_mgr,cm_sa.crm.stage.history manager,model_cm_sa_crm_stage_history,sales_team.group_sale_manager,1,1,1,1
+access_stage_hist_user,cm_sa.crm.stage.history user,model_cm_sa_crm_stage_history,sales_team.group_sale_salesman,1,1,1,0

@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cm_sa_reset_audit_rule_admin,cm_sa.reset_audit.rule system,model_cm_sa_reset_audit_rule,base.group_system,1,1,1,1
+access_cm_sa_reset_audit_rule_user,cm_sa.reset_audit.rule user,model_cm_sa_reset_audit_rule,base.group_user,1,0,0,0
+access_cm_sa_reset_audit_log_admin,cm_sa.reset_audit.log system,model_cm_sa_reset_audit_log,base.group_system,1,1,1,1
+access_cm_sa_reset_audit_log_user,cm_sa.reset_audit.log user,model_cm_sa_reset_audit_log,base.group_user,1,1,1,0
+access_cm_sa_reset_audit_wizard_user,cm_sa.reset_audit.wizard user,model_cm_sa_reset_audit_wizard,base.group_user,1,1,1,1

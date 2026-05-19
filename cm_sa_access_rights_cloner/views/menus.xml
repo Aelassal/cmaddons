@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Settings > Users & Companies > Clone Access Rights.
+        base.menu_users is the "Users & Companies" submenu under Settings.
+    -->
+    <menuitem id="menu_access_cloner_wizard"
+              name="Clone Access Rights"
+              parent="base.menu_users"
+              action="action_access_cloner_wizard"
+              sequence="50"/>
+</odoo>

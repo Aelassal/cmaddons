@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_att_size_rule_admin,cm_sa.attachment.size.rule admin,model_cm_sa_attachment_size_rule,base.group_system,1,1,1,1
+access_att_size_rule_user,cm_sa.attachment.size.rule user,model_cm_sa_attachment_size_rule,base.group_user,1,0,0,0
+access_att_size_log_admin,cm_sa.attachment.size.log admin,model_cm_sa_attachment_size_log,base.group_system,1,1,1,1
+access_att_size_log_user,cm_sa.attachment.size.log user,model_cm_sa_attachment_size_log,base.group_user,1,1,1,0

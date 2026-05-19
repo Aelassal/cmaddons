@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="payment_score_config_default" model="cm_sa.payment_score.config">
+        <field name="name">Default</field>
+        <field name="active" eval="True"/>
+        <field name="window_days">90</field>
+        <field name="weight_days_late">40</field>
+        <field name="weight_partial">15</field>
+        <field name="weight_stretch">20</field>
+        <field name="weight_on_time">25</field>
+        <field name="band_a_min">85</field>
+        <field name="band_b_min">70</field>
+        <field name="band_c_min">50</field>
+        <field name="require_rule" eval="False"/>
+    </record>
+</odoo>

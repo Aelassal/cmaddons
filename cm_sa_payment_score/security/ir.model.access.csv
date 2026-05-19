@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_payment_score_config_admin,cm_sa.payment_score.config.admin,model_cm_sa_payment_score_config,base.group_system,1,1,1,1
+access_payment_score_config_user,cm_sa.payment_score.config.user,model_cm_sa_payment_score_config,base.group_user,1,0,0,0
+access_payment_score_snapshot_admin,cm_sa.payment_score.snapshot.admin,model_cm_sa_payment_score_snapshot,base.group_system,1,1,1,1
+access_payment_score_snapshot_user,cm_sa.payment_score.snapshot.user,model_cm_sa_payment_score_snapshot,base.group_user,1,0,0,0

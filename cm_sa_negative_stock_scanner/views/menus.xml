@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_negstock_root"
+              name="Negative Stock"
+              web_icon="cm_sa_negative_stock_scanner,static/description/icon.png"
+              sequence="85"/>
+
+    <menuitem id="menu_negstock_snapshots"
+              name="Snapshots"
+              parent="menu_negstock_root"
+              action="action_negstock_snapshot"
+              sequence="10"/>
+
+    <menuitem id="menu_negstock_scan_now"
+              name="Scan Now"
+              parent="menu_negstock_root"
+              action="action_scan_now_wizard"
+              sequence="20"/>
+
+    <menuitem id="menu_negstock_config"
+              name="Settings"
+              parent="menu_negstock_root"
+              action="action_negstock_config"
+              sequence="90"/>
+</odoo>

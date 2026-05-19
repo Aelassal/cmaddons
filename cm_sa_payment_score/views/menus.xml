@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_payment_score_root"
+              name="Payment Score"
+              parent="account.menu_finance"
+              sequence="95"/>
+
+    <menuitem id="menu_payment_score_history"
+              name="Score History"
+              parent="menu_payment_score_root"
+              action="action_payment_score_snapshot"
+              sequence="10"/>
+
+    <menuitem id="menu_payment_score_config"
+              name="Settings"
+              parent="menu_payment_score_root"
+              action="action_payment_score_config"
+              sequence="90"
+              groups="base.group_system"/>
+</odoo>

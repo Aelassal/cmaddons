@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_access_cloner_wizard_form" model="ir.ui.view">
+        <field name="name">cm_sa.access.cloner.wizard.form</field>
+        <field name="model">cm_sa.access.cloner.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Clone Access Rights">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Clone Access Rights</h1>
+                        <p>
+                            Pick a source user, choose one or more targets, then
+                            review the diff before applying.
+                        </p>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="source_user_id"
+                                   options="{'no_create': True, 'no_open': True}"/>
+                            <field name="mode" widget="radio"/>
+                        </group>
+                        <group>
+                            <field name="target_user_ids"
+                                   widget="many2many_tags"
+                                   options="{'no_create': True}"/>
+                            <field name="affected_groups_count" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Preview">
+                        <button name="action_refresh_preview"
+                                type="object"
+                                string="Refresh preview"
+                                icon="fa-refresh"
+                                class="btn-secondary"/>
+                        <field name="preview_diff" nolabel="1" colspan="2"
+                               widget="text" readonly="1"
+                               style="font-family: monospace; min-height: 280px; white-space: pre;"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_apply"
+                            type="object"
+                            string="Apply (Add)"
+                            class="btn-primary"
+                            invisible="mode != 'add'"/>
+                    <button name="action_apply"
+                            type="object"
+                            string="Apply (Replace — destructive)"
+                            class="btn-danger"
+                            invisible="mode != 'replace'"
+                            confirm="Replace mode will REMOVE any group on the targets that the source does not have. Continue?"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_access_cloner_wizard" model="ir.actions.act_window">
+        <field name="name">Clone Access Rights</field>
+        <field name="res_model">cm_sa.access.cloner.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

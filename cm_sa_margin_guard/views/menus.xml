@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_margin_guard_root"
+              name="Margin Guard"
+              web_icon="cm_sa_margin_guard,static/description/icon.png"
+              sequence="85"/>
+
+    <menuitem id="menu_margin_guard_rules"
+              name="Rules"
+              parent="menu_margin_guard_root"
+              action="action_margin_guard_rule"
+              sequence="10"/>
+
+    <menuitem id="menu_margin_guard_logs"
+              name="Override Log"
+              parent="menu_margin_guard_root"
+              action="action_margin_log"
+              sequence="20"/>
+</odoo>

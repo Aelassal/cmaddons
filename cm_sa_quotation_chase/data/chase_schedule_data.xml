@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="chase_schedule_standard" model="cm_sa.chase.schedule">
+        <field name="name">Standard 3-7-14</field>
+        <field name="description">Default cadence: nudge after 3 days, again after a week, final reminder at two weeks.</field>
+    </record>
+
+    <record id="chase_step_standard_1" model="cm_sa.chase.step">
+        <field name="schedule_id" ref="chase_schedule_standard"/>
+        <field name="sequence">1</field>
+        <field name="days_after_send">3</field>
+        <field name="mail_template_id" ref="mail_template_chase_default"/>
+    </record>
+
+    <record id="chase_step_standard_2" model="cm_sa.chase.step">
+        <field name="schedule_id" ref="chase_schedule_standard"/>
+        <field name="sequence">2</field>
+        <field name="days_after_send">7</field>
+        <field name="mail_template_id" ref="mail_template_chase_default"/>
+    </record>
+
+    <record id="chase_step_standard_3" model="cm_sa.chase.step">
+        <field name="schedule_id" ref="chase_schedule_standard"/>
+        <field name="sequence">3</field>
+        <field name="days_after_send">14</field>
+        <field name="mail_template_id" ref="mail_template_chase_default"/>
+    </record>
+</odoo>

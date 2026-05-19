@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="vendor_scorecard_config_default" model="cm_sa.vendor_scorecard.config">
+        <field name="name">Default</field>
+        <field name="active" eval="True"/>
+        <field name="window_days">180</field>
+        <field name="price_reference_days">180</field>
+        <field name="weight_on_time">45</field>
+        <field name="weight_price_variance">30</field>
+        <field name="weight_bill_dispute">25</field>
+        <field name="band_a_min">85</field>
+        <field name="band_b_min">70</field>
+        <field name="band_c_min">50</field>
+    </record>
+</odoo>

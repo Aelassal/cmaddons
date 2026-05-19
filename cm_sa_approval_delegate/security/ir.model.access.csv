@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_delegation_log_admin,cm_sa.delegation.log.admin,model_cm_sa_delegation_log,base.group_system,1,1,1,1
+access_delegation_log_user,cm_sa.delegation.log.user,model_cm_sa_delegation_log,base.group_user,1,0,0,0
+access_delegation_item_admin,cm_sa.delegation.item.admin,model_cm_sa_delegation_item,base.group_system,1,1,1,1
+access_delegation_item_user,cm_sa.delegation.item.user,model_cm_sa_delegation_item,base.group_user,1,0,0,0

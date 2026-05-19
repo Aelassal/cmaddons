@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_transfer_sla_rule_mgr,cm_sa.transfer.sla.rule manager,model_cm_sa_transfer_sla_rule,stock.group_stock_manager,1,1,1,1
+access_transfer_sla_rule_user,cm_sa.transfer.sla.rule user,model_cm_sa_transfer_sla_rule,stock.group_stock_user,1,0,0,0
+access_transfer_sla_log_mgr,cm_sa.transfer.sla.log manager,model_cm_sa_transfer_sla_log,stock.group_stock_manager,1,1,1,1
+access_transfer_sla_log_user,cm_sa.transfer.sla.log user,model_cm_sa_transfer_sla_log,stock.group_stock_user,1,1,1,0

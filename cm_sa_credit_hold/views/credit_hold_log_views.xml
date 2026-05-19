@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_credit_hold_log_list" model="ir.ui.view">
+        <field name="name">cm_sa.credit_hold.log.list</field>
+        <field name="model">cm_sa.credit_hold.log</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0">
+                <field name="at"/>
+                <field name="partner_id"/>
+                <field name="event" widget="badge"
+                       decoration-danger="event == 'hold_applied'"
+                       decoration-success="event == 'hold_released'"
+                       decoration-warning="event == 'block_triggered'"/>
+                <field name="by_user_id"/>
+                <field name="ref_model" optional="show"/>
+                <field name="ref_id" optional="hide"/>
+                <field name="ref_ref" widget="reference" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_credit_hold_log_form" model="ir.ui.view">
+        <field name="name">cm_sa.credit_hold.log.form</field>
+        <field name="model">cm_sa.credit_hold.log</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="at"/>
+                            <field name="partner_id"/>
+                            <field name="event"/>
+                            <field name="by_user_id"/>
+                        </group>
+                        <group>
+                            <field name="ref_model"/>
+                            <field name="ref_id"/>
+                            <field name="ref_ref" widget="reference"/>
+                        </group>
+                    </group>
+                    <group string="Reason">
+                        <field name="reason" nolabel="1" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_credit_hold_log_search" model="ir.ui.view">
+        <field name="name">cm_sa.credit_hold.log.search</field>
+        <field name="model">cm_sa.credit_hold.log</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="partner_id"/>
+                <field name="by_user_id"/>
+                <filter name="filter_holds" string="Holds applied"
+                        domain="[('event', '=', 'hold_applied')]"/>
+                <filter name="filter_releases" string="Releases"
+                        domain="[('event', '=', 'hold_released')]"/>
+                <filter name="filter_blocks" string="Blocked attempts"
+                        domain="[('event', '=', 'block_triggered')]"/>
+                <group>
+                    <filter name="group_partner" string="Partner"
+                            context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_event" string="Event"
+                            context="{'group_by': 'event'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_credit_hold_log" model="ir.actions.act_window">
+        <field name="name">Credit Hold Log</field>
+        <field name="res_model">cm_sa.credit_hold.log</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

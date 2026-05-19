@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_filestore_sweep_root"
+              name="Filestore Sweeper"
+              parent="base.menu_administration"
+              sequence="95"/>
+
+    <menuitem id="menu_filestore_sweep_wizard"
+              name="Run Sweeper"
+              parent="menu_filestore_sweep_root"
+              action="action_filestore_sweep_wizard"
+              sequence="10"/>
+
+    <menuitem id="menu_filestore_sweep_run"
+              name="Sweep History"
+              parent="menu_filestore_sweep_root"
+              action="action_filestore_sweep_run"
+              sequence="20"/>
+</odoo>

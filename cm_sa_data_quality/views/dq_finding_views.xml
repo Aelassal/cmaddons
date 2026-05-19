@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dq_finding_list" model="ir.ui.view">
+        <field name="name">cm_sa.dq.finding.list</field>
+        <field name="model">cm_sa.dq.finding</field>
+        <field name="arch" type="xml">
+            <list create="0"
+                  decoration-muted="resolved"
+                  decoration-danger="severity == 'fail' and not resolved"
+                  decoration-warning="severity == 'warn' and not resolved">
+                <field name="last_seen"/>
+                <field name="rule_id"/>
+                <field name="res_model"/>
+                <field name="record_name"/>
+                <field name="severity" widget="badge"
+                       decoration-info="severity == 'info'"
+                       decoration-warning="severity == 'warn'"
+                       decoration-danger="severity == 'fail'"/>
+                <field name="detail" optional="show"/>
+                <field name="first_seen" optional="hide"/>
+                <field name="resolved" widget="boolean_toggle"/>
+                <button type="object" name="action_open_record"
+                        string="Open" class="btn-link" icon="fa-external-link"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dq_finding_form" model="ir.ui.view">
+        <field name="name">cm_sa.dq.finding.form</field>
+        <field name="model">cm_sa.dq.finding</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0">
+                <header>
+                    <button type="object" name="action_open_record"
+                            string="Open Record" class="oe_highlight"/>
+                    <button type="object" name="action_mark_resolved"
+                            string="Mark Resolved"
+                            invisible="resolved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="record_name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="rule_id"/>
+                            <field name="severity"/>
+                            <field name="detail"/>
+                        </group>
+                        <group>
+                            <field name="res_model"/>
+                            <field name="res_id"/>
+                            <field name="res_ref" widget="reference"/>
+                            <field name="first_seen"/>
+                            <field name="last_seen"/>
+                            <field name="resolved"/>
+                            <field name="resolved_at" invisible="not resolved"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dq_finding_search" model="ir.ui.view">
+        <field name="name">cm_sa.dq.finding.search</field>
+        <field name="model">cm_sa.dq.finding</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="rule_id"/>
+                <field name="res_model"/>
+                <field name="record_name"/>
+                <filter name="filter_open" string="Open"
+                        domain="[('resolved', '=', False)]"/>
+                <filter name="filter_resolved" string="Resolved"
+                        domain="[('resolved', '=', True)]"/>
+                <filter name="filter_fail" string="Severity: Fail"
+                        domain="[('severity', '=', 'fail')]"/>
+                <filter name="filter_warn" string="Severity: Warn"
+                        domain="[('severity', '=', 'warn')]"/>
+                <filter name="filter_info" string="Severity: Info"
+                        domain="[('severity', '=', 'info')]"/>
+                <group>
+                    <filter name="group_rule" string="Rule"
+                            context="{'group_by': 'rule_id'}"/>
+                    <filter name="group_model" string="Model"
+                            context="{'group_by': 'res_model'}"/>
+                    <filter name="group_severity" string="Severity"
+                            context="{'group_by': 'severity'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dq_finding" model="ir.actions.act_window">
+        <field name="name">Findings</field>
+        <field name="res_model">cm_sa.dq.finding</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{"search_default_filter_open": 1}</field>
+    </record>
+</odoo>

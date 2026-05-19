@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form_inherit_cm_sa_lost_reason_enforcer"
+            model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.cm_sa_lost_reason_enforcer</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="50"/>
+        <field name="inherit_id" ref="crm.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='crm']" position="inside">
+                <block title="CRM Lost Reason" name="cm_sa_lost_reason_enforcer_block">
+                    <setting id="cm_sa_lost_reason_required_setting"
+                             string="Require Lost Reason"
+                             help="Block the Mark as Lost wizard until a Lost Reason is selected.">
+                        <field name="cm_sa_lost_reason_required"/>
+                    </setting>
+                    <setting id="cm_sa_lost_note_required_setting"
+                             string="Require Closing Note"
+                             help="Block the Mark as Lost wizard until a closing note is written.">
+                        <field name="cm_sa_lost_note_required"/>
+                        <div class="row mt8" invisible="not cm_sa_lost_note_required">
+                            <label string="Minimum characters"
+                                   for="cm_sa_lost_note_min_chars"
+                                   class="col-lg-4 o_light_label"/>
+                            <field name="cm_sa_lost_note_min_chars"/>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

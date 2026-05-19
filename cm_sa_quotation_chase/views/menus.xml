@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_chase_schedule"
+              name="Quotation Chase Schedules"
+              parent="sale.menu_sale_config"
+              action="action_chase_schedule"
+              sequence="80"/>
+
+    <menuitem id="menu_chase_run_now"
+              name="Run Chase Now"
+              parent="sale.menu_sale_config"
+              action="action_cron_run_quotation_chase"
+              sequence="81"/>
+</odoo>

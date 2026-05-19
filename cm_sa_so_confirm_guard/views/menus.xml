@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_confirm_guard"
+              name="Confirm Guards"
+              parent="base.menu_custom"
+              action="action_confirm_guard"
+              sequence="50"/>
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_expiry_root"
+              name="Expiry Watcher"
+              web_icon="cm_sa_expiry_watcher,static/description/icon.png"
+              sequence="92"/>
+
+    <menuitem id="menu_expiry_rule"
+              name="Rules"
+              parent="menu_expiry_root"
+              action="action_expiry_rule"
+              sequence="10"/>
+
+    <menuitem id="menu_expiry_log"
+              name="Alerts Log"
+              parent="menu_expiry_root"
+              action="action_expiry_log"
+              sequence="20"/>
+</odoo>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_vendor_scorecard_root"
+              name="Vendor Scorecard"
+              parent="purchase.menu_purchase_root"
+              sequence="95"/>
+
+    <menuitem id="menu_vendor_scorecard_history"
+              name="Scorecard History"
+              parent="menu_vendor_scorecard_root"
+              action="action_vendor_scorecard_snapshot"
+              sequence="10"/>
+
+    <menuitem id="menu_vendor_scorecard_config"
+              name="Settings"
+              parent="menu_vendor_scorecard_root"
+              action="action_vendor_scorecard_config"
+              sequence="90"
+              groups="base.group_system"/>
+</odoo>

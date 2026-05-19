@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_transfer_sla_rule_list" model="ir.ui.view">
+        <field name="name">cm_sa.transfer.sla.rule.list</field>
+        <field name="model">cm_sa.transfer.sla.rule</field>
+        <field name="arch" type="xml">
+            <list string="Transfer SLA Rules">
+                <field name="name"/>
+                <field name="max_days_in_transit"/>
+                <field name="escalation_buckets_csv"/>
+                <field name="log_count"/>
+                <field name="last_run"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_transfer_sla_rule_form" model="ir.ui.view">
+        <field name="name">cm_sa.transfer.sla.rule.form</field>
+        <field name="model">cm_sa.transfer.sla.rule</field>
+        <field name="arch" type="xml">
+            <form string="Transfer SLA Rule">
+                <header>
+                    <button name="action_run_now" type="object"
+                            string="Run Now" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_logs" type="object"
+                                class="oe_stat_button" icon="fa-history">
+                            <field name="log_count" widget="statinfo"
+                                   string="Alerts"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived"
+                            bg_color="bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Internal transfers — 5-day SLA"/></h1>
+                    </div>
+                    <group>
+                        <group string="Thresholds">
+                            <field name="max_days_in_transit"/>
+                            <field name="escalation_buckets_csv"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group string="Notify">
+                            <field name="notify_responsible"/>
+                            <field name="notify_user_ids"
+                                   widget="many2many_tags"
+                                   options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <group string="Scope">
+                        <group>
+                            <field name="picking_type_ids"
+                                   widget="many2many_tags"
+                                   options="{'no_create': True}"/>
+                            <field name="source_location_ids"
+                                   widget="many2many_tags"
+                                   options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="dest_location_ids"
+                                   widget="many2many_tags"
+                                   options="{'no_create': True}"/>
+                            <field name="extra_domain" widget="char_domain"/>
+                        </group>
+                    </group>
+                    <group string="Status">
+                        <field name="last_run" readonly="1"/>
+                    </group>
+                    <div class="alert alert-info" role="alert">
+                        Hourly cron <b>Transfer SLA: hourly scan</b> runs
+                        automatically. Each (picking, bucket) pair alerts
+                        exactly once — escalation buckets keep stale
+                        transfers on the radar without spamming.
+                    </div>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_transfer_sla_rule_search" model="ir.ui.view">
+        <field name="name">cm_sa.transfer.sla.rule.search</field>
+        <field name="model">cm_sa.transfer.sla.rule</field>
+        <field name="arch" type="xml">
+            <search string="Transfer SLA Rules">
+                <field name="name"/>
+                <filter name="active" string="Active"
+                        domain="[('active', '=', True)]"/>
+                <filter name="inactive" string="Archived"
+                        domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_transfer_sla_rule" model="ir.actions.act_window">
+        <field name="name">Transfer SLA Rules</field>
+        <field name="res_model">cm_sa.transfer.sla.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first SLA rule</p>
+            <p>Pick operation types + max days, add a notify group. Hourly cron flags overdue pickings.</p>
+        </field>
+    </record>
+</odoo>

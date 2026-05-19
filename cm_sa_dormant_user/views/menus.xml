@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_dormant_root"
+              name="Dormant Users"
+              web_icon="cm_sa_dormant_user,static/description/icon.png"
+              sequence="85"
+              groups="base.group_system"/>
+    <menuitem id="menu_dormant_log"
+              name="Event Log"
+              parent="menu_dormant_root"
+              action="action_dormant_log"
+              sequence="10"/>
+    <menuitem id="menu_dormant_config"
+              name="Settings"
+              parent="menu_dormant_root"
+              action="action_dormant_config"
+              sequence="90"/>
+</odoo>

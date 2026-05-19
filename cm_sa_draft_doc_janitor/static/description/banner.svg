@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 280" width="560" height="280">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0e1a3a"/>
+      <stop offset="100%" stop-color="#1e3a8a"/>
+    </linearGradient>
+  </defs>
+  <rect width="560" height="280" fill="url(#bg)"/>
+  <rect y="0" width="560" height="6" fill="#f8b73c"/>
+  <text x="40" y="68" font-family="Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#cfd8e3" letter-spacing="2">CUBE MASTER</text>
+  <text x="40" y="130" font-family="Helvetica,Arial,sans-serif" font-size="34" font-weight="800" fill="#ffffff">Draft Document Janitor</text>
+  <text x="40" y="168" font-family="Helvetica,Arial,sans-serif" font-size="18" fill="#cfd8e3">Auto-clean stale drafts.</text>
+  <rect x="40" y="200" width="64" height="4" fill="#f8b73c" rx="2"/>
+  <text x="40" y="234" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#9fb3cc">apps.odoo.com  ·  cm.sa</text>
+  <g transform="translate(370 60) scale(2.1)">
+    <circle cx="40" cy="40" r="30" fill="#f8b73c"/><path d="M14 40a26 26 0 0 1 36-24l4-6v14h-14l4-4a18 18 0 0 0-22 18z" fill="#29c4b3"/><path d="M66 40a26 26 0 0 1-36 24l-4 6v-14h14l-4 4a18 18 0 0 0 22-18z" fill="#f8763a"/><rect x="32" y="32" width="16" height="20" rx="2" fill="#8e447e"/>
+  </g>
+</svg>

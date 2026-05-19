@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_reset_audit_root"
+              name="Reset Auditor"
+              web_icon="cm_sa_reset_auditor,static/description/icon.png"
+              sequence="85"/>
+
+    <menuitem id="menu_reset_audit_rules"
+              name="Rules"
+              parent="menu_reset_audit_root"
+              action="action_reset_audit_rule"
+              sequence="10"/>
+
+    <menuitem id="menu_reset_audit_logs"
+              name="Audit Log"
+              parent="menu_reset_audit_root"
+              action="action_reset_audit_log"
+              sequence="20"/>
+</odoo>

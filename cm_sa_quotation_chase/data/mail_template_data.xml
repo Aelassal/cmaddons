@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="mail_template_chase_default" model="mail.template">
+        <field name="name">Quotation Chase: default follow-up</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="subject">Following up on quotation {{ object.name }}</field>
+        <field name="email_from">{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
+        <field name="email_to">{{ object.partner_id.email }}</field>
+        <field name="partner_to">{{ object.partner_id.id }}</field>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="auto_delete" eval="True"/>
+        <field name="body_html" type="html">
+            <div style="font-family: Arial, sans-serif; font-size: 14px; color: #2c2c2c;">
+                <p>Hello <t t-out="object.partner_id.name or ''">Customer</t>,</p>
+                <p>
+                    Just following up on quotation
+                    <strong t-out="object.name or ''">SO0001</strong>
+                    we sent over for
+                    <strong t-out="format_amount(object.amount_total, object.currency_id) or ''">$0.00</strong>.
+                </p>
+                <p>
+                    Have you had a chance to review it? Happy to walk through the details,
+                    answer questions, or adjust anything that does not fit.
+                </p>
+                <p>
+                    Just hit reply and let us know.
+                </p>
+                <p>
+                    Best regards,<br/>
+                    <t t-out="object.user_id.name or object.company_id.name or ''">Sales Team</t>
+                </p>
+            </div>
+        </field>
+    </record>
+</odoo>

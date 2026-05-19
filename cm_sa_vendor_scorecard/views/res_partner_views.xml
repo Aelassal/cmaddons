@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_vendor_scorecard" model="ir.ui.view">
+        <field name="name">res.partner.form.vendor_scorecard</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button type="object"
+                        name="action_view_vendor_perf_history"
+                        class="oe_stat_button" icon="fa-line-chart"
+                        invisible="not vendor_perf_snapshot_count">
+                    <field name="vendor_perf_snapshot_count" widget="statinfo"
+                           string="Scorecards"/>
+                </button>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Vendor Scorecard" name="vendor_scorecard"
+                      invisible="supplier_rank == 0">
+                    <group>
+                        <group string="Latest Score">
+                            <field name="vendor_perf_score" readonly="1"/>
+                            <field name="vendor_perf_band" widget="badge"
+                                   decoration-success="vendor_perf_band == 'A'"
+                                   decoration-info="vendor_perf_band == 'B'"
+                                   decoration-warning="vendor_perf_band == 'C'"
+                                   decoration-danger="vendor_perf_band == 'D'"
+                                   readonly="1"/>
+                            <field name="vendor_perf_updated_at" readonly="1"/>
+                        </group>
+                        <group>
+                            <button type="object"
+                                    name="action_compute_vendor_score"
+                                    string="Recompute Now"
+                                    class="btn-secondary"
+                                    groups="base.group_system"/>
+                        </group>
+                    </group>
+                    <group string="Breakdown (JSON)">
+                        <field name="vendor_perf_breakdown_json"
+                               nolabel="1" widget="text" readonly="1"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

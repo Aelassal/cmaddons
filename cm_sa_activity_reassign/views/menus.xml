@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_activity_reassign_wizard"
+              name="Bulk Reassign Activities"
+              parent="base.menu_custom"
+              action="action_activity_reassign_wizard"
+              sequence="90"/>
+</odoo>

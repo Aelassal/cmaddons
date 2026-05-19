@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Default cascade setting row, seeded with the typical address/VAT
+         field set. Admin can edit or replace. -->
+    <record id="cascade_setting_default" model="cm_sa.cascade.setting">
+        <field name="name">Default</field>
+        <field name="active">True</field>
+        <field name="watched_field_ids"
+               eval="[(6, 0, [
+                    ref('base.field_res_partner__street'),
+                    ref('base.field_res_partner__street2'),
+                    ref('base.field_res_partner__city'),
+                    ref('base.field_res_partner__zip'),
+                    ref('base.field_res_partner__country_id'),
+                    ref('base.field_res_partner__state_id'),
+                    ref('base.field_res_partner__email'),
+                    ref('base.field_res_partner__phone'),
+                    ref('base.field_res_partner__website'),
+                    ref('base.field_res_partner__vat'),
+                    ref('base.field_res_partner__lang'),
+               ])]"/>
+    </record>
+</odoo>

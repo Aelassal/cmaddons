@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_reason_wizard_form" model="ir.ui.view">
+        <field name="name">cm_sa.reason.wizard.form</field>
+        <field name="model">cm_sa.reason.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Change with Reason">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Change with Reason</h1>
+                        <p>Type the new value(s) as JSON, pick a category, explain why.</p>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="rule_id" readonly="1"
+                                   options="{'no_open': True}"/>
+                            <field name="res_model" readonly="1"/>
+                            <field name="res_id" readonly="1"/>
+                            <field name="record_display" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="category_id"
+                                   options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <group string="Proposed changes (JSON: {&quot;field&quot;: &quot;new value&quot;})">
+                        <field name="pending_values" nolabel="1"
+                               widget="text"
+                               placeholder='{"credit_limit": 50000}'/>
+                    </group>
+                    <group string="Note">
+                        <field name="note" nolabel="1" widget="text"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_apply" type="object"
+                            string="Apply Change" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_reason_wizard" model="ir.actions.act_window">
+        <field name="name">Change with Reason</field>
+        <field name="res_model">cm_sa.reason.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

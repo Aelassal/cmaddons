@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_credit_hold_log"
+              name="Credit Hold Log"
+              parent="contacts.menu_contacts"
+              action="action_credit_hold_log"
+              sequence="91"/>
+</odoo>

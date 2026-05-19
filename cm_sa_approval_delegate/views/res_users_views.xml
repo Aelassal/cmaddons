@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_users_form_delegate" model="ir.ui.view">
+        <field name="name">res.users.form.delegate</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='access_rights']" position="before">
+                <page string="Delegation" name="delegation">
+                    <group>
+                        <group string="Delegate">
+                            <field name="delegate_to_id"
+                                   options="{'no_create': True}"/>
+                            <field name="is_currently_delegating"/>
+                        </group>
+                        <group string="Window">
+                            <field name="delegation_start"/>
+                            <field name="delegation_end"/>
+                        </group>
+                    </group>
+                    <group string="Scope">
+                        <field name="delegate_activities"/>
+                        <field name="delegate_approvals"/>
+                    </group>
+                    <group>
+                        <button type="object" name="action_end_delegation_now"
+                                string="End delegation now" class="btn-danger"
+                                invisible="not is_currently_delegating"/>
+                    </group>
+                    <div class="alert alert-info" role="alert">
+                        While the window is active, an hourly cron reassigns your
+                        open activities (and approval requests, if the Approvals
+                        module is installed) to your delegate. When the end date
+                        passes, items are automatically reverted.
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

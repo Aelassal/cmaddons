@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Add discount-reason column to the SO line tree on the form. -->
+    <record id="view_order_form_discount_reason" model="ir.ui.view">
+        <field name="name">sale.order.form.discount_reason</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/list/field[@name='discount']" position="after">
+                <field name="cm_sa_discount_reason"
+                       string="Discount Reason"
+                       optional="show"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

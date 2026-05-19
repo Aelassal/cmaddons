@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_template_escalation_default" model="mail.template">
+        <field name="name">Approval Escalation: default reminder</field>
+        <field name="subject">Pending approval reminder: {{ object.display_name }}</field>
+        <field name="body_html" type="html">
+            <div>
+                <p>Hello,</p>
+                <p>The following record is still waiting for your action:</p>
+                <p><b><t t-esc="object.display_name"/></b></p>
+                <p>Please review and approve, or reassign if someone else should handle it.</p>
+            </div>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_discount_log_list" model="ir.ui.view">
+        <field name="name">cm_sa.discount.audit.log.list</field>
+        <field name="model">cm_sa.discount.audit.log</field>
+        <field name="arch" type="xml">
+            <list string="Discount Audit Log" create="false">
+                <field name="create_date" string="When"/>
+                <field name="salesperson_id"/>
+                <field name="order_id"/>
+                <field name="partner_id" optional="show"/>
+                <field name="product_id"/>
+                <field name="discount_pct"/>
+                <field name="threshold_pct" optional="hide"/>
+                <field name="unit_price" optional="hide"/>
+                <field name="qty" optional="hide"/>
+                <field name="discount_amount" sum="Total"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="reason" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_discount_log_form" model="ir.ui.view">
+        <field name="name">cm_sa.discount.audit.log.form</field>
+        <field name="model">cm_sa.discount.audit.log</field>
+        <field name="arch" type="xml">
+            <form string="Discount Audit Log" create="false" edit="false">
+                <header>
+                    <button name="action_open_order" type="object"
+                            string="Open Sale Order" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="create_date" string="When"/>
+                            <field name="order_id"/>
+                            <field name="partner_id"/>
+                            <field name="salesperson_id"/>
+                            <field name="team_id"/>
+                        </group>
+                        <group>
+                            <field name="product_id"/>
+                            <field name="list_price"/>
+                            <field name="unit_price"/>
+                            <field name="qty"/>
+                            <field name="discount_pct"/>
+                            <field name="threshold_pct"/>
+                            <field name="discount_amount"/>
+                            <field name="currency_id"/>
+                        </group>
+                    </group>
+                    <group string="Reason">
+                        <field name="reason" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_discount_log_search" model="ir.ui.view">
+        <field name="name">cm_sa.discount.audit.log.search</field>
+        <field name="model">cm_sa.discount.audit.log</field>
+        <field name="arch" type="xml">
+            <search string="Discount Audit Log">
+                <field name="salesperson_id"/>
+                <field name="order_id"/>
+                <field name="partner_id"/>
+                <field name="product_id"/>
+                <field name="reason"/>
+                <filter name="filter_30d" string="Last 30 days"
+                        domain="[('create_date', '&gt;=',
+                                  (context_today() + datetime.timedelta(days=-30))
+                                  .strftime('%Y-%m-%d'))]"/>
+                <group>
+                    <filter name="group_salesperson" string="Salesperson"
+                            context="{'group_by': 'salesperson_id'}"/>
+                    <filter name="group_team" string="Team"
+                            context="{'group_by': 'team_id'}"/>
+                    <filter name="group_partner" string="Customer"
+                            context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_product" string="Product"
+                            context="{'group_by': 'product_id'}"/>
+                    <filter name="group_month" string="Month"
+                            context="{'group_by': 'create_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_discount_log_pivot" model="ir.ui.view">
+        <field name="name">cm_sa.discount.audit.log.pivot</field>
+        <field name="model">cm_sa.discount.audit.log</field>
+        <field name="arch" type="xml">
+            <pivot string="Discount Pivot">
+                <field name="salesperson_id" type="row"/>
+                <field name="create_date" interval="month" type="col"/>
+                <field name="discount_amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_discount_log_graph" model="ir.ui.view">
+        <field name="name">cm_sa.discount.audit.log.graph</field>
+        <field name="model">cm_sa.discount.audit.log</field>
+        <field name="arch" type="xml">
+            <graph string="Discounts Over Time" type="line">
+                <field name="create_date" interval="month"/>
+                <field name="discount_amount" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_discount_log" model="ir.actions.act_window">
+        <field name="name">Discount Audit Log</field>
+        <field name="res_model">cm_sa.discount.audit.log</field>
+        <field name="view_mode">list,pivot,graph,form</field>
+    </record>
+</odoo>

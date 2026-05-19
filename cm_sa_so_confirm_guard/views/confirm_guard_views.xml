@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_confirm_guard_list" model="ir.ui.view">
+        <field name="name">cm_sa.confirm.guard.list</field>
+        <field name="model">cm_sa.confirm.guard</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="method_name"/>
+                <field name="required_field_ids" widget="many2many_tags" optional="show"/>
+                <field name="domain" optional="hide"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_confirm_guard_form" model="ir.ui.view">
+        <field name="name">cm_sa.confirm.guard.form</field>
+        <field name="model">cm_sa.confirm.guard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
+                            invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Require PO Number on Sale Confirm"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="model_id" options="{'no_create': True}"/>
+                            <field name="model_name" invisible="1"/>
+                            <field name="method_name"
+                                   placeholder="action_confirm / action_post / button_validate / ..."/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="domain" placeholder="[]"/>
+                        </group>
+                    </group>
+                    <group string="Required Fields">
+                        <field name="required_field_ids" nolabel="1"
+                               widget="many2many_tags"
+                               options="{'no_create': True}"
+                               domain="[('model_id', '=', model_id)]"/>
+                    </group>
+                    <group string="Error Message">
+                        <field name="error_message" nolabel="1"/>
+                    </group>
+                    <div class="alert alert-info" role="alert">
+                        <strong>Heads up:</strong>
+                        Adding, removing, archiving, or changing the model/method of a
+                        rule signals a registry reload so other workers pick up the
+                        change on their next request. Edits to <i>Required Fields</i>,
+                        <i>Domain</i>, and <i>Error Message</i> are read on every call
+                        and take effect immediately. In multi-worker production setups,
+                        a quick service restart guarantees the wrapper is installed
+                        everywhere.
+                    </div>
+                    <div class="alert alert-secondary" role="alert">
+                        <strong>Common method names:</strong>
+                        <code>action_confirm</code> (sale.order, purchase.order),
+                        <code>action_post</code> (account.move),
+                        <code>button_validate</code> (stock.picking).
+                        Custom buttons from your own modules also work — just type
+                        the exact method name.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_confirm_guard_search" model="ir.ui.view">
+        <field name="name">cm_sa.confirm.guard.search</field>
+        <field name="model">cm_sa.confirm.guard</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="method_name"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Model" name="group_model" context="{'group_by': 'model_id'}"/>
+                    <filter string="Method" name="group_method" context="{'group_by': 'method_name'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_confirm_guard" model="ir.actions.act_window">
+        <field name="name">Confirm Guards</field>
+        <field name="res_model">cm_sa.confirm.guard</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_confirm_guard_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first confirm-guard rule</p>
+            <p>
+                Pick a model (e.g. Sale Order), a method to guard
+                (<code>action_confirm</code>), and the fields that must be
+                filled before the button is allowed to run.
+            </p>
+        </field>
+    </record>
+</odoo>

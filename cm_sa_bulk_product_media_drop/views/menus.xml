@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_bulk_media_root"
+              name="Bulk Media"
+              web_icon="cm_sa_bulk_product_media_drop,static/description/icon.png"
+              sequence="85"/>
+
+    <menuitem id="menu_bulk_media_upload"
+              name="Upload Images"
+              parent="menu_bulk_media_root"
+              action="action_bulk_media_wizard"
+              sequence="10"/>
+</odoo>

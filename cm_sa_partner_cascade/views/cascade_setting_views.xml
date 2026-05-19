@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_cascade_setting_list" model="ir.ui.view">
+        <field name="name">cm_sa.cascade.setting.list</field>
+        <field name="model">cm_sa.cascade.setting</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="watched_field_ids" widget="many2many_tags"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_cascade_setting_form" model="ir.ui.view">
+        <field name="name">cm_sa.cascade.setting.form</field>
+        <field name="model">cm_sa.cascade.setting</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
+                            invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <field name="active" invisible="1"/>
+                        <field name="watched_field_ids" widget="many2many_tags"
+                               options="{'no_create': True}"/>
+                    </group>
+                    <div class="alert alert-info" role="alert">
+                        These are the partner fields whose changes will prompt a
+                        cascade to the company's child contacts. Cascade is never
+                        automatic — the parent is updated immediately and the user
+                        can open the wizard from the partner form.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_cascade_setting" model="ir.actions.act_window">
+        <field name="name">Cascade Settings</field>
+        <field name="res_model">cm_sa.cascade.setting</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

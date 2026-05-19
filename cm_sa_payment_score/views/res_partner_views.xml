@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_payment_score" model="ir.ui.view">
+        <field name="name">res.partner.form.payment_score</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button type="object"
+                        name="action_view_payment_score_history"
+                        class="oe_stat_button" icon="fa-history"
+                        invisible="not payment_score_snapshot_count">
+                    <field name="payment_score_snapshot_count" widget="statinfo"
+                           string="Score Snapshots"/>
+                </button>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Payment Score" name="payment_score">
+                    <group>
+                        <group string="Current Score">
+                            <field name="payment_score_total" readonly="1"/>
+                            <field name="payment_score_band" widget="badge"
+                                   decoration-success="payment_score_band == 'A'"
+                                   decoration-info="payment_score_band == 'B'"
+                                   decoration-warning="payment_score_band == 'C'"
+                                   decoration-danger="payment_score_band == 'D'"
+                                   readonly="1"/>
+                            <field name="payment_score_updated_at" readonly="1"/>
+                        </group>
+                        <group>
+                            <button type="object"
+                                    name="action_compute_payment_score"
+                                    string="Recompute Now"
+                                    class="btn-secondary"
+                                    groups="base.group_system"/>
+                        </group>
+                    </group>
+                    <group string="Breakdown (JSON)">
+                        <field name="payment_score_breakdown_json"
+                               nolabel="1" widget="text" readonly="1"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

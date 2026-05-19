@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_stale_opp_root"
+              name="Stale Opportunity"
+              web_icon="cm_sa_stale_opportunity,static/description/icon.png"
+              sequence="85"/>
+
+    <menuitem id="menu_stale_opp_rules"
+              name="Rules"
+              parent="menu_stale_opp_root"
+              action="action_stale_opp_rule"
+              sequence="10"/>
+
+    <menuitem id="menu_stale_opp_logs"
+              name="Event Log"
+              parent="menu_stale_opp_root"
+              action="action_stale_opp_log"
+              sequence="20"/>
+</odoo>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="140" height="140">
+<rect x="8" y="8" width="30" height="58" rx="3" fill="#8e447e"/><circle cx="32" cy="40" r="3" fill="#f8b73c"/><path d="M40 38h26v-8l12 12-12 12v-8H40z" fill="#f8763a"/><rect x="4" y="68" width="72" height="6" rx="2" fill="#29c4b3"/>
+</svg>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_credit_hold_wizard_form" model="ir.ui.view">
+        <field name="name">cm_sa.credit_hold.wizard.form</field>
+        <field name="model">cm_sa.credit_hold.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Credit Hold">
+                <sheet>
+                    <div class="oe_title">
+                        <h1 invisible="mode != 'hold'">Place on Credit Hold</h1>
+                        <h1 invisible="mode != 'release'">Release Credit Hold</h1>
+                    </div>
+                    <group>
+                        <field name="partner_id" readonly="1"/>
+                        <field name="mode" invisible="1"/>
+                        <field name="expected_release"
+                               invisible="mode != 'hold'"/>
+                    </group>
+                    <group string="Reason (required)">
+                        <field name="reason" nolabel="1" widget="text"/>
+                    </group>
+                    <div class="alert alert-info" role="alert"
+                         invisible="mode != 'hold'">
+                        While the hold is active, confirming a sale order, purchase
+                        order, or stock picking against this partner will be
+                        blocked with this reason shown to the user.
+                    </div>
+                </sheet>
+                <footer>
+                    <button name="action_confirm" type="object"
+                            string="Apply" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_credit_hold_wizard" model="ir.actions.act_window">
+        <field name="name">Credit Hold</field>
+        <field name="res_model">cm_sa.credit_hold.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

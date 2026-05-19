@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_dedup_root"
+              name="Duplicate Bill Review"
+              web_icon="cm_sa_bill_dedup,static/description/icon.png"
+              sequence="94"/>
+
+    <menuitem id="menu_dedup_review_log"
+              name="Review Log"
+              parent="menu_dedup_root"
+              action="action_dedup_review_log"
+              sequence="10"/>
+</odoo>

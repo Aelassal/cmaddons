@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="140" height="140">
+<path d="M40 6l28 16v32L40 70 12 54V22z" fill="#f8b73c"/><path d="M40 6l28 16-28 16-28-16z" fill="#f8763a"/><path d="M40 22l28 16-28 16-28-16z" fill="#8e447e"/><path d="M28 42l8 8 16-18" stroke="#fff" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cm_sa_renewal_rule_manager,cm_sa.renewal.rule sales manager,model_cm_sa_renewal_rule,sales_team.group_sale_manager,1,1,1,1
+access_cm_sa_renewal_rule_user,cm_sa.renewal.rule sales user,model_cm_sa_renewal_rule,sales_team.group_sale_salesman,1,0,0,0
+access_cm_sa_renewal_log_manager,cm_sa.renewal.log sales manager,model_cm_sa_renewal_log,sales_team.group_sale_manager,1,1,1,1
+access_cm_sa_renewal_log_user,cm_sa.renewal.log sales user,model_cm_sa_renewal_log,sales_team.group_sale_salesman,1,0,0,0

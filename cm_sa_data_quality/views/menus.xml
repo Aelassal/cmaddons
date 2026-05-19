@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_dq_root"
+              name="Data Quality"
+              web_icon="cm_sa_data_quality,static/description/icon.png"
+              sequence="92"/>
+
+    <menuitem id="menu_dq_findings"
+              name="Findings"
+              parent="menu_dq_root"
+              action="action_dq_finding"
+              sequence="10"/>
+
+    <menuitem id="menu_dq_rules"
+              name="Rules"
+              parent="menu_dq_root"
+              action="action_dq_rule"
+              sequence="20"/>
+
+    <menuitem id="menu_dq_scans"
+              name="Scan History"
+              parent="menu_dq_root"
+              action="action_dq_scan"
+              sequence="30"/>
+</odoo>

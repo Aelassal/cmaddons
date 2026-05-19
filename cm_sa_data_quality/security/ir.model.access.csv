@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dq_rule_admin,cm_sa.dq.rule.admin,model_cm_sa_dq_rule,base.group_system,1,1,1,1
+access_dq_rule_user,cm_sa.dq.rule.user,model_cm_sa_dq_rule,base.group_user,1,0,0,0
+access_dq_finding_admin,cm_sa.dq.finding.admin,model_cm_sa_dq_finding,base.group_system,1,1,1,1
+access_dq_finding_user,cm_sa.dq.finding.user,model_cm_sa_dq_finding,base.group_user,1,1,0,0
+access_dq_scan_admin,cm_sa.dq.scan.admin,model_cm_sa_dq_scan,base.group_system,1,1,1,1
+access_dq_scan_user,cm_sa.dq.scan.user,model_cm_sa_dq_scan,base.group_user,1,0,0,0

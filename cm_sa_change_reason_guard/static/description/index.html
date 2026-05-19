@@ -1,0 +1,381 @@
+<style>
+  :root { --cm-accent: #f8b73c; }
+  .cm-accent-stripe { height: 6px; background: var(--cm-accent); margin: 0 0 12px 0; }
+  .oe_slogan { color: #111 !important; font-weight: 700; }
+  .oe_container code { color: #111; font-weight: 600; background: #eef1f5; padding: 1px 6px; border-radius: 3px; font-size: 0.92em; }
+  .cm-hero { background: linear-gradient(135deg, #0e1a3a 0%, #1f3a72 100%); color: #fff; padding: 36px 32px; border-radius: 8px; }
+  .cm-hero h1 { color: #fff !important; margin: 0 0 10px; font-size: 30px; }
+  .cm-hero p.tag { color: #ffd89b; font-size: 16px; margin: 0 0 18px; font-weight: 600; }
+  .cm-hero .pitch { color: #cfd8e3; font-size: 14.5px; line-height: 1.6; }
+  .cm-benefit-row { display: flex; gap: 18px; margin-top: 22px; flex-wrap: wrap; }
+  .cm-benefit { flex: 1; min-width: 220px; background: #1a2a55; padding: 18px; border-radius: 6px; }
+  .cm-benefit .b-title { color: #f8b73c; font-weight: 700; font-size: 13.5px; margin-bottom: 6px; letter-spacing: 0.3px; }
+  .cm-benefit .b-text { color: #d4dce5; font-size: 13px; line-height: 1.5; }
+  .cm-roi { background: #fff7e6; border-left: 4px solid #f8b73c; padding: 16px 20px; margin: 22px 0 18px; border-radius: 4px; color: #5b4a1f; font-size: 14.5px; line-height: 1.55; }
+  .cm-roi b { color: #1a365d; }
+  .cm-hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+  .cm-hero-cta a { display: inline-block; padding: 10px 20px; border-radius: 4px; font-weight: 600; font-size: 13.5px; text-decoration: none; transition: transform 0.15s; }
+  .cm-hero-cta a:hover { transform: translateY(-1px); }
+  .cm-hero-cta a.primary { background: #f8b73c; color: #1a365d; }
+  .cm-hero-cta a.secondary { background: rgba(255,255,255,0.08); color: #fff; border: 1px solid rgba(248,183,60,0.5); }
+  .cm-cta-strip { background: #f8b73c; color: #1a365d; padding: 16px 24px; text-align: center; font-weight: 700; font-size: 14.5px; border-radius: 4px; }
+  .cm-cta-strip a { color: #1a365d; text-decoration: underline; }
+  .cm-shots { background: #fff; padding: 24px 28px; border-radius: 8px; border: 1px solid #e2e8f0; }
+  .cm-shots h3 { color: #1a365d !important; margin: 0 0 6px; font-size: 20px; }
+  .cm-shots p.lead { color: #4a5568; font-size: 13.5px; margin: 0 0 18px; }
+  .cm-shots .grid { display: flex; flex-wrap: wrap; gap: 16px; }
+  .cm-shots .shot { flex: 1 1 calc(50% - 8px); min-width: 280px; background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden; }
+  .cm-shots .shot img { width: 100%; height: auto; display: block; }
+  .cm-shots .shot .cap { padding: 10px 14px; color: #4a5568; font-size: 12.5px; border-top: 1px solid #e2e8f0; background: #fff; }
+  .cm-shots .shot .cap b { color: #1a365d; display: block; margin-bottom: 2px; font-size: 13px; }
+  .cm-faq { background: #fafbfc; padding: 22px 28px; border-radius: 8px; border: 1px solid #e2e8f0; }
+  .cm-faq h3 { color: #1a365d !important; margin: 0 0 14px; font-size: 20px; }
+  .cm-faq details { background: #fff; border: 1px solid #e2e8f0; border-radius: 5px; margin-bottom: 8px; padding: 0; }
+  .cm-faq summary { padding: 13px 18px; cursor: pointer; font-weight: 600; color: #1a365d; font-size: 14px; list-style: none; outline: none; }
+  .cm-faq summary::-webkit-details-marker { display: none; }
+  .cm-faq summary::before { content: "+"; color: #f8b73c; font-weight: 700; margin-right: 10px; font-size: 17px; }
+  .cm-faq details[open] summary::before { content: "-"; }
+  .cm-faq .ans { padding: 0 18px 14px 34px; color: #4a5568; font-size: 13.5px; line-height: 1.6; }
+  .cm-footer-pitch { background: #fafbfc; padding: 22px 28px; border-radius: 6px; border: 1px solid #e2e8f0; }
+  .cm-footer-pitch h3 { color: #2b6fb0 !important; margin: 0 0 10px; font-size: 18px; }
+  .cm-footer-pitch p.intro { color: #4a5568; font-size: 14px; line-height: 1.65; margin: 0 0 16px; }
+  .cm-footer-pitch .tags { display: flex; gap: 14px; flex-wrap: wrap; }
+  .cm-footer-pitch .tag-card { flex: 1; min-width: 200px; background: #fff; padding: 14px; border-radius: 4px; border: 1px solid #e2e8f0; }
+  .cm-footer-pitch .tag-card b { color: #2b6fb0; display: block; margin-bottom: 4px; font-size: 13px; }
+  .cm-footer-pitch .tag-card span { color: #4a5568; font-size: 12.5px; line-height: 1.5; }
+  .cm-services { background: linear-gradient(135deg, #1a2a55 0%, #2b4a85 100%); color: #fff; padding: 28px 30px; border-radius: 8px; }
+  .cm-services h3 { color: #f8b73c !important; margin: 0 0 8px; font-size: 20px; }
+  .cm-services p.lead { color: #cfd8e3; font-size: 14px; margin: 0 0 20px; line-height: 1.6; }
+  .cm-services .srv-grid { display: flex; flex-wrap: wrap; gap: 14px; }
+  .cm-services .srv-card { flex: 1; min-width: 230px; background: rgba(255,255,255,0.06); border: 1px solid rgba(248,183,60,0.25); padding: 14px 16px; border-radius: 6px; text-decoration: none; display: block; transition: background 0.15s; }
+  .cm-services .srv-card:hover { background: rgba(248,183,60,0.12); }
+  .cm-services .srv-card b { color: #f8b73c; display: block; margin-bottom: 6px; font-size: 13.5px; }
+  .cm-services .srv-card span { color: #d4dce5; font-size: 12.5px; line-height: 1.5; display: block; }
+  .cm-services .srv-card em { color: #ffd89b; font-style: normal; font-size: 11.5px; display: block; margin-top: 6px; }
+  .cm-services .srv-cta { margin: 18px 0 0; padding: 12px 16px; background: rgba(248,183,60,0.12); border-left: 3px solid #f8b73c; border-radius: 4px; color: #fff7e6; font-size: 13.5px; }
+  .cm-services .srv-cta a { color: #f8b73c; font-weight: 600; text-decoration: none; }
+  .cm-services .srv-cta a:hover { text-decoration: underline; }
+  .cm-capabilities { background: #fff; padding: 26px 30px; border-radius: 8px; border: 1px solid #e2e8f0; }
+  .cm-capabilities h3 { color: #1a365d !important; margin: 0 0 6px; font-size: 20px; }
+  .cm-capabilities .lead { color: #4a5568; font-size: 14px; line-height: 1.6; margin: 0 0 20px; }
+  .cm-capabilities .cap-grid { display: flex; flex-wrap: wrap; gap: 14px; }
+  .cm-capabilities .cap-card { flex: 1; min-width: 200px; background: #f7fafc; border-left: 3px solid #f8b73c; padding: 14px 16px; border-radius: 4px; }
+  .cm-capabilities .cap-card b { color: #1a365d; display: block; margin-bottom: 5px; font-size: 13.5px; }
+  .cm-capabilities .cap-card span { color: #4a5568; font-size: 12.5px; line-height: 1.55; display: block; }
+  .cm-capabilities .partners { margin-top: 20px; padding-top: 16px; border-top: 1px solid #e2e8f0; color: #718096; font-size: 12.5px; text-align: center; }
+  .cm-capabilities .partners b { color: #2b6fb0; }
+  .cm-crosssell { background: #fafbfc; padding: 24px 28px; border-radius: 8px; border: 1px solid #e2e8f0; }
+  .cm-crosssell h3 { color: #1a365d !important; margin: 0 0 6px; font-size: 20px; }
+  .cm-crosssell p.lead { color: #4a5568; font-size: 13.5px; margin: 0 0 18px; }
+  .cm-crosssell .xs-grid { display: flex; flex-wrap: wrap; gap: 12px; }
+  .cm-crosssell .xs-card { flex: 1 1 calc(33.33% - 8px); min-width: 240px; background: #fff; border: 1px solid #e2e8f0; border-left: 3px solid #f8b73c; padding: 12px 14px; border-radius: 4px; text-decoration: none; display: block; transition: box-shadow 0.15s; }
+  .cm-crosssell .xs-card:hover { box-shadow: 0 3px 10px rgba(26,54,93,0.08); }
+  .cm-crosssell .xs-card b { color: #1a365d; display: block; margin-bottom: 4px; font-size: 13px; }
+  .cm-crosssell .xs-card span { color: #4a5568; font-size: 12.5px; line-height: 1.5; display: block; }
+  .cm-crosssell .xs-card em { color: #a78b3d; font-style: normal; font-size: 11.5px; display: block; margin-top: 6px; font-weight: 600; }
+  .cm-brand-header { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 14px 4px 14px; margin-bottom: 4px; border-bottom: 1px solid #e2e8f0; }
+  .cm-brand-header .logo img { height: 44px; width: auto; display: block; }
+  .cm-brand-header .tagline { color: #4a5568; font-size: 12.5px; font-weight: 500; letter-spacing: 0.3px; text-align: right; }
+  .cm-brand-header .tagline b { color: #3DA9E1; display: block; font-size: 13px; margin-bottom: 2px; }
+  .cm-about { background: linear-gradient(135deg, #3DA9E1 0%, #5B8DD5 50%, #7B6CC8 100%); color: #fff; padding: 32px; border-radius: 10px; position: relative; overflow: hidden; }
+  .cm-about .about-logo-banner { background: rgba(255,255,255,0.96); padding: 18px 24px; border-radius: 8px; margin-bottom: 22px; text-align: center; }
+  .cm-about .about-logo-banner img { height: 60px; width: auto; display: inline-block; vertical-align: middle; }
+  .cm-about .about-body h3 { color: #fff !important; margin: 0 0 4px; font-size: 22px; font-weight: 700; }
+  .cm-about .about-body .motto { color: #ffd89b; margin: 0 0 14px; font-size: 14px; font-style: italic; font-weight: 600; }
+  .cm-about .about-body p { color: #f0f6ff; font-size: 13.5px; line-height: 1.65; margin: 0 0 14px; }
+  .cm-about .social { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 14px; }
+  .cm-about .social a { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); border-radius: 50%; color: #fff; text-decoration: none; transition: background 0.15s, transform 0.15s; }
+  .cm-about .social a:hover { background: rgba(255,255,255,0.25); transform: translateY(-2px); }
+  .cm-about .social a svg { width: 17px; height: 17px; }
+  .cm-about .contact-row { margin-top: 22px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.2); display: flex; gap: 24px; flex-wrap: wrap; color: #eaf3ff; font-size: 13px; }
+  .cm-about .contact-row .block { flex: 1; min-width: 200px; }
+  .cm-about .contact-row .block b { display: block; color: #ffd89b; font-size: 11px; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 4px; }
+  .cm-about .contact-row .block a { color: #fff; text-decoration: none; font-weight: 500; }
+  .cm-about .contact-row .block a:hover { text-decoration: underline; }
+</style>
+<div class="cm-accent-stripe"></div>
+
+<section class="oe_container">
+    <div class="oe_row">
+        <div class="oe_span12">
+            <div class="cm-brand-header">
+                <div class="logo"><a href="https://cm.sa" target="_blank" rel="noopener"><img src="cm-logo.png" alt="Cube Master - &#1573;&#1578;&#1602;&#1575;&#1606; &#1605;&#1603;&#1593;&#1576;"/></a></div>
+                <div class="tagline"><b>We blend mastery with creativity</b>&#1606;&#1605;&#1586;&#1580; &#1575;&#1604;&#1573;&#1578;&#1602;&#1575;&#1606; &#1576;&#1575;&#1604;&#1573;&#1576;&#1583;&#1575;&#1593;</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <div class="cm-hero">
+                <h1>Field Change Reason Enforcer</h1>
+                <p class="tag">Force a categorized reason + note when configured fields are changed.</p>
+                <p class="pitch">Customer credit limit goes up. Vendor bank account changes. Product cost is edited. Odoo's chatter records the value diff but doesn't capture <i>why</i>. This module wraps writes on configured fields: a reason wizard fires, the change can't save without a categorised reason and a note.</p>
+                <div class="cm-benefit-row">
+                    <div class="cm-benefit">
+                        <div class="b-title">Per-field rules</div>
+                        <div class="b-text">Pick exactly which fields trigger the wizard. Surgical.</div>
+                    </div>
+                    <div class="cm-benefit">
+                        <div class="b-title">Reason categories</div>
+                        <div class="b-text">Admin-configured taxonomy. Data normalises for reporting.</div>
+                    </div>
+                    <div class="cm-benefit">
+                        <div class="b-title">Bypass group + log</div>
+                        <div class="b-text">Override with reason. Every override is auditable.</div>
+                    </div>
+                </div>
+                <div class="cm-roi">
+                    <b>Where it pays for itself:</b> Closes the 'why did this number change' question that auditors hate. Saves dispute time downstream.
+                </div>
+                <div class="cm-hero-cta">
+                    <a class="primary" href="https://cm.sa" target="_blank" rel="noopener">Visit cm.sa</a>
+                    <a class="secondary" href="mailto:contact@cm.sa?subject=Question%20about%20Field%20Change%20Reason%20Enforcer">Ask a question</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <div class="cm-cta-strip">
+                One module. $59 once. Works on Odoo 17.0, 18.0, 19.0 (Community + Enterprise). Install from <a href="https://apps.odoo.com/apps/modules/browse?author=cm.sa">apps.odoo.com</a> in under a minute.
+            </div>
+        </div>
+    </div>
+</section>
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h2 class="oe_slogan">Field Change Reason Enforcer</h2>
+        <h3 class="oe_slogan">Force a categorized reason + note when configured fields are changed.</h3>
+    </div>
+</section>
+<section class="oe_container oe_dark">
+    <div class="oe_row">
+        <h2 class="oe_slogan">What it does</h2>
+        <div class="oe_span12 oe_mt32">
+            <p>Sensitive fields, customer credit limits, product prices, invoice due dates, tax settings, should never be changed without a written reason. Compliance teams need a clean list of who changed what, when, and why.</p>
+            <p>Odoo core logs field changes in chatter when tracking is enabled, but requires no reason, enforces no categorization, and offers no reporting on the deltas.</p>
+            <p><b>What this module adds:</b></p>
+            <ul><li>Pick the field(s) you want guarded on any model.</li><li>Pick the reason categories (Price correction, Credit override, Data cleanup, and so on).</li><li>Optionally require a minimum-length note to stop single-character bypasses.</li><li>Change with Reason action appears in the cog menu of the guarded record.</li><li>Wizard captures the new value, category, and note; the write goes through only after submit.</li><li>Every change logged with user, field, old value, new value, category, note, and timestamp.</li></ul>
+            <p><b>Who benefits</b></p>
+            <p>Controllers, compliance officers, data stewards, and operations managers at mid-market and enterprise companies tracking sensitive master-data changes.</p>
+            <p><b>How it works</b></p>
+            <p>Pure wizards plus configurable server-action bindings. No core-model inheritance, no JS gymnastics, no write-time interception that breaks transactions. TransactionCase tested on Odoo 17, 18, and 19. Safe to install, safe to uninstall.</p>
+        </div>
+    </div>
+</section>
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <div class="cm-shots">
+                <h3>What the module looks like</h3>
+                <p class="lead">Real screenshots from a live Odoo 19 install. Every view is standard Odoo chrome, no bespoke widgets to learn.</p>
+                <div class="grid">
+                    <div class="shot">
+                        <img src="01-rules-list.png" alt="Rules list"/>
+                        <div class="cap"><b>Rules list</b>A view from Field Change Reason Enforcer.</div>
+                    </div>
+                    <div class="shot">
+                        <img src="02-rule-form-new.png" alt="Rule form new"/>
+                        <div class="cap"><b>Rule form new</b>A view from Field Change Reason Enforcer.</div>
+                    </div>
+                    <div class="shot">
+                        <img src="03-reason-log.png" alt="Reason log"/>
+                        <div class="cap"><b>Reason log</b>A view from Field Change Reason Enforcer.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <div class="cm-faq">
+                <h3>Common questions</h3>
+                <details>
+                    <summary>Does it inherit or patch core Odoo models?</summary>
+                    <div class="ans">No. We use <code>_register_hook</code> to wrap the target method at registry load, and the wrapper unwinds cleanly at uninstall. No schema changes to core tables, no monkey-patches, no Studio surgery.</div>
+                </details>
+                <details>
+                    <summary>Does it work on Odoo Community, or only Enterprise?</summary>
+                    <div class="ans">Both. Every branch ships tested against Odoo 17.0, 18.0, and 19.0 on both Community and Enterprise editions. Install it the same way you install any Odoo module.</div>
+                </details>
+                <details>
+                    <summary>Can I uninstall it cleanly if it does not fit?</summary>
+                    <div class="ans">Yes. Uninstall removes the module rows, unwinds any method wrappers, and drops the module tables. Data you already captured stays in chatter / audit logs on the original records where relevant.</div>
+                </details>
+                <details>
+                    <summary>What support do I get after buying?</summary>
+                    <div class="ans">Email <a href="mailto:contact@cm.sa">contact@cm.sa</a> with your issue. We reply within one business day and ship bug fixes fast. For paid customisation, ask for a quote from the same inbox.</div>
+                </details>
+                <details>
+                    <summary>Can Cube Master customise it for my company?</summary>
+                    <div class="ans">Yes. Every module is a starting point. We run Odoo deployments across the Gulf and beyond: custom fields, extra workflows, connected reports. Tell us what you need at <a href="mailto:contact@cm.sa">contact@cm.sa</a>.</div>
+                </details>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <div class="cm-footer-pitch">
+                <h3>ISO-grade audit on Odoo</h3>
+                <p class="intro">Cube Master is the partner Saudi enterprises pick when they need SOC 2 / ZATCA / GDPR posture inside Odoo without a custom-rebuild project. These modules are the building blocks of the audit trail your auditor will actually accept.</p>
+                <div class="tags">
+                    <div class="tag-card"><b>Tamper-evident</b><span>Logs are append-only, chatter-anchored, and survive uninstall.</span></div>
+                    <div class="tag-card"><b>Zero core-model surgery</b><span>Wrappers install at registry load, uninstall leaves no residue.</span></div>
+                    <div class="tag-card"><b>Drop-in compliance</b><span>Designed for the audit cycle, quarterly, half-yearly, fiscal close.</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <div class="cm-services">
+                <h3>Other apps Cube Master installs &amp; supports</h3>
+                <p class="lead">Beyond this utility, here is what we also deploy, configure, and keep running for our customers on Odoo 17 / 18 / 19. If you liked this module, talk to us about the rest.</p>
+                <div class="srv-grid">
+                    <a class="srv-card" href="https://apps.odoo.com/apps/modules/19.0/base_accounting_kit" target="_blank" rel="noopener">
+                        <b>Full Accounting Kit</b>
+                        <span>Turn Odoo Community into a proper finance suite: asset depreciation, PDC, cash flow statement, aged reports, recurring entries.</span>
+                        <em>Odoo 17 / 18 / 19 - Community</em>
+                    </a>
+                    <a class="srv-card" href="https://apps.odoo.com/apps/modules/19.0/hide_user_menus" target="_blank" rel="noopener">
+                        <b>Hide User Menus</b>
+                        <span>Strip the top-right menu (profile, documentation, help) down to what your team actually needs. Great for kiosk logins and shop-floor users.</span>
+                        <em>Clean UI in one click</em>
+                    </a>
+                    <a class="srv-card" href="https://apps.odoo.com/apps/modules/19.0/pd_pos_custom_receipt" target="_blank" rel="noopener">
+                        <b>POS Custom Receipt</b>
+                        <span>Put your logo, tagline, VAT number, QR code and custom footer on every POS receipt. No developer needed, all from a config screen.</span>
+                        <em>Odoo POS</em>
+                    </a>
+                    <a class="srv-card" href="https://apps.odoo.com/apps/modules/19.0/login_bg_img_knk" target="_blank" rel="noopener">
+                        <b>Login Background Image</b>
+                        <span>Replace the bland default login page with your own branded image. First screen your staff sees every morning, make it look sharp.</span>
+                        <em>Per-company branding</em>
+                    </a>
+                    <a class="srv-card" href="https://apps.odoo.com/apps/modules/19.0/cm_disable_pos_pdf_generation" target="_blank" rel="noopener">
+                        <b>POS - Skip Invoice PDF</b>
+                        <span>Disable automatic PDF invoice generation at POS checkout. Faster queues at peak hours, smaller filestore, same audit trail.</span>
+                        <em>Cube Master - $50</em>
+                    </a>
+                </div>
+                <p class="srv-cta"><b>Need any of these installed on your Odoo?</b> <a href="mailto:contact@cm.sa">contact@cm.sa</a> &nbsp;&middot;&nbsp; <a href="tel:+966115121392">+966 11 512 1392</a> &nbsp;&middot;&nbsp; <a href="https://cm.sa">cm.sa</a></p>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <div class="cm-capabilities">
+                <h3>Beyond this module, Cube Master also builds:</h3>
+                <p class="lead">We are a full technology house. The Odoo utility you are reading about is one part of what we ship. If your back office, website, or app team needs more, we have the team for it.</p>
+                <div class="cap-grid">
+                    <div class="cap-card"><b>ERP &amp; Business Systems</b><span>End-to-end Odoo rollouts: accounting, HR, sales, inventory, manufacturing. Custom modules where the standard does not reach.</span></div>
+                    <div class="cap-card"><b>Artificial Intelligence</b><span>Document understanding, chatbots, computer vision, and LLM workflows plugged into your existing systems. Enterprise-grade, not demo-ware.</span></div>
+                    <div class="cap-card"><b>Website Development</b><span>Corporate sites, customer portals, and e-commerce storefronts. Built to convert, not just to exist.</span></div>
+                    <div class="cap-card"><b>Mobile Applications</b><span>iOS and Android, native or cross-platform. B2B field tools and B2C products for smartphones and tablets.</span></div>
+                    <div class="cap-card"><b>Content, Marketing &amp; Design</b><span>Brand identity, social content, landing pages, and campaign creative that looks professional and performs.</span></div>
+                    <div class="cap-card"><b>Consulting</b><span>Project management, digital transformation, AI strategy, and ISO certification support. Senior advisors, not juniors.</span></div>
+                </div>
+                <div class="partners"><b>Technology partners:</b> Microsoft &nbsp;&middot;&nbsp; AWS &nbsp;&middot;&nbsp; Odoo &nbsp;&middot;&nbsp; Umbraco</div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <div class="cm-crosssell">
+                <h3>More from the Cube Master catalogue</h3>
+                <p class="lead">We ship 34 single-feature utilities at the same price point. If this one solved a pain for you, the others probably will too.</p>
+                <div class="xs-grid">
+                    <a class="xs-card" href="https://apps.odoo.com/apps/modules/19.0/cm_sa_access_rights_cloner" target="_blank" rel="noopener">
+                        <b>Access Rights Cloner</b>
+                        <span>Copy a user's full permission set to one or more other users in seconds.</span>
+                        <em>$49 - Odoo 17 / 18 / 19</em>
+                    </a>
+                    <a class="xs-card" href="https://apps.odoo.com/apps/modules/19.0/cm_sa_reset_auditor" target="_blank" rel="noopener">
+                        <b>Reset-to-Draft Auditor</b>
+                        <span>Require a reason, restrict to a group, log every reset-to-draft.</span>
+                        <em>$49 - Odoo 17 / 18 / 19</em>
+                    </a>
+                    <a class="xs-card" href="https://apps.odoo.com/apps/modules/19.0/cm_sa_config_auditor" target="_blank" rel="noopener">
+                        <b>Config Parameter Change Auditor</b>
+                        <span>Audit trail for every ir.config_parameter change, with diff and email alerts.</span>
+                        <em>$49 - Odoo 17 / 18 / 19</em>
+                    </a>
+                    <a class="xs-card" href="https://apps.odoo.com/apps/modules/19.0/cm_sa_payment_score" target="_blank" rel="noopener">
+                        <b>Customer Payment Behavior Score</b>
+                        <span>Know which customer pays late before you send the next quote.</span>
+                        <em>$59 - Odoo 17 / 18 / 19</em>
+                    </a>
+                    <a class="xs-card" href="https://apps.odoo.com/apps/modules/19.0/cm_sa_quotation_chase" target="_blank" rel="noopener">
+                        <b>Quotation Chase</b>
+                        <span>Auto-nudge customers about open quotations on a schedule. Stops on reply or confirm.</span>
+                        <em>$49 - Odoo 17 / 18 / 19</em>
+                    </a>
+                    <a class="xs-card" href="https://apps.odoo.com/apps/modules/19.0/cm_sa_expiry_watcher" target="_blank" rel="noopener">
+                        <b>Any-Model Expiry Alerter</b>
+                        <span>Watch any date/datetime field on any model and alert before expiry.</span>
+                        <em>$49 - Odoo 17 / 18 / 19</em>
+                    </a>
+                </div>
+                <p style="margin:16px 0 0; text-align:center;"><a href="https://apps.odoo.com/apps/modules/browse?author=cm.sa" style="color:#2b6fb0; font-weight:600; text-decoration:none;">Browse the full catalogue &#8594;</a></p>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <div class="oe_span12">
+            <div class="cm-about">
+                <div class="about-logo-banner">
+                    <img src="cm-logo.png" alt="Cube Master - &#1573;&#1578;&#1602;&#1575;&#1606; &#1605;&#1603;&#1593;&#1576;"/>
+                </div>
+                <div class="about-body">
+                    <h3>About Cube Master</h3>
+                    <p class="motto">We blend mastery with creativity - &#1606;&#1605;&#1586;&#1580; &#1575;&#1604;&#1573;&#1578;&#1602;&#1575;&#1606; &#1576;&#1575;&#1604;&#1573;&#1576;&#1583;&#1575;&#1593;</p>
+                    <p>Cube Master is a Saudi technology house based in Al-Mubarraz. We design, build, and run business systems for customers across the Gulf and beyond: end-to-end Odoo ERP rollouts, custom AI workflows, corporate websites, and mobile apps. Strategic technology partners with Microsoft, AWS, Odoo, and Umbraco.</p>
+                    <p>The Odoo utility you are reading about is one small piece of what we ship. If you need any of the above for your company, talk to us.</p>
+                    <div class="social">
+                            <a href="https://www.linkedin.com/company/cubemastercodes/" target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.76 0-5 2.24-5 5v14c0 2.76 2.24 5 5 5h14c2.76 0 5-2.24 5-5v-14c0-2.76-2.24-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.27c-.97 0-1.75-.79-1.75-1.76s.78-1.76 1.75-1.76 1.75.79 1.75 1.76-.78 1.76-1.75 1.76zm13.5 12.27h-3v-5.6c0-1.34-.03-3.07-1.87-3.07-1.87 0-2.16 1.46-2.16 2.97v5.7h-3v-11h2.88v1.5h.04c.4-.76 1.38-1.56 2.84-1.56 3.04 0 3.6 2 3.6 4.61v6.45z"/></svg>
+                            </a>
+                            <a href="https://twitter.com/CubeMasterCodes" target="_blank" rel="noopener" title="X (Twitter)" aria-label="X">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                            </a>
+                            <a href="https://www.instagram.com/CubeMasterCodes" target="_blank" rel="noopener" title="Instagram" aria-label="Instagram">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                            </a>
+                            <a href="https://github.com/CubeMasterCodes" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                            </a>
+                            <a href="https://api.whatsapp.com/send/?phone=966115121392" target="_blank" rel="noopener" title="WhatsApp" aria-label="WhatsApp">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                            </a>
+                            <a href="https://www.snapchat.com/add/cubemastercodes" target="_blank" rel="noopener" title="Snapchat" aria-label="Snapchat">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.166 23.999c-.055 0-.109-.002-.163-.004-.044.002-.095.004-.148.004-.968 0-1.627-.418-2.21-.787-.416-.264-.807-.512-1.255-.587-.219-.037-.437-.055-.654-.055-.39 0-.7.06-.927.104-.138.028-.26.052-.357.052-.099 0-.219-.022-.301-.248-.067-.184-.112-.361-.156-.532-.111-.432-.191-.691-.376-.72-1.982-.307-2.564-.722-2.691-1.014-.019-.043-.03-.088-.033-.133-.013-.188.119-.353.304-.385 1.488-.245 2.811-1.034 3.931-2.344.639-.747 1.102-1.426 1.386-2.02.044-.092.097-.192.15-.299.112-.22.168-.41.168-.581 0-.341-.289-.516-.547-.655-.224-.121-.451-.239-.699-.405-.195-.131-.427-.316-.549-.594-.161-.368-.138-.793.063-1.152.288-.514.823-.835 1.395-.835.128 0 .256.017.38.05-.046-1.106-.079-2.312.141-3.307.227-1.03.701-1.908 1.408-2.608.806-.798 1.923-1.319 3.314-1.548.437-.072.832-.143 1.225-.244 1.026-.263 1.998-.618 3.057-.618.995 0 1.879.307 2.703.938.824.63 1.441 1.508 1.83 2.608.193.548.319 1.127.376 1.726.06.616.087 1.236.079 1.854.124-.033.252-.05.38-.05.572 0 1.107.321 1.395.835.2.359.223.784.063 1.152-.122.277-.354.463-.549.594-.248.166-.475.284-.699.405-.258.139-.547.314-.547.655 0 .172.056.361.168.581.052.107.105.207.15.299.284.593.747 1.273 1.386 2.02 1.12 1.31 2.443 2.099 3.931 2.344.185.032.317.197.304.385-.003.045-.014.09-.033.133-.127.292-.709.707-2.691 1.014-.185.029-.265.288-.376.72-.044.17-.089.347-.156.532-.082.226-.202.248-.301.248-.097 0-.219-.024-.357-.052-.227-.044-.537-.104-.927-.104-.217 0-.435.018-.654.055-.448.075-.839.323-1.255.587-.583.369-1.242.787-2.21.787z"/></svg>
+                            </a>
+                    </div>
+                </div>
+                <div class="contact-row">
+                    <div class="block"><b>Email</b><a href="mailto:contact@cm.sa">contact@cm.sa</a></div>
+                    <div class="block"><b>Phone</b><a href="tel:+966115121392">+966 11 512 1392</a></div>
+                    <div class="block"><b>Website</b><a href="https://cm.sa" target="_blank" rel="noopener">cm.sa</a></div>
+                    <div class="block"><b>Address</b>Unit 7, Al-Rashidiyah, Al-Mubarraz 36342, KSA</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

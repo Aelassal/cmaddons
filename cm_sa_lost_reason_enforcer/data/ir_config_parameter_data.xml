@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="param_reason_required" model="ir.config_parameter">
+            <field name="key">cm_sa_lost_reason_enforcer.reason_required</field>
+            <field name="value">True</field>
+        </record>
+        <record id="param_note_required" model="ir.config_parameter">
+            <field name="key">cm_sa_lost_reason_enforcer.note_required</field>
+            <field name="value">True</field>
+        </record>
+        <record id="param_note_min_chars" model="ir.config_parameter">
+            <field name="key">cm_sa_lost_reason_enforcer.note_min_chars</field>
+            <field name="value">10</field>
+        </record>
+    </data>
+</odoo>

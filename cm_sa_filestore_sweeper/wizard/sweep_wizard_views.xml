@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_filestore_sweep_wizard_form" model="ir.ui.view">
+        <field name="name">cm_sa.filestore.sweep.wizard.form</field>
+        <field name="model">cm_sa.filestore.sweep.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Filestore Orphan Sweeper">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Filestore Orphan Sweeper</h1>
+                        <p>Find and delete filestore files with no matching attachment row.</p>
+                    </div>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="action_state != 'idle'">
+                        <strong>Administrator only.</strong>
+                        This tool walks the active database's filestore directory
+                        and cross-references every file against
+                        <code>ir.attachment.store_fname</code>. Files younger than
+                        24 hours are never deleted.
+                    </div>
+                    <group>
+                        <group>
+                            <field name="action_state" readonly="1"/>
+                            <field name="scan_started" readonly="1"/>
+                            <field name="last_run_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="orphan_count" readonly="1"/>
+                            <field name="orphan_size_mb" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Orphans Preview (first 50)"
+                           invisible="action_state == 'idle'">
+                        <field name="orphan_preview" nolabel="1"
+                               widget="text" readonly="1"
+                               style="font-family: monospace; min-height: 240px; white-space: pre;"/>
+                    </group>
+                    <field name="orphans_blob" invisible="1"/>
+                </sheet>
+                <footer>
+                    <button name="action_scan" type="object"
+                            string="Scan now" class="btn-primary"
+                            invisible="action_state == 'applied'"/>
+                    <button name="action_delete" type="object"
+                            string="Delete orphans" class="btn-danger"
+                            invisible="action_state != 'scanned'"
+                            confirm="Permanently delete every listed orphan file from the filestore. Continue?"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_filestore_sweep_wizard" model="ir.actions.act_window">
+        <field name="name">Filestore Orphan Sweeper</field>
+        <field name="res_model">cm_sa.filestore.sweep.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_cascade_root"
+              name="Cascade"
+              parent="contacts.menu_contacts"
+              sequence="90"/>
+
+    <menuitem id="menu_cascade_setting"
+              name="Settings"
+              parent="menu_cascade_root"
+              action="action_cascade_setting"
+              sequence="10"/>
+
+    <menuitem id="menu_cascade_log"
+              name="Log"
+              parent="menu_cascade_root"
+              action="action_cascade_log"
+              sequence="20"/>
+</odoo>

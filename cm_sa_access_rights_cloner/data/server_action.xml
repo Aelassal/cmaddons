@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Contextual "Action" menu entry on res.users records.
+        Pre-fills the wizard's source_user_id with the selected user.
+    -->
+    <record id="action_clone_access_from_user" model="ir.actions.server">
+        <field name="name">Clone access rights from this user</field>
+        <field name="model_id" ref="base.model_res_users"/>
+        <field name="binding_model_id" ref="base.model_res_users"/>
+        <field name="binding_view_types">form,list</field>
+        <field name="state">code</field>
+        <field name="code">
+if records:
+    action = {
+        "type": "ir.actions.act_window",
+        "name": "Clone Access Rights",
+        "res_model": "cm_sa.access.cloner.wizard",
+        "view_mode": "form",
+        "target": "new",
+        "context": {
+            "default_source_user_id": records[0].id,
+        },
+    }
+        </field>
+    </record>
+</odoo>

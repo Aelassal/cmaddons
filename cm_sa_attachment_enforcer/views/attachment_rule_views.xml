@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_attach_rule_list" model="ir.ui.view">
+        <field name="name">cm_sa.attachment.rule.list</field>
+        <field name="model">cm_sa.attachment.rule</field>
+        <field name="arch" type="xml">
+            <list string="Attachment Rules">
+                <field name="name"/>
+                <field name="move_type"/>
+                <field name="min_attachments"/>
+                <field name="allowed_mimetypes" optional="hide"/>
+                <field name="bypass_group_id"/>
+                <field name="log_count"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_attach_rule_form" model="ir.ui.view">
+        <field name="name">cm_sa.attachment.rule.form</field>
+        <field name="model">cm_sa.attachment.rule</field>
+        <field name="arch" type="xml">
+            <form string="Attachment Rule">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_logs" type="object"
+                                class="oe_stat_button" icon="fa-history">
+                            <field name="log_count" widget="statinfo" string="Bypasses"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived"
+                            bg_color="bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Vendor bills require PDF"/></h1>
+                    </div>
+                    <group>
+                        <group string="Scope">
+                            <field name="move_type"/>
+                            <field name="journal_ids" widget="many2many_tags"
+                                   options="{'no_create': True}"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group string="Requirements">
+                            <field name="min_attachments"/>
+                            <field name="allowed_mimetypes"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Bypass Policy">
+                            <field name="bypass_group_id"
+                                   options="{'no_create': True}"/>
+                            <field name="require_bypass_reason"/>
+                            <field name="min_bypass_reason_length"
+                                   invisible="not require_bypass_reason"/>
+                        </group>
+                    </group>
+                    <group string="Error Message">
+                        <field name="error_message" nolabel="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_attach_rule_search" model="ir.ui.view">
+        <field name="name">cm_sa.attachment.rule.search</field>
+        <field name="model">cm_sa.attachment.rule</field>
+        <field name="arch" type="xml">
+            <search string="Attachment Rules">
+                <field name="name"/>
+                <field name="move_type"/>
+                <filter name="active" string="Active"
+                        domain="[('active', '=', True)]"/>
+                <filter name="inactive" string="Archived"
+                        domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_attach_rule" model="ir.actions.act_window">
+        <field name="name">Attachment Rules</field>
+        <field name="res_model">cm_sa.attachment.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first attachment rule</p>
+            <p>Pick a move type + minimum attachments + optional bypass group. Posts will be blocked without the required attachment(s).</p>
+        </field>
+    </record>
+</odoo>

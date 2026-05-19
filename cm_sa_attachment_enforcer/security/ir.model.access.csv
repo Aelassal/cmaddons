@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_attach_rule_admin,cm_sa.attachment.rule admin,model_cm_sa_attachment_rule,account.group_account_manager,1,1,1,1
+access_attach_rule_user,cm_sa.attachment.rule user,model_cm_sa_attachment_rule,account.group_account_user,1,0,0,0
+access_attach_log_admin,cm_sa.attachment.bypass.log admin,model_cm_sa_attachment_bypass_log,account.group_account_manager,1,1,1,1
+access_attach_log_user,cm_sa.attachment.bypass.log user,model_cm_sa_attachment_bypass_log,account.group_account_user,1,1,1,0
+access_attach_wizard_user,cm_sa.attachment.bypass.wizard user,model_cm_sa_attachment_bypass_wizard,account.group_account_user,1,1,1,1

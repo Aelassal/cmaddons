@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_janitor_root"
+              name="Janitor"
+              web_icon="cm_sa_draft_doc_janitor,static/description/icon.png"
+              sequence="90"/>
+
+    <menuitem id="menu_janitor_rules"
+              name="Rules"
+              parent="menu_janitor_root"
+              action="action_janitor_rule"
+              sequence="10"/>
+
+    <menuitem id="menu_janitor_log"
+              name="Run Log"
+              parent="menu_janitor_root"
+              action="action_janitor_log"
+              sequence="20"/>
+</odoo>

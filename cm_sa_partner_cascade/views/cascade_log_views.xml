@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_cascade_log_list" model="ir.ui.view">
+        <field name="name">cm_sa.cascade.log.list</field>
+        <field name="model">cm_sa.cascade.log</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0">
+                <field name="applied_at"/>
+                <field name="parent_id"/>
+                <field name="applied_by"/>
+                <field name="count_applied"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_cascade_log_form" model="ir.ui.view">
+        <field name="name">cm_sa.cascade.log.form</field>
+        <field name="model">cm_sa.cascade.log</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="applied_at"/>
+                            <field name="parent_id"/>
+                        </group>
+                        <group>
+                            <field name="applied_by"/>
+                            <field name="count_applied"/>
+                        </group>
+                    </group>
+                    <group string="Changes (JSON)">
+                        <field name="changes" nolabel="1" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_cascade_log" model="ir.actions.act_window">
+        <field name="name">Cascade Log</field>
+        <field name="res_model">cm_sa.cascade.log</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

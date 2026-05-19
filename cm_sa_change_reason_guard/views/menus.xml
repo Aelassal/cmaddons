@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_reason_root"
+              name="Change Reason"
+              web_icon="cm_sa_change_reason_guard,static/description/icon.png"
+              sequence="93"/>
+
+    <menuitem id="menu_reason_rule"
+              name="Rules"
+              parent="menu_reason_root"
+              action="action_reason_rule"
+              sequence="10"/>
+
+    <menuitem id="menu_reason_category"
+              name="Categories"
+              parent="menu_reason_root"
+              action="action_reason_category"
+              sequence="20"/>
+
+    <menuitem id="menu_reason_log"
+              name="Change Log"
+              parent="menu_reason_root"
+              action="action_reason_log"
+              sequence="30"/>
+</odoo>

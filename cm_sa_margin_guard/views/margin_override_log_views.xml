@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_margin_log_list" model="ir.ui.view">
+        <field name="name">cm_sa.margin.override.log.list</field>
+        <field name="model">cm_sa.margin.override.log</field>
+        <field name="arch" type="xml">
+            <list string="Margin Override Log" create="false">
+                <field name="create_date" string="When"/>
+                <field name="user_id" string="By"/>
+                <field name="rule_id"/>
+                <field name="res_model" string="Model"/>
+                <field name="record_name" string="Record"/>
+                <field name="threshold_pct"/>
+                <field name="actual_pct"/>
+                <field name="gap_pct" sum="Total Gap"/>
+                <field name="reason"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_margin_log_form" model="ir.ui.view">
+        <field name="name">cm_sa.margin.override.log.form</field>
+        <field name="model">cm_sa.margin.override.log</field>
+        <field name="arch" type="xml">
+            <form string="Margin Override Log" create="false" edit="false">
+                <header>
+                    <button name="action_open_source" type="object"
+                            string="Open Record" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="create_date" string="When"/>
+                            <field name="user_id"/>
+                            <field name="rule_id"/>
+                        </group>
+                        <group>
+                            <field name="res_model"/>
+                            <field name="res_id"/>
+                            <field name="record_name"/>
+                            <field name="threshold_pct"/>
+                            <field name="actual_pct"/>
+                            <field name="gap_pct"/>
+                        </group>
+                    </group>
+                    <group string="Reason">
+                        <field name="reason" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_margin_log_search" model="ir.ui.view">
+        <field name="name">cm_sa.margin.override.log.search</field>
+        <field name="model">cm_sa.margin.override.log</field>
+        <field name="arch" type="xml">
+            <search string="Margin Override Log">
+                <field name="user_id"/>
+                <field name="rule_id"/>
+                <field name="res_model"/>
+                <field name="record_name"/>
+                <group>
+                    <filter name="group_user" string="User"
+                            context="{'group_by': 'user_id'}"/>
+                    <filter name="group_rule" string="Rule"
+                            context="{'group_by': 'rule_id'}"/>
+                    <filter name="group_month" string="Month"
+                            context="{'group_by': 'create_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_margin_log_pivot" model="ir.ui.view">
+        <field name="name">cm_sa.margin.override.log.pivot</field>
+        <field name="model">cm_sa.margin.override.log</field>
+        <field name="arch" type="xml">
+            <pivot string="Margin Overrides">
+                <field name="user_id" type="row"/>
+                <field name="create_date" interval="month" type="col"/>
+                <field name="gap_pct" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_margin_log" model="ir.actions.act_window">
+        <field name="name">Margin Override Log</field>
+        <field name="res_model">cm_sa.margin.override.log</field>
+        <field name="view_mode">list,pivot,form</field>
+    </record>
+</odoo>

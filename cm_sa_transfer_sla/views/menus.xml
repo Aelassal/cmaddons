@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_transfer_sla_root"
+              name="Transfer SLA"
+              web_icon="cm_sa_transfer_sla,static/description/icon.png"
+              sequence="85"/>
+    <menuitem id="menu_transfer_sla_rules"
+              name="Rules"
+              parent="menu_transfer_sla_root"
+              action="action_transfer_sla_rule"
+              sequence="10"/>
+    <menuitem id="menu_transfer_sla_log"
+              name="Alert Log"
+              parent="menu_transfer_sla_root"
+              action="action_transfer_sla_log"
+              sequence="20"/>
+</odoo>

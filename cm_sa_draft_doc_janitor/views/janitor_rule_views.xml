@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_janitor_rule_tree" model="ir.ui.view">
+        <field name="name">cm_sa.janitor.rule.list</field>
+        <field name="model">cm_sa.janitor.rule</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="state_field"/>
+                <field name="draft_state_value"/>
+                <field name="age_days"/>
+                <field name="action"/>
+                <field name="log_count"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_janitor_rule_form" model="ir.ui.view">
+        <field name="name">cm_sa.janitor.rule.form</field>
+        <field name="model">cm_sa.janitor.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button type="object" name="action_run_now" string="Run Now"
+                            class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object" name="action_view_logs" icon="fa-history"
+                                class="oe_stat_button" invisible="not log_count">
+                            <field name="log_count" widget="statinfo" string="Actions"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
+                            invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Stale Draft Quotations"/></h1>
+                    </div>
+                    <group>
+                        <group string="Target">
+                            <field name="model_id" options="{'no_create': True}"/>
+                            <field name="model_name" invisible="1"/>
+                            <field name="state_field"/>
+                            <field name="draft_state_value"/>
+                            <field name="date_field"/>
+                            <field name="extra_domain"/>
+                        </group>
+                        <group string="Action">
+                            <field name="age_days"/>
+                            <field name="action"/>
+                            <field name="cancel_method"
+                                   invisible="action != 'auto_cancel'"
+                                   required="action == 'auto_cancel'"/>
+                            <field name="notify_template_id"
+                                   invisible="action != 'notify_owner'"
+                                   required="action == 'notify_owner'"
+                                   options="{'no_create': True}"/>
+                            <field name="sequence"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_janitor_rule_search" model="ir.ui.view">
+        <field name="name">cm_sa.janitor.rule.search</field>
+        <field name="model">cm_sa.janitor.rule</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="model_id"/>
+                <filter name="filter_notify" string="Notify" domain="[('action','=','notify_owner')]"/>
+                <filter name="filter_cancel" string="Auto-cancel" domain="[('action','=','auto_cancel')]"/>
+                <filter name="filter_archive" string="Auto-archive" domain="[('action','=','auto_archive')]"/>
+                <separator/>
+                <filter name="filter_active" string="Active" domain="[('active','=',True)]"/>
+                <filter name="filter_inactive" string="Archived" domain="[('active','=',False)]"/>
+                <group>
+                    <filter name="group_model" string="Model" context="{'group_by':'model_id'}"/>
+                    <filter name="group_action" string="Action" context="{'group_by':'action'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_janitor_rule" model="ir.actions.act_window">
+        <field name="name">Janitor Rules</field>
+        <field name="res_model">cm_sa.janitor.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first janitor rule</p>
+            <p>Pick a model (e.g. Sale Order), the state value that means "draft",
+               a maximum age in days, and what to do with the stale records.</p>
+        </field>
+    </record>
+</odoo>

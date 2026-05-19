@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_renewal_root"
+              name="Renewal Pipeline"
+              web_icon="cm_sa_renewal_pipeline,static/description/icon.png"
+              sequence="85"/>
+
+    <menuitem id="menu_renewal_rules"
+              name="Rules"
+              parent="menu_renewal_root"
+              action="action_renewal_rule"
+              sequence="10"/>
+
+    <menuitem id="menu_renewal_logs"
+              name="Renewal Log"
+              parent="menu_renewal_root"
+              action="action_renewal_log"
+              sequence="20"/>
+</odoo>

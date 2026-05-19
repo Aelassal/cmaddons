@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_att_size_log_list" model="ir.ui.view">
+        <field name="name">cm_sa.attachment.size.log.list</field>
+        <field name="model">cm_sa.attachment.size.log</field>
+        <field name="arch" type="xml">
+            <list string="Attachment Size Bypass Log" create="false">
+                <field name="create_date" string="When"/>
+                <field name="user_id"/>
+                <field name="rule_id"/>
+                <field name="res_model"/>
+                <field name="attachment_name"/>
+                <field name="size_mb"/>
+                <field name="limit_mb"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_att_size_log_search" model="ir.ui.view">
+        <field name="name">cm_sa.attachment.size.log.search</field>
+        <field name="model">cm_sa.attachment.size.log</field>
+        <field name="arch" type="xml">
+            <search string="Bypass Log">
+                <field name="user_id"/>
+                <field name="rule_id"/>
+                <field name="res_model"/>
+                <group>
+                    <filter name="group_user" string="User"
+                            context="{'group_by': 'user_id'}"/>
+                    <filter name="group_rule" string="Rule"
+                            context="{'group_by': 'rule_id'}"/>
+                    <filter name="group_month" string="Month"
+                            context="{'group_by': 'create_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="action_att_size_log" model="ir.actions.act_window">
+        <field name="name">Bypass Log</field>
+        <field name="res_model">cm_sa.attachment.size.log</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

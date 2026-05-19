@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_vendor_scorecard_snapshot_list" model="ir.ui.view">
+        <field name="name">cm_sa.vendor_scorecard.snapshot.list</field>
+        <field name="model">cm_sa.vendor_scorecard.snapshot</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0">
+                <field name="computed_at"/>
+                <field name="vendor_id"/>
+                <field name="period_start"/>
+                <field name="period_end"/>
+                <field name="score"/>
+                <field name="band" widget="badge"
+                       decoration-success="band == 'A'"
+                       decoration-info="band == 'B'"
+                       decoration-warning="band == 'C'"
+                       decoration-danger="band == 'D'"/>
+                <field name="on_time_pct" optional="show"/>
+                <field name="avg_days_late" optional="show"/>
+                <field name="price_variance_pct" optional="show"/>
+                <field name="bill_dispute_count" optional="show"/>
+                <field name="receipt_count" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_vendor_scorecard_snapshot_form" model="ir.ui.view">
+        <field name="name">cm_sa.vendor_scorecard.snapshot.form</field>
+        <field name="model">cm_sa.vendor_scorecard.snapshot</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="vendor_id"/>
+                            <field name="computed_at"/>
+                            <field name="period_start"/>
+                            <field name="period_end"/>
+                        </group>
+                        <group>
+                            <field name="score"/>
+                            <field name="band"/>
+                            <field name="on_time_pct"/>
+                            <field name="avg_days_late"/>
+                            <field name="price_variance_pct"/>
+                            <field name="bill_dispute_count"/>
+                            <field name="receipt_count"/>
+                        </group>
+                    </group>
+                    <group string="Breakdown (JSON)">
+                        <field name="breakdown_json" nolabel="1" widget="text" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_vendor_scorecard_snapshot_search" model="ir.ui.view">
+        <field name="name">cm_sa.vendor_scorecard.snapshot.search</field>
+        <field name="model">cm_sa.vendor_scorecard.snapshot</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="vendor_id"/>
+                <field name="period_start"/>
+                <filter name="filter_a" string="Band A"
+                        domain="[('band', '=', 'A')]"/>
+                <filter name="filter_b" string="Band B"
+                        domain="[('band', '=', 'B')]"/>
+                <filter name="filter_c" string="Band C"
+                        domain="[('band', '=', 'C')]"/>
+                <filter name="filter_d" string="Band D"
+                        domain="[('band', '=', 'D')]"/>
+                <group>
+                    <filter name="group_vendor" string="Vendor"
+                            context="{'group_by': 'vendor_id'}"/>
+                    <filter name="group_band" string="Band"
+                            context="{'group_by': 'band'}"/>
+                    <filter name="group_period" string="Period Start"
+                            context="{'group_by': 'period_start'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_vendor_scorecard_snapshot_pivot" model="ir.ui.view">
+        <field name="name">cm_sa.vendor_scorecard.snapshot.pivot</field>
+        <field name="model">cm_sa.vendor_scorecard.snapshot</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="vendor_id" type="row"/>
+                <field name="period_start" type="col"/>
+                <field name="score" type="measure"/>
+                <field name="on_time_pct" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_vendor_scorecard_snapshot_graph" model="ir.ui.view">
+        <field name="name">cm_sa.vendor_scorecard.snapshot.graph</field>
+        <field name="model">cm_sa.vendor_scorecard.snapshot</field>
+        <field name="arch" type="xml">
+            <graph type="bar">
+                <field name="vendor_id"/>
+                <field name="score" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_vendor_scorecard_snapshot" model="ir.actions.act_window">
+        <field name="name">Vendor Scorecard History</field>
+        <field name="res_model">cm_sa.vendor_scorecard.snapshot</field>
+        <field name="view_mode">list,form,pivot,graph</field>
+    </record>
+</odoo>

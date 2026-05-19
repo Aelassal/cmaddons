@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="param_dormant_days" model="ir.config_parameter">
+            <field name="key">cm_sa_user_offboarding_kit.dormant_days</field>
+            <field name="value">90</field>
+        </record>
+    </data>
+</odoo>

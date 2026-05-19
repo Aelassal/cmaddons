@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_ts_lock_root"
+              name="Timesheet Lock"
+              web_icon="cm_sa_timesheet_lock,static/description/icon.png"
+              sequence="85"/>
+    <menuitem id="menu_ts_lock_rules"
+              name="Lock Rules"
+              parent="menu_ts_lock_root"
+              action="action_ts_lock_rule"
+              sequence="10"/>
+    <menuitem id="menu_ts_lock_log"
+              name="Bypass Log"
+              parent="menu_ts_lock_root"
+              action="action_ts_lock_log"
+              sequence="20"/>
+</odoo>

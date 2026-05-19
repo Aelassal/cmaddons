@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_renewal_rule_list" model="ir.ui.view">
+        <field name="name">cm_sa.renewal.rule.list</field>
+        <field name="model">cm_sa.renewal.rule</field>
+        <field name="arch" type="xml">
+            <list string="Renewal Rules">
+                <field name="name"/>
+                <field name="model_name"/>
+                <field name="date_field_name"/>
+                <field name="lead_days"/>
+                <field name="crm_team_id"/>
+                <field name="stage_id"/>
+                <field name="log_count"/>
+                <field name="last_run"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_renewal_rule_form" model="ir.ui.view">
+        <field name="name">cm_sa.renewal.rule.form</field>
+        <field name="model">cm_sa.renewal.rule</field>
+        <field name="arch" type="xml">
+            <form string="Renewal Rule">
+                <header>
+                    <button name="action_run_now" type="object"
+                            string="Run Now" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_logs" type="object"
+                                class="oe_stat_button" icon="fa-history">
+                            <field name="log_count" widget="statinfo"
+                                   string="Logs"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived"
+                            bg_color="bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Service contracts expiring"/></h1>
+                    </div>
+                    <group>
+                        <group string="Watched Records">
+                            <field name="model_id"/>
+                            <field name="date_field_id"/>
+                            <field name="partner_field_id"/>
+                            <field name="lead_days"/>
+                            <field name="extra_domain" widget="char_domain"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group string="Pipeline Defaults">
+                            <field name="crm_team_id"/>
+                            <field name="stage_id"/>
+                            <field name="user_field_id"/>
+                            <field name="revenue_field_id"/>
+                            <field name="quote_template_id"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <group string="Opportunity Name">
+                        <field name="name_template" nolabel="1"/>
+                    </group>
+                    <group string="Status">
+                        <field name="last_run" readonly="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_renewal_rule_search" model="ir.ui.view">
+        <field name="name">cm_sa.renewal.rule.search</field>
+        <field name="model">cm_sa.renewal.rule</field>
+        <field name="arch" type="xml">
+            <search string="Renewal Rules">
+                <field name="name"/>
+                <field name="model_name"/>
+                <filter name="active" string="Active"
+                        domain="[('active', '=', True)]"/>
+                <filter name="inactive" string="Archived"
+                        domain="[('active', '=', False)]"/>
+                <group>
+                    <filter name="group_model" string="Model"
+                            context="{'group_by': 'model_name'}"/>
+                    <filter name="group_team" string="Sales Team"
+                            context="{'group_by': 'crm_team_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_renewal_rule" model="ir.actions.act_window">
+        <field name="name">Renewal Rules</field>
+        <field name="res_model">cm_sa.renewal.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first renewal rule</p>
+            <p>Point it at any model with an end-date field. The daily cron
+               will create a CRM opportunity N days before that date.</p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dormant_log_list" model="ir.ui.view">
+        <field name="name">cm_sa.dormant.log.list</field>
+        <field name="model">cm_sa.dormant.log</field>
+        <field name="arch" type="xml">
+            <list string="Dormant User Log" create="false">
+                <field name="create_date" string="When"/>
+                <field name="action"/>
+                <field name="user_id"/>
+                <field name="user_login" string="Login"/>
+                <field name="days_inactive"/>
+                <field name="user_active" widget="boolean_toggle"/>
+                <button name="action_reactivate" type="object"
+                        string="Reactivate" icon="fa-undo"
+                        invisible="action != 'archived' or user_active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dormant_log_form" model="ir.ui.view">
+        <field name="name">cm_sa.dormant.log.form</field>
+        <field name="model">cm_sa.dormant.log</field>
+        <field name="arch" type="xml">
+            <form string="Dormant User Log" create="false" edit="false">
+                <header>
+                    <button name="action_reactivate" type="object"
+                            string="Reactivate User" class="btn-primary"
+                            invisible="action != 'archived' or user_active"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="create_date" string="When"/>
+                            <field name="action"/>
+                        </group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="user_login"/>
+                            <field name="user_active"/>
+                            <field name="days_inactive"/>
+                            <field name="login_date_at_action"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dormant_log_search" model="ir.ui.view">
+        <field name="name">cm_sa.dormant.log.search</field>
+        <field name="model">cm_sa.dormant.log</field>
+        <field name="arch" type="xml">
+            <search string="Dormant User Log">
+                <field name="user_id"/>
+                <field name="user_login"/>
+                <filter name="filter_warned" string="Warned"
+                        domain="[('action', '=', 'warned')]"/>
+                <filter name="filter_archived" string="Archived"
+                        domain="[('action', '=', 'archived')]"/>
+                <filter name="filter_reactivated" string="Reactivated"
+                        domain="[('action', '=', 'reactivated')]"/>
+                <group>
+                    <filter name="group_action" string="Action"
+                            context="{'group_by': 'action'}"/>
+                    <filter name="group_user" string="User"
+                            context="{'group_by': 'user_id'}"/>
+                    <filter name="group_month" string="Month"
+                            context="{'group_by': 'create_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dormant_log" model="ir.actions.act_window">
+        <field name="name">Dormant User Log</field>
+        <field name="res_model">cm_sa.dormant.log</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

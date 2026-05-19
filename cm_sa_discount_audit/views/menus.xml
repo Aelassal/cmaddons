@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_discount_audit_root"
+              name="Discount Audit"
+              web_icon="cm_sa_discount_audit,static/description/icon.png"
+              sequence="85"/>
+
+    <menuitem id="menu_discount_audit_log"
+              name="Audit Log"
+              parent="menu_discount_audit_root"
+              action="action_discount_log"
+              sequence="10"/>
+
+    <menuitem id="menu_discount_audit_config"
+              name="Settings"
+              parent="menu_discount_audit_root"
+              action="action_discount_config"
+              sequence="90"/>
+</odoo>

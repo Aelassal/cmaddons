@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_janitor_log_tree" model="ir.ui.view">
+        <field name="name">cm_sa.janitor.log.list</field>
+        <field name="model">cm_sa.janitor.log</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0">
+                <field name="executed_at"/>
+                <field name="rule_id"/>
+                <field name="model_name"/>
+                <field name="record_name"/>
+                <field name="record_ref" widget="reference"/>
+                <field name="action_taken"/>
+                <field name="error_message" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_janitor_log_form" model="ir.ui.view">
+        <field name="name">cm_sa.janitor.log.form</field>
+        <field name="model">cm_sa.janitor.log</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="executed_at"/>
+                            <field name="rule_id"/>
+                            <field name="action_taken"/>
+                        </group>
+                        <group>
+                            <field name="model_name"/>
+                            <field name="record_name"/>
+                            <field name="record_ref" widget="reference"/>
+                        </group>
+                    </group>
+                    <group string="Error Message" invisible="not error_message">
+                        <field name="error_message" nolabel="1" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_janitor_log_search" model="ir.ui.view">
+        <field name="name">cm_sa.janitor.log.search</field>
+        <field name="model">cm_sa.janitor.log</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="rule_id"/>
+                <field name="model_name"/>
+                <field name="record_name"/>
+                <filter name="filter_errors" string="Errors" domain="[('action_taken','=','error')]"/>
+                <filter name="filter_cancels" string="Cancelled" domain="[('action_taken','=','auto_cancel')]"/>
+                <filter name="filter_archives" string="Archived" domain="[('action_taken','=','auto_archive')]"/>
+                <filter name="filter_notifies" string="Notifications" domain="[('action_taken','=','notify_owner')]"/>
+                <group>
+                    <filter name="group_rule" string="Rule" context="{'group_by':'rule_id'}"/>
+                    <filter name="group_model" string="Model" context="{'group_by':'model_name'}"/>
+                    <filter name="group_action" string="Action" context="{'group_by':'action_taken'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_janitor_log" model="ir.actions.act_window">
+        <field name="name">Run Log</field>
+        <field name="res_model">cm_sa.janitor.log</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

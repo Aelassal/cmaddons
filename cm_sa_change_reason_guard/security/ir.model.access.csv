@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_reason_category_admin,cm_sa.reason.category.admin,model_cm_sa_reason_category,base.group_system,1,1,1,1
+access_reason_category_user,cm_sa.reason.category.user,model_cm_sa_reason_category,base.group_user,1,0,0,0
+access_reason_rule_admin,cm_sa.reason.rule.admin,model_cm_sa_reason_rule,base.group_system,1,1,1,1
+access_reason_rule_user,cm_sa.reason.rule.user,model_cm_sa_reason_rule,base.group_user,1,0,0,0
+access_reason_log_admin,cm_sa.reason.log.admin,model_cm_sa_reason_log,base.group_system,1,1,1,1
+access_reason_log_user,cm_sa.reason.log.user,model_cm_sa_reason_log,base.group_user,1,0,0,0
+access_reason_wizard_user,cm_sa.reason.wizard.user,model_cm_sa_reason_wizard,base.group_user,1,1,1,1

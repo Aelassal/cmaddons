@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_escalation_log_tree" model="ir.ui.view">
+        <field name="name">approval.escalation.log.list</field>
+        <field name="model">approval.escalation.log</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0">
+                <field name="create_date"/>
+                <field name="rule_id"/>
+                <field name="step_id"/>
+                <field name="res_ref" widget="reference"/>
+                <field name="escalated_to_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_escalation_log_form" model="ir.ui.view">
+        <field name="name">approval.escalation.log.form</field>
+        <field name="model">approval.escalation.log</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0">
+                <sheet>
+                    <group>
+                        <field name="rule_id"/>
+                        <field name="step_id"/>
+                        <field name="res_ref" widget="reference"/>
+                        <field name="escalated_to_id"/>
+                        <field name="create_date"/>
+                    </group>
+                    <group string="Message Body">
+                        <field name="body" nolabel="1" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_escalation_log" model="ir.actions.act_window">
+        <field name="name">Escalation Log</field>
+        <field name="res_model">approval.escalation.log</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

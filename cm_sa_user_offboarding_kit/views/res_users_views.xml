@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Add Offboarding tab to the existing user form -->
+    <record id="view_users_form_offboarding" model="ir.ui.view">
+        <field name="name">res.users.form.offboarding</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='access_rights']" position="before">
+                <page string="Offboarding" name="offboarding">
+                    <group>
+                        <group string="Scheduled Deactivation">
+                            <field name="deactivation_date"/>
+                            <field name="deactivation_reason"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Dormant users list -->
+    <record id="view_users_dormant_tree" model="ir.ui.view">
+        <field name="name">res.users.list.dormant</field>
+        <field name="model">res.users</field>
+        <field name="arch" type="xml">
+            <list string="Dormant Users">
+                <field name="name"/>
+                <field name="login"/>
+                <field name="login_date"/>
+                <field name="deactivation_date" optional="show"/>
+                <field name="deactivation_reason" optional="hide"/>
+                <button name="action_open_dormant_archive_wizard" type="object"
+                        string="Archive" icon="fa-archive"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Dormant search view: pre-applied filter using configured threshold.
+         The default 90 matches the seeded ir.config_parameter; admins who
+         change the parameter can edit this filter or use the search bar. -->
+    <record id="view_users_dormant_search" model="ir.ui.view">
+        <field name="name">res.users.search.dormant</field>
+        <field name="model">res.users</field>
+        <field name="arch" type="xml">
+            <search string="Dormant Users">
+                <field name="name"/>
+                <field name="login"/>
+                <filter name="dormant_only" string="Dormant (no login &gt; 90 days)"
+                        domain="[('login_date', '&lt;', (context_today() - relativedelta(days=90)).strftime('%Y-%m-%d'))]"/>
+                <group>
+                    <filter name="group_login_date" string="Last Login"
+                            context="{'group_by': 'login_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_users_dormant" model="ir.actions.act_window">
+        <field name="name">Dormant Users</field>
+        <field name="res_model">res.users</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_users_dormant_tree"/>
+        <field name="search_view_id" ref="view_users_dormant_search"/>
+        <field name="domain">[
+            ('active', '=', True),
+            ('login', '!=', False),
+            ('login_date', '!=', False),
+            ('id', 'not in', [1, 2, 3, 4]),
+        ]</field>
+        <field name="context">{'search_default_dormant_only': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No dormant users — nice.</p>
+            <p>Users that haven't logged in for the configured threshold
+               (default 90 days) appear here for review.</p>
+        </field>
+    </record>
+</odoo>

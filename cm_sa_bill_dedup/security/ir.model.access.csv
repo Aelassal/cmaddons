@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dedup_review_log_admin,cm_sa.dedup.review.log.admin,model_cm_sa_dedup_review_log,base.group_system,1,1,1,1
+access_dedup_review_log_user,cm_sa.dedup.review.log.user,model_cm_sa_dedup_review_log,base.group_user,1,1,1,0

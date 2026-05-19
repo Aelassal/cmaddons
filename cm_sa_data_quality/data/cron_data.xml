@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cron_dq_daily_scan" model="ir.cron">
+        <field name="name">Data Quality: daily scan</field>
+        <field name="model_id" ref="model_cm_sa_dq_rule"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_scan()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="cron_dq_weekly_summary" model="ir.cron">
+        <field name="name">Data Quality: weekly admin summary</field>
+        <field name="model_id" ref="model_cm_sa_dq_rule"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_weekly_summary()</field>
+        <field name="interval_number">7</field>
+        <field name="interval_type">days</field>
+        <field name="active" eval="True"/>
+    </record>
+</odoo>

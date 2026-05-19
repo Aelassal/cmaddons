@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_credit_hold" model="ir.ui.view">
+        <field name="name">res.partner.form.credit_hold</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button type="object"
+                        name="action_open_credit_hold_wizard"
+                        class="oe_stat_button" icon="fa-ban"
+                        invisible="is_credit_held">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Place on</span>
+                        <span class="o_stat_text">Credit Hold</span>
+                    </div>
+                </button>
+                <button type="object"
+                        name="action_open_credit_release_wizard"
+                        class="oe_stat_button" icon="fa-check"
+                        invisible="not is_credit_held">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Release</span>
+                        <span class="o_stat_text">Credit Hold</span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-danger mb-0"
+                     role="alert"
+                     invisible="not is_credit_held"
+                     style="border-radius:0;">
+                    <strong>ON CREDIT HOLD.</strong>
+                    <field name="credit_hold_reason" readonly="1" nolabel="1"/>
+                    <span invisible="not credit_hold_expected_release">
+                        Expected release:
+                        <field name="credit_hold_expected_release" readonly="1" nolabel="1"/>
+                    </span>
+                </div>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Credit Hold" name="credit_hold">
+                    <group>
+                        <group>
+                            <field name="is_credit_held" readonly="1"/>
+                            <field name="credit_hold_applied_at" readonly="1"/>
+                            <field name="credit_hold_applied_by" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="credit_hold_expected_release" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Hold Reason" invisible="not is_credit_held">
+                        <field name="credit_hold_reason" nolabel="1" readonly="1"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dq_rule_list" model="ir.ui.view">
+        <field name="name">cm_sa.dq.rule.list</field>
+        <field name="model">cm_sa.dq.rule</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="rule_type"/>
+                <field name="severity" widget="badge"
+                       decoration-info="severity == 'info'"
+                       decoration-warning="severity == 'warn'"
+                       decoration-danger="severity == 'fail'"/>
+                <field name="finding_count"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dq_rule_form" model="ir.ui.view">
+        <field name="name">cm_sa.dq.rule.form</field>
+        <field name="model">cm_sa.dq.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button type="object" name="action_run_now"
+                            string="Run Now" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object" name="action_view_findings"
+                                class="oe_stat_button" icon="fa-exclamation-triangle"
+                                invisible="not finding_count">
+                            <field name="finding_count" widget="statinfo" string="Open"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
+                            invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Partner email must be set"/></h1>
+                    </div>
+                    <group>
+                        <group string="Target">
+                            <field name="model_id" options="{'no_create': True}"/>
+                            <field name="model_name" invisible="1"/>
+                            <field name="rule_type"/>
+                            <field name="severity"/>
+                        </group>
+                        <group string="Scope">
+                            <field name="extra_domain"/>
+                            <field name="limit_records"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Rule Configuration">
+                        <field name="field_id" options="{'no_create': True}"
+                               invisible="rule_type == 'orphan_reference'"
+                               required="rule_type in ('field_required','regex_format','value_in_list','stale_value_days')"/>
+                        <field name="regex_pattern"
+                               invisible="rule_type != 'regex_format'"
+                               required="rule_type == 'regex_format'"/>
+                        <field name="value_list"
+                               invisible="rule_type != 'value_in_list'"
+                               required="rule_type == 'value_in_list'"/>
+                        <field name="stale_days"
+                               invisible="rule_type != 'stale_value_days'"
+                               required="rule_type == 'stale_value_days'"/>
+                        <field name="orphan_field_id"
+                               options="{'no_create': True}"
+                               invisible="rule_type != 'orphan_reference'"
+                               required="rule_type == 'orphan_reference'"/>
+                    </group>
+                    <div class="alert alert-info" role="alert">
+                        <strong>How it works.</strong> A daily cron walks every
+                        active rule, evaluates it against the model's records
+                        (filtered by the extra domain), and upserts a finding
+                        per hit. Recurring hits only post to chatter once;
+                        resolved findings auto-close when the record passes
+                        again.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dq_rule_search" model="ir.ui.view">
+        <field name="name">cm_sa.dq.rule.search</field>
+        <field name="model">cm_sa.dq.rule</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="model_id"/>
+                <filter name="filter_active" string="Active"
+                        domain="[('active', '=', True)]"/>
+                <filter name="filter_fail" string="Severity: Fail"
+                        domain="[('severity', '=', 'fail')]"/>
+                <filter name="filter_warn" string="Severity: Warn"
+                        domain="[('severity', '=', 'warn')]"/>
+                <group>
+                    <filter name="group_model" string="Model"
+                            context="{'group_by': 'model_id'}"/>
+                    <filter name="group_type" string="Rule Type"
+                            context="{'group_by': 'rule_type'}"/>
+                    <filter name="group_severity" string="Severity"
+                            context="{'group_by': 'severity'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dq_rule" model="ir.actions.act_window">
+        <field name="name">Rules</field>
+        <field name="res_model">cm_sa.dq.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first data-quality rule</p>
+            <p>Pick a model, a rule type, a field — you are done.</p>
+        </field>
+    </record>
+</odoo>

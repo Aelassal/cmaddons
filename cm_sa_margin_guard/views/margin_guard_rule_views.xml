@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_margin_guard_rule_list" model="ir.ui.view">
+        <field name="name">cm_sa.margin.guard.rule.list</field>
+        <field name="model">cm_sa.margin.guard.rule</field>
+        <field name="arch" type="xml">
+            <list string="Margin Guard Rules">
+                <field name="name"/>
+                <field name="model_name"/>
+                <field name="method_name"/>
+                <field name="threshold_pct"/>
+                <field name="override_group_id"/>
+                <field name="log_count"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_margin_guard_rule_form" model="ir.ui.view">
+        <field name="name">cm_sa.margin.guard.rule.form</field>
+        <field name="model">cm_sa.margin.guard.rule</field>
+        <field name="arch" type="xml">
+            <form string="Margin Guard Rule">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_logs" type="object"
+                                class="oe_stat_button" icon="fa-history">
+                            <field name="log_count" widget="statinfo"
+                                   string="Overrides"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived"
+                            bg_color="bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. SO minimum 10% margin"/></h1>
+                    </div>
+                    <group>
+                        <group string="Target">
+                            <field name="model_id"/>
+                            <field name="method_name"/>
+                            <field name="domain" widget="char_domain"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group string="Threshold">
+                            <field name="threshold_pct"/>
+                            <field name="override_group_id"
+                                   options="{'no_create': True}"/>
+                            <field name="require_reason_on_override"/>
+                            <field name="min_reason_length"
+                                   invisible="not require_reason_on_override"/>
+                        </group>
+                    </group>
+                    <group string="Margin Formula">
+                        <field name="margin_formula" nolabel="1" widget="text"/>
+                    </group>
+                    <group string="Error Message">
+                        <field name="error_message" nolabel="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_margin_guard_rule_search" model="ir.ui.view">
+        <field name="name">cm_sa.margin.guard.rule.search</field>
+        <field name="model">cm_sa.margin.guard.rule</field>
+        <field name="arch" type="xml">
+            <search string="Margin Guard Rules">
+                <field name="name"/>
+                <field name="model_name"/>
+                <filter name="active" string="Active"
+                        domain="[('active', '=', True)]"/>
+                <filter name="inactive" string="Archived"
+                        domain="[('active', '=', False)]"/>
+                <group>
+                    <filter name="group_model" string="Model"
+                            context="{'group_by': 'model_name'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_margin_guard_rule" model="ir.actions.act_window">
+        <field name="name">Margin Guard Rules</field>
+        <field name="res_model">cm_sa.margin.guard.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Set up your first margin rule</p>
+            <p>Pick a model + method, set a minimum margin %, choose who may override.</p>
+        </field>
+    </record>
+</odoo>

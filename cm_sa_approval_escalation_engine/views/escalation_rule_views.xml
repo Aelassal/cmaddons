@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_escalation_rule_tree" model="ir.ui.view">
+        <field name="name">approval.escalation.rule.list</field>
+        <field name="model">approval.escalation.rule</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="state_field"/>
+                <field name="pending_states"/>
+                <field name="log_count"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_escalation_rule_form" model="ir.ui.view">
+        <field name="name">approval.escalation.rule.form</field>
+        <field name="model">approval.escalation.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object" name="action_view_logs" icon="fa-history"
+                                class="oe_stat_button" invisible="not log_count">
+                            <field name="log_count" widget="statinfo" string="Escalations"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
+                            invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Stale Purchase Orders"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="model_id" options="{'no_create': True}"/>
+                            <field name="model_name" invisible="1"/>
+                            <field name="state_field"/>
+                            <field name="pending_states"/>
+                        </group>
+                        <group>
+                            <field name="owner_field"/>
+                            <field name="date_field"/>
+                            <field name="extra_domain"/>
+                            <field name="sequence"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Escalation Steps">
+                            <field name="step_ids">
+                                <list editable="bottom">
+                                    <field name="after_hours"/>
+                                    <field name="action"/>
+                                    <field name="target_user_id"
+                                           invisible="action not in ('notify_user', 'escalate_user')"
+                                           required="action in ('notify_user', 'escalate_user')"/>
+                                    <field name="mail_template_id"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_escalation_rule" model="ir.actions.act_window">
+        <field name="name">Escalation Rules</field>
+        <field name="res_model">approval.escalation.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first escalation rule</p>
+            <p>Pick a model (e.g. Purchase Order), the state(s) that mean "pending",
+               and the steps to take when records get stuck.</p>
+        </field>
+    </record>
+</odoo>

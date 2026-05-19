@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_task_budget_rule_mgr,cm_sa.task.budget.rule manager,model_cm_sa_task_budget_rule,project.group_project_manager,1,1,1,1
+access_task_budget_rule_user,cm_sa.task.budget.rule user,model_cm_sa_task_budget_rule,project.group_project_user,1,0,0,0
+access_task_budget_log_mgr,cm_sa.task.budget.alert.log manager,model_cm_sa_task_budget_alert_log,project.group_project_manager,1,1,1,1
+access_task_budget_log_user,cm_sa.task.budget.alert.log user,model_cm_sa_task_budget_alert_log,project.group_project_user,1,1,1,0

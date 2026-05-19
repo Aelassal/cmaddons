@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_stage_history_list" model="ir.ui.view">
+        <field name="name">cm_sa.crm.stage.history.list</field>
+        <field name="model">cm_sa.crm.stage.history</field>
+        <field name="arch" type="xml">
+            <list string="CRM Stage History" create="false">
+                <field name="lead_id"/>
+                <field name="stage_id"/>
+                <field name="user_id"/>
+                <field name="team_id" optional="hide"/>
+                <field name="entered_at"/>
+                <field name="exited_at"/>
+                <field name="days_in_stage" sum="Avg"/>
+                <field name="is_current" widget="boolean_toggle"/>
+                <field name="expected_revenue" sum="Total" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_stage_history_form" model="ir.ui.view">
+        <field name="name">cm_sa.crm.stage.history.form</field>
+        <field name="model">cm_sa.crm.stage.history</field>
+        <field name="arch" type="xml">
+            <form string="Stage History" create="false" edit="false">
+                <header>
+                    <button name="action_open_lead" type="object"
+                            string="Open Opportunity" class="btn-primary"
+                            invisible="not lead_id"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="lead_id"/>
+                            <field name="stage_id"/>
+                            <field name="user_id"/>
+                            <field name="team_id"/>
+                        </group>
+                        <group>
+                            <field name="entered_at"/>
+                            <field name="exited_at"/>
+                            <field name="days_in_stage"/>
+                            <field name="is_current"/>
+                            <field name="expected_revenue"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_stage_history_search" model="ir.ui.view">
+        <field name="name">cm_sa.crm.stage.history.search</field>
+        <field name="model">cm_sa.crm.stage.history</field>
+        <field name="arch" type="xml">
+            <search string="Stage History">
+                <field name="lead_id"/>
+                <field name="stage_id"/>
+                <field name="user_id"/>
+                <field name="team_id"/>
+                <filter name="is_current" string="Current Stage Only"
+                        domain="[('is_current', '=', True)]"/>
+                <filter name="stuck_7" string="Stuck &gt; 7d (current)"
+                        domain="[('is_current', '=', True), ('days_in_stage', '&gt;', 7)]"/>
+                <filter name="stuck_14" string="Stuck &gt; 14d (current)"
+                        domain="[('is_current', '=', True), ('days_in_stage', '&gt;', 14)]"/>
+                <filter name="stuck_30" string="Stuck &gt; 30d (current)"
+                        domain="[('is_current', '=', True), ('days_in_stage', '&gt;', 30)]"/>
+                <group>
+                    <filter name="group_stage" string="Stage"
+                            context="{'group_by': 'stage_id'}"/>
+                    <filter name="group_user" string="Salesperson"
+                            context="{'group_by': 'user_id'}"/>
+                    <filter name="group_team" string="Team"
+                            context="{'group_by': 'team_id'}"/>
+                    <filter name="group_month" string="Entered — Month"
+                            context="{'group_by': 'entered_at:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_stage_history_pivot" model="ir.ui.view">
+        <field name="name">cm_sa.crm.stage.history.pivot</field>
+        <field name="model">cm_sa.crm.stage.history</field>
+        <field name="arch" type="xml">
+            <pivot string="Stage Velocity">
+                <field name="stage_id" type="col"/>
+                <field name="user_id" type="row"/>
+                <field name="days_in_stage" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_stage_history_graph" model="ir.ui.view">
+        <field name="name">cm_sa.crm.stage.history.graph</field>
+        <field name="model">cm_sa.crm.stage.history</field>
+        <field name="arch" type="xml">
+            <graph string="Average Days in Stage">
+                <field name="stage_id"/>
+                <field name="days_in_stage" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_stage_history" model="ir.actions.act_window">
+        <field name="name">Stage History</field>
+        <field name="res_model">cm_sa.crm.stage.history</field>
+        <field name="view_mode">list,pivot,graph,form</field>
+    </record>
+
+    <record id="action_stage_history_stuck" model="ir.actions.act_window">
+        <field name="name">Stuck Deals</field>
+        <field name="res_model">cm_sa.crm.stage.history</field>
+        <field name="view_mode">list,pivot,form</field>
+        <field name="domain">[('is_current', '=', True), ('days_in_stage', '&gt;', 14)]</field>
+        <field name="context">{'search_default_group_stage': 1}</field>
+    </record>
+</odoo>

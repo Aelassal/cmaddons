@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_negstock_config_mgr,cm_sa.negative.stock.config manager,model_cm_sa_negative_stock_config,stock.group_stock_manager,1,1,1,1
+access_negstock_config_user,cm_sa.negative.stock.config user,model_cm_sa_negative_stock_config,stock.group_stock_user,1,0,0,0
+access_negstock_snapshot_mgr,cm_sa.negative.stock.snapshot manager,model_cm_sa_negative_stock_snapshot,stock.group_stock_manager,1,1,1,1
+access_negstock_snapshot_user,cm_sa.negative.stock.snapshot user,model_cm_sa_negative_stock_snapshot,stock.group_stock_user,1,0,0,0
+access_negstock_line_mgr,cm_sa.negative.stock.line manager,model_cm_sa_negative_stock_line,stock.group_stock_manager,1,1,1,1
+access_negstock_line_user,cm_sa.negative.stock.line user,model_cm_sa_negative_stock_line,stock.group_stock_user,1,0,0,0
+access_negstock_wizard_mgr,cm_sa.negative.stock.scan_now.wizard manager,model_cm_sa_negative_stock_scan_now_wizard,stock.group_stock_manager,1,1,1,1
