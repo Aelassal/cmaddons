@@ -10,6 +10,7 @@ _logger = logging.getLogger(__name__)
 
 class CmSaTransferSlaRule(models.Model):
     _name = "cm_sa.transfer.sla.rule"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "Warehouse Transfer SLA Rule"
     _order = "name, id"
 

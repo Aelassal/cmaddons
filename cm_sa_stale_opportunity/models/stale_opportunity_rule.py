@@ -10,6 +10,7 @@ _logger = logging.getLogger(__name__)
 
 class CmSaStaleOpportunityRule(models.Model):
     _name = "cm_sa.stale.opportunity.rule"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "Stale Opportunity Rule"
     _order = "name, id"
 

@@ -12,6 +12,7 @@ class CmSaNegativeStockConfig(models.Model):
     """Singleton holding scan settings. One row per database."""
 
     _name = "cm_sa.negative.stock.config"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "Negative Inventory Scanner Configuration"
     _order = "id"
 

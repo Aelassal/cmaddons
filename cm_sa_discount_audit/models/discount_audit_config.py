@@ -11,6 +11,7 @@ class CmSaDiscountAuditConfig(models.Model):
     """
 
     _name = "cm_sa.discount.audit.config"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "Discount Audit Configuration"
     _order = "id"
 

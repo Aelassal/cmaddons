@@ -19,6 +19,7 @@ CTX_BYPASS = "cm_sa_reset_audit_bypass"
 
 class CmSaResetAuditRule(models.Model):
     _name = "cm_sa.reset_audit.rule"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "Reset-to-Draft Audit Rule"
     _order = "model_name, method_name, id"
 

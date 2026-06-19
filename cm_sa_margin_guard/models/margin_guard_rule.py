@@ -21,6 +21,7 @@ DEFAULT_SO_FORMULA = (
 
 class CmSaMarginGuardRule(models.Model):
     _name = "cm_sa.margin.guard.rule"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "Sale-Order Margin Guard Rule"
     _order = "model_name, method_name, id"
 
