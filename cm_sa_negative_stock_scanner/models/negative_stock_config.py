@@ -93,6 +93,12 @@ class CmSaNegativeStockConfig(models.Model):
             domain += safe_eval(self.extra_domain or "[]", {"__builtins__": {}})
         except Exception:
             _logger.exception("NegativeStockScanner: invalid extra_domain")
+        _logger.info(
+            "NegativeStockScanner[%s]: quant domain = %s "
+            "(company=%s id=%s, include_internal_only=%s)",
+            self.name, domain, self.env.company.display_name,
+            self.env.company.id, self.include_internal_only,
+        )
         return domain
 
     def _run_scan(self, triggered_by="cron"):
