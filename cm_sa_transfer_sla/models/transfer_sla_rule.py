@@ -30,16 +30,24 @@ class CmSaTransferSlaRule(models.Model):
         "cm_sa_transfer_sla_src_rel",
         "rule_id", "location_id",
         string="Source Locations",
-        help="Limit to pickings moving FROM these locations. Leave empty "
-             "to ignore source.",
+        compute="_compute_locations_from_picking_types",
+        store=True, readonly=False,
+        help="Limit to pickings moving FROM these locations. Auto-filled "
+             "from the selected operation types' default source location "
+             "(like a stock picking); editable. Leave empty to ignore "
+             "source.",
     )
     dest_location_ids = fields.Many2many(
         "stock.location",
         "cm_sa_transfer_sla_dst_rel",
         "rule_id", "location_id",
         string="Destination Locations",
-        help="Limit to pickings moving TO these locations. Leave empty "
-             "to ignore destination.",
+        compute="_compute_locations_from_picking_types",
+        store=True, readonly=False,
+        help="Limit to pickings moving TO these locations. Auto-filled "
+             "from the selected operation types' default destination "
+             "location (like a stock picking); editable. Leave empty to "
+             "ignore destination.",
     )
     max_days_in_transit = fields.Integer(
         default=5,
@@ -83,6 +91,22 @@ class CmSaTransferSlaRule(models.Model):
         "unique(name)",
         "A transfer-SLA rule with this name already exists.",
     )
+
+    @api.depends("picking_type_ids")
+    def _compute_locations_from_picking_types(self):
+        """Default the source/dest filters from the chosen operation types.
+
+        Mirrors stock.picking._compute_location_id: picking the operation
+        type(s) pulls in their default source/destination locations. The
+        fields stay editable (store=True, readonly=False), so users can
+        refine or clear the suggestion afterwards. Selecting/clearing the
+        operation types re-applies the defaults.
+        """
+        for rule in self:
+            # Many2one accessed on a multi-record set yields the union of
+            # the related records, so this collects every type's default.
+            rule.source_location_ids = rule.picking_type_ids.default_location_src_id
+            rule.dest_location_ids = rule.picking_type_ids.default_location_dest_id
 
     @api.depends("log_ids")
     def _compute_log_count(self):
