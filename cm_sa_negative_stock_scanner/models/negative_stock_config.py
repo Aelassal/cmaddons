@@ -108,8 +108,23 @@ class CmSaNegativeStockConfig(models.Model):
         Line = self.env["cm_sa.negative.stock.line"].sudo()
 
         company = self.env.company
+        _logger.info(
+            "NegativeStockScanner[%s]: starting scan (trigger=%s) as user=%s, "
+            "env.company=%s (id=%s), allowed_companies=%s",
+            self.name, triggered_by, self.env.user.login,
+            company.display_name, company.id, self.env.companies.ids,
+        )
         quants = Quant.search(self._build_quant_domain())
         today = fields.Date.context_today(self)
+        _logger.info(
+            "NegativeStockScanner[%s]: %s negative quant(s) matched: %s",
+            self.name, len(quants),
+            [
+                (q.product_id.display_name, q.location_id.display_name,
+                 q.quantity, q.company_id.display_name)
+                for q in quants
+            ],
+        )
 
         # The negativity decision is driven by the product's net availability
         # (qty_available) evaluated in the CURRENT company, not by individual
@@ -125,14 +140,24 @@ class CmSaNegativeStockConfig(models.Model):
         products = quants.product_id.with_company(company).with_context(
             allowed_company_ids=[company.id],
         )
-        negative_product_ids = {
-            product.id
-            for product in products
-            if float_compare(
-                product.qty_available, 0.0,
-                precision_rounding=product.uom_id.rounding,
+        negative_product_ids = set()
+        for product in products:
+            qty = product.qty_available
+            is_negative = float_compare(
+                qty, 0.0, precision_rounding=product.uom_id.rounding,
             ) < 0
-        }
+            _logger.info(
+                "NegativeStockScanner[%s]: product %s qty_available=%s "
+                "(company=%s) -> %s",
+                self.name, product.display_name, qty, company.display_name,
+                "NEGATIVE" if is_negative else "ok",
+            )
+            if is_negative:
+                negative_product_ids.add(product.id)
+        _logger.info(
+            "NegativeStockScanner[%s]: %s product(s) net-negative: %s",
+            self.name, len(negative_product_ids), sorted(negative_product_ids),
+        )
 
         snapshot = Snapshot.create({
             "config_id": self.id,
@@ -158,6 +183,11 @@ class CmSaNegativeStockConfig(models.Model):
             })
         if line_vals:
             Line.create(line_vals)
+        _logger.info(
+            "NegativeStockScanner[%s]: snapshot %s created with %s line(s) "
+            "(min_days_negative=%s)",
+            self.name, snapshot.id, len(line_vals), self.min_days_negative,
+        )
 
         # Recompute totals
         snapshot._compute_totals()
@@ -217,7 +247,14 @@ class CmSaNegativeStockConfig(models.Model):
 
     @api.model
     def _cron_scan(self):
-        for cfg in self.search([("active", "=", True)]):
+        configs = self.search([("active", "=", True)])
+        _logger.info(
+            "NegativeStockScanner cron: %s active config(s) found, "
+            "running as user=%s, env.company=%s (id=%s)",
+            len(configs), self.env.user.login,
+            self.env.company.display_name, self.env.company.id,
+        )
+        for cfg in configs:
             try:
                 cfg._run_scan(triggered_by="cron")
             except Exception:
