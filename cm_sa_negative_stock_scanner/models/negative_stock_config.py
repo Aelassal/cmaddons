@@ -74,7 +74,9 @@ class CmSaNegativeStockConfig(models.Model):
 
     @api.model
     def get_singleton(self):
-        rec = self.search([], limit=1)
+        # active_test=False so an archived config is reused rather than
+        # spawning a duplicate alongside it.
+        rec = self.with_context(active_test=False).search([], limit=1)
         if not rec:
             rec = self.create({})
         return rec
@@ -247,6 +249,10 @@ class CmSaNegativeStockConfig(models.Model):
 
     @api.model
     def _cron_scan(self):
+        # Ensure the singleton exists so a fresh DB (where the config form /
+        # wizard was never opened) still scans instead of silently doing
+        # nothing.
+        self.get_singleton()
         configs = self.search([("active", "=", True)])
         _logger.info(
             "NegativeStockScanner cron: %s active config(s) found, "
