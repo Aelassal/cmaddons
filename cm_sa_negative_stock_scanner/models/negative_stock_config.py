@@ -3,6 +3,7 @@ from datetime import date
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.tools import float_compare
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -80,7 +81,12 @@ class CmSaNegativeStockConfig(models.Model):
 
     def _build_quant_domain(self):
         self.ensure_one()
-        domain = [("quantity", "<", 0)]
+        # Scope to the current company so the scan respects multi-company:
+        # only the company the user is working in is considered.
+        domain = [
+            ("quantity", "<", 0),
+            ("company_id", "=", self.env.company.id),
+        ]
         if self.include_internal_only:
             domain += [("location_id.usage", "=", "internal")]
         try:
@@ -95,8 +101,32 @@ class CmSaNegativeStockConfig(models.Model):
         Snapshot = self.env["cm_sa.negative.stock.snapshot"].sudo()
         Line = self.env["cm_sa.negative.stock.line"].sudo()
 
+        company = self.env.company
         quants = Quant.search(self._build_quant_domain())
         today = fields.Date.context_today(self)
+
+        # The negativity decision is driven by the product's net availability
+        # (qty_available) evaluated in the CURRENT company, not by individual
+        # quant rows. A product that is -8 in one bin but positive overall is
+        # not negative stock; multi-company on-hand stays isolated per company.
+        # qty_available < 0 implies at least one negative internal quant, so
+        # scanning the company's negative quants never misses a net-negative
+        # product while letting us keep the per-location breakdown and aging.
+        # Pin allowed_company_ids too: with_company alone keeps other open
+        # companies in context, and qty_available's location domain is built
+        # from env.companies — so qty_available must be restricted to this one
+        # company to stay isolated.
+        products = quants.product_id.with_company(company).with_context(
+            allowed_company_ids=[company.id],
+        )
+        negative_product_ids = {
+            product.id
+            for product in products
+            if float_compare(
+                product.qty_available, 0.0,
+                precision_rounding=product.uom_id.rounding,
+            ) < 0
+        }
 
         snapshot = Snapshot.create({
             "config_id": self.id,
@@ -106,6 +136,8 @@ class CmSaNegativeStockConfig(models.Model):
 
         line_vals = []
         for quant in quants:
+            if quant.product_id.id not in negative_product_ids:
+                continue
             wdate = fields.Date.to_date(quant.write_date) if quant.write_date else today
             aging_days = (today - wdate).days if wdate else 0
             if aging_days < self.min_days_negative:
