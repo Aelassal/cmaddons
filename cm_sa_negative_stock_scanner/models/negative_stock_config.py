@@ -3,7 +3,6 @@ from datetime import date
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import float_compare
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -13,10 +12,9 @@ class CmSaNegativeStockConfig(models.Model):
     """Singleton holding scan settings. One row per database."""
 
     _name = "cm_sa.negative.stock.config"
-    _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "Negative Inventory Scanner Configuration"
     _order = "id"
-
+    _inherit = ["mail.thread", "mail.activity.mixin"]
     name = fields.Char(default="Negative Stock Scanner", required=True)
     active = fields.Boolean(default=True)
     min_days_negative = fields.Integer(
@@ -74,33 +72,20 @@ class CmSaNegativeStockConfig(models.Model):
 
     @api.model
     def get_singleton(self):
-        # active_test=False so an archived config is reused rather than
-        # spawning a duplicate alongside it.
-        rec = self.with_context(active_test=False).search([], limit=1)
+        rec = self.search([], limit=1)
         if not rec:
             rec = self.create({})
         return rec
 
     def _build_quant_domain(self):
         self.ensure_one()
-        # Scope to the current company so the scan respects multi-company:
-        # only the company the user is working in is considered.
-        domain = [
-            ("quantity", "<", 0),
-            ("company_id", "=", self.env.company.id),
-        ]
+        domain = [("quantity", "<", 0)]
         if self.include_internal_only:
             domain += [("location_id.usage", "=", "internal")]
         try:
             domain += safe_eval(self.extra_domain or "[]", {"__builtins__": {}})
         except Exception:
             _logger.exception("NegativeStockScanner: invalid extra_domain")
-        _logger.info(
-            "NegativeStockScanner[%s]: quant domain = %s "
-            "(company=%s id=%s, include_internal_only=%s)",
-            self.name, domain, self.env.company.display_name,
-            self.env.company.id, self.include_internal_only,
-        )
         return domain
 
     def _run_scan(self, triggered_by="cron"):
@@ -109,57 +94,8 @@ class CmSaNegativeStockConfig(models.Model):
         Snapshot = self.env["cm_sa.negative.stock.snapshot"].sudo()
         Line = self.env["cm_sa.negative.stock.line"].sudo()
 
-        company = self.env.company
-        _logger.info(
-            "NegativeStockScanner[%s]: starting scan (trigger=%s) as user=%s, "
-            "env.company=%s (id=%s), allowed_companies=%s",
-            self.name, triggered_by, self.env.user.login,
-            company.display_name, company.id, self.env.companies.ids,
-        )
         quants = Quant.search(self._build_quant_domain())
         today = fields.Date.context_today(self)
-        _logger.info(
-            "NegativeStockScanner[%s]: %s negative quant(s) matched: %s",
-            self.name, len(quants),
-            [
-                (q.product_id.display_name, q.location_id.display_name,
-                 q.quantity, q.company_id.display_name)
-                for q in quants
-            ],
-        )
-
-        # The negativity decision is driven by the product's net availability
-        # (qty_available) evaluated in the CURRENT company, not by individual
-        # quant rows. A product that is -8 in one bin but positive overall is
-        # not negative stock; multi-company on-hand stays isolated per company.
-        # qty_available < 0 implies at least one negative internal quant, so
-        # scanning the company's negative quants never misses a net-negative
-        # product while letting us keep the per-location breakdown and aging.
-        # Pin allowed_company_ids too: with_company alone keeps other open
-        # companies in context, and qty_available's location domain is built
-        # from env.companies — so qty_available must be restricted to this one
-        # company to stay isolated.
-        products = quants.product_id.with_company(company).with_context(
-            allowed_company_ids=[company.id],
-        )
-        negative_product_ids = set()
-        for product in products:
-            qty = product.qty_available
-            is_negative = float_compare(
-                qty, 0.0, precision_rounding=product.uom_id.rounding,
-            ) < 0
-            _logger.info(
-                "NegativeStockScanner[%s]: product %s qty_available=%s "
-                "(company=%s) -> %s",
-                self.name, product.display_name, qty, company.display_name,
-                "NEGATIVE" if is_negative else "ok",
-            )
-            if is_negative:
-                negative_product_ids.add(product.id)
-        _logger.info(
-            "NegativeStockScanner[%s]: %s product(s) net-negative: %s",
-            self.name, len(negative_product_ids), sorted(negative_product_ids),
-        )
 
         snapshot = Snapshot.create({
             "config_id": self.id,
@@ -169,8 +105,6 @@ class CmSaNegativeStockConfig(models.Model):
 
         line_vals = []
         for quant in quants:
-            if quant.product_id.id not in negative_product_ids:
-                continue
             wdate = fields.Date.to_date(quant.write_date) if quant.write_date else today
             aging_days = (today - wdate).days if wdate else 0
             if aging_days < self.min_days_negative:
@@ -185,11 +119,6 @@ class CmSaNegativeStockConfig(models.Model):
             })
         if line_vals:
             Line.create(line_vals)
-        _logger.info(
-            "NegativeStockScanner[%s]: snapshot %s created with %s line(s) "
-            "(min_days_negative=%s)",
-            self.name, snapshot.id, len(line_vals), self.min_days_negative,
-        )
 
         # Recompute totals
         snapshot._compute_totals()
@@ -249,18 +178,7 @@ class CmSaNegativeStockConfig(models.Model):
 
     @api.model
     def _cron_scan(self):
-        # Ensure the singleton exists so a fresh DB (where the config form /
-        # wizard was never opened) still scans instead of silently doing
-        # nothing.
-        self.get_singleton()
-        configs = self.search([("active", "=", True)])
-        _logger.info(
-            "NegativeStockScanner cron: %s active config(s) found, "
-            "running as user=%s, env.company=%s (id=%s)",
-            len(configs), self.env.user.login,
-            self.env.company.display_name, self.env.company.id,
-        )
-        for cfg in configs:
+        for cfg in self.search([("active", "=", True)]):
             try:
                 cfg._run_scan(triggered_by="cron")
             except Exception:

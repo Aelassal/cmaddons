@@ -14,10 +14,9 @@ CTX_BYPASS = "cm_sa_attachment_enforcer_bypass"
 
 class CmSaAttachmentRule(models.Model):
     _name = "cm_sa.attachment.rule"
-    _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "Invoice Attachment Rule"
     _order = "name, id"
-
+    _inherit = ["mail.thread", "mail.activity.mixin"]
     name = fields.Char(required=True)
     active = fields.Boolean(default=True)
 

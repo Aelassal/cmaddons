@@ -10,7 +10,6 @@ _logger = logging.getLogger(__name__)
 
 class CmSaRenewalRule(models.Model):
     _name = "cm_sa.renewal.rule"
-    _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "Renewal Pipeline Rule"
     _order = "name, id"
 

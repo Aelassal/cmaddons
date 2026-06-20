@@ -47,7 +47,6 @@ the background, that one blocks at picking time.
     "depends": ["base", "mail", "stock"],
     "data": [
         "security/ir.model.access.csv",
-        "data/config_data.xml",
         "data/cron_data.xml",
         "wizard/scan_now_wizard_views.xml",
         "views/negative_stock_config_views.xml",

@@ -13,7 +13,7 @@ CTX_REASON = "cm_sa_margin_override_reason"
 CTX_BYPASS = "cm_sa_margin_guard_bypass"
 
 DEFAULT_SO_FORMULA = (
-    "(record.amount_untaxed - sum(line.purchase_price * line.product_uom_qty "
+    "(record.amount_untaxed - sum(line.product_id.standard_price * line.product_uom_qty "
     "for line in record.order_line)) / record.amount_untaxed * 100 "
     "if record.amount_untaxed else 100"
 )
@@ -21,10 +21,9 @@ DEFAULT_SO_FORMULA = (
 
 class CmSaMarginGuardRule(models.Model):
     _name = "cm_sa.margin.guard.rule"
-    _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "Sale-Order Margin Guard Rule"
     _order = "model_name, method_name, id"
-
+    _inherit = ["mail.thread", "mail.activity.mixin"]
     name = fields.Char(required=True)
     active = fields.Boolean(default=True)
 

@@ -12,7 +12,6 @@ CTX_BYPASS = "cm_sa_attachment_size_bypass"
 
 class CmSaAttachmentSizeRule(models.Model):
     _name = "cm_sa.attachment.size.rule"
-    _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "Attachment Size Rule"
     _order = "model_id, id"
 

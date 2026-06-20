@@ -9,10 +9,9 @@ _logger = logging.getLogger(__name__)
 
 class CmSaTaskBudgetRule(models.Model):
     _name = "cm_sa.task.budget.rule"
-    _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "Task Time-Budget Alert Rule"
     _order = "name, id"
-
+    _inherit = ["mail.thread", "mail.activity.mixin"]
     name = fields.Char(required=True)
     active = fields.Boolean(default=True)
 

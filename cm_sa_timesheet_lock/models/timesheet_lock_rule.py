@@ -13,10 +13,9 @@ CTX_BYPASS = "cm_sa_timesheet_lock_bypass"
 
 class CmSaTimesheetLockRule(models.Model):
     _name = "cm_sa.timesheet.lock.rule"
-    _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "Timesheet Back-Dating Lock Rule"
     _order = "name, id"
-
+    _inherit = ["mail.thread", "mail.activity.mixin"]
     name = fields.Char(required=True)
     active = fields.Boolean(default=True)
     max_days_back = fields.Integer(

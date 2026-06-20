@@ -14,4 +14,4 @@ class TestModuleSmoke(TransactionCase):
         mod = self.env["ir.module.module"].search([("name", "=", "cm_sa_reset_auditor")])
         self.assertTrue(mod, "cm_sa_reset_auditor module record missing")
         self.assertEqual(mod.state, "installed",
-                         f"{slug} not marked installed: {mod.state}")
+                         f"cm_sa_reset_auditor not marked installed: {mod.state}")
