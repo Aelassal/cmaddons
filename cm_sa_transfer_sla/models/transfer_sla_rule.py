@@ -228,7 +228,7 @@ class CmSaTransferSlaRule(models.Model):
             if p.strip()
         ]
 
-        return sorted({int(p) for p in parts})
+        return [int(p) for p in parts]
 
     def _candidate_domain(self):
         self.ensure_one()
