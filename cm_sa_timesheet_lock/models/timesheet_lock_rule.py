@@ -115,11 +115,30 @@ class CmSaTimesheetLockRule(models.Model):
 
             today = fields.Date.context_today(self)
 
+            def get_user_groups(user):
+                user = user.sudo()
+
+                if "groups_id" in user._fields:
+                    return user.groups_id
+                if "group_ids" in user._fields:
+                    return user.group_ids
+
+                Groups = user.env["res.groups"].sudo()
+                if "users" in Groups._fields:
+                    return Groups.search([("users", "in", user.id)])
+
+                user.env.cr.execute(
+                    "SELECT gid FROM res_groups_users_rel WHERE uid = %s",
+                    (user.id,),
+                )
+                return Groups.browse([row[0] for row in user.env.cr.fetchall()])
+
             def applicable_rules_for_user(user):
+                user_groups = get_user_groups(user)
                 out = []
                 for rule in rules:
                     if (rule.applies_to_group_ids
-                            and not (rule.applies_to_group_ids & user.groups_id)):
+                            and not (rule.applies_to_group_ids & user_groups)):
                         continue
                     out.append(rule)
                 return out
@@ -135,9 +154,10 @@ class CmSaTimesheetLockRule(models.Model):
                     cutoff = today - timedelta(days=rule.max_days_back)
                     if rule_date >= cutoff:
                         continue  # within window
+                    user_groups = get_user_groups(self.env.user)
                     in_bypass = (
-                        rule.bypass_group_id
-                        and rule.bypass_group_id in self.env.user.groups_id
+                            rule.bypass_group_id
+                            and rule.bypass_group_id in user_groups
                     )
                     if not in_bypass:
                         raise UserError(rule.error_message % {
