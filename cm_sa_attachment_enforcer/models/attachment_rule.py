@@ -179,11 +179,21 @@ class CmSaAttachmentRule(models.Model):
                             for mt in rule.allowed_mimetypes.split(",")
                             if mt.strip()
                         }
-                        mimes_ok = sum(
-                            1 for a in attachments
-                            if (a.mimetype or "").lower() in allowed
-                        )
-                        ok = mimes_ok >= rule.min_attachments
+
+                        def _attachment_type_ok(attachment):
+                            mimetype = (attachment.mimetype or "").lower()
+                            filename = (attachment.name or "").lower()
+
+                            if mimetype in allowed:
+                                return True
+
+                            if "application/pdf" in allowed and filename.endswith(".pdf"):
+                                return True
+
+                            return False
+
+                        valid_count = sum(1 for attachment in attachments if _attachment_type_ok(attachment))
+                        ok = valid_count >= rule.min_attachments
 
                     if ok:
                         continue  # rule satisfied
