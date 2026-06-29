@@ -11,6 +11,7 @@ class ResUsers(models.Model):
     delegate_to_id = fields.Many2one(
         "res.users",
         string="Delegate To",
+        domain="[('share', '=', False), ('active', '=', True)]",
         help="User who covers activities and approvals while you're out.",
     )
     delegation_start = fields.Date(string="Delegation Start")
