@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_timesheet_line_tree_bypass_reason" model="ir.ui.view">
+        <field name="name">account.analytic.line.tree.bypass.reason</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date']" position="after">
+                <field name="cm_sa_timesheet_bypass_reason"
+                       string="Bypass Reason"
+                       optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_hr_timesheet_line_form_bypass_reason" model="ir.ui.view">
+        <field name="name">account.analytic.line.form.bypass.reason</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Timesheet Lock Bypass">
+                    <field name="cm_sa_timesheet_bypass_reason"
+                           placeholder="Required only when bypassing a locked/back-dated timesheet"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -8,7 +8,9 @@ class CmSaTimesheetLockLog(models.Model):
 
     rule_id = fields.Many2one(
         "cm_sa.timesheet.lock.rule",
-        required=True, ondelete="cascade", index=True,
+        required=True,
+        ondelete="cascade",
+        index=True,
     )
     user_id = fields.Many2one(
         "res.users",
@@ -18,11 +20,27 @@ class CmSaTimesheetLockLog(models.Model):
         default=lambda self: self.env.user,
         index=True,
     )
+    line_id = fields.Many2one(
+        "account.analytic.line",
+        string="Timesheet Entry",
+        ondelete="set null",
+        index=True,
+        help="The timesheet entry that was created or modified using bypass.",
+    )
     entry_date = fields.Date(
         string="Back-Dated Entry Date",
         help="The 'date' field of the timesheet entry that was back-dated.",
     )
     window_days = fields.Integer(string="Window (days)")
     source = fields.Selection(
-        [("create", "Create"), ("write-new-date", "Write (new date)"), ("write-same-date", "Write (existing date)")],
+        [
+            ("create", "Create"),
+            ("write-new-date", "Write (new date)"),
+            ("write-same-date", "Write (existing date)"),
+        ],
+        string="Source",
+    )
+    reason = fields.Text(
+        string="Bypass Reason",
+        help="Mandatory reason entered by the bypass-group user.",
     )

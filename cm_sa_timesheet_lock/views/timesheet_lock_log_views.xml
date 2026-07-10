@@ -4,16 +4,46 @@
         <field name="name">cm_sa.timesheet.lock.log.list</field>
         <field name="model">cm_sa.timesheet.lock.log</field>
         <field name="arch" type="xml">
-            <list string="Timesheet Bypass Log" create="false">
+            <list string="Timesheet Bypass Log" create="false" edit="false" delete="false">
                 <field name="create_date" string="When"/>
                 <field name="user_id"/>
                 <field name="rule_id"/>
+                <field name="line_id"/>
                 <field name="entry_date"/>
                 <field name="window_days"/>
                 <field name="source"/>
+                <field name="reason"/>
             </list>
         </field>
     </record>
+
+    <record id="view_ts_lock_log_form" model="ir.ui.view">
+        <field name="name">cm_sa.timesheet.lock.log.form</field>
+        <field name="model">cm_sa.timesheet.lock.log</field>
+        <field name="arch" type="xml">
+            <form string="Timesheet Bypass Log" create="false" edit="false" delete="false">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="create_date" string="When"/>
+                            <field name="user_id"/>
+                            <field name="rule_id"/>
+                            <field name="line_id"/>
+                        </group>
+                        <group>
+                            <field name="entry_date"/>
+                            <field name="window_days"/>
+                            <field name="source"/>
+                        </group>
+                    </group>
+                    <group string="Bypass Reason">
+                        <field name="reason" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
     <record id="view_ts_lock_log_search" model="ir.ui.view">
         <field name="name">cm_sa.timesheet.lock.log.search</field>
         <field name="model">cm_sa.timesheet.lock.log</field>
@@ -21,18 +51,24 @@
             <search string="Bypass Log">
                 <field name="user_id"/>
                 <field name="rule_id"/>
+                <field name="line_id"/>
+                <field name="entry_date"/>
+                <field name="reason"/>
                 <group>
                     <filter name="group_user" string="User"
                             context="{'group_by': 'user_id'}"/>
+                    <filter name="group_rule" string="Rule"
+                            context="{'group_by': 'rule_id'}"/>
                     <filter name="group_month" string="Month"
                             context="{'group_by': 'create_date:month'}"/>
                 </group>
             </search>
         </field>
     </record>
+
     <record id="action_ts_lock_log" model="ir.actions.act_window">
         <field name="name">Bypass Log</field>
         <field name="res_model">cm_sa.timesheet.lock.log</field>
-        <field name="view_mode">list</field>
+        <field name="view_mode">list,form</field>
     </record>
 </odoo>
