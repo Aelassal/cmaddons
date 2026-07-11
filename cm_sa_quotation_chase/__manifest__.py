@@ -1,6 +1,6 @@
 {
     "name": "Quotation Chase",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.0.1",
     "summary": "Auto-remind customers about sent quotations on a schedule, stops on confirm or customer reply.",
     "description": """
 Quotation Chase

@@ -18,18 +18,33 @@ class SaleOrder(models.Model):
     chase_paused = fields.Boolean(
         string="Pause Chase",
         default=False,
+        copy=False,
         help="Stop sending chase emails for this quotation without losing the schedule.",
     )
     chase_last_sent = fields.Datetime(
         string="Last Chase Sent",
         readonly=True,
+        copy=False,
     )
     chase_step = fields.Integer(
         string="Chase Step",
         default=0,
         readonly=True,
+        copy=False,
         help="Number of chase emails already sent for this quotation.",
     )
+
+    def copy(self, default=None):
+        """Reset runtime chase data when duplicating a quotation.
+
+        The schedule itself may be copied, but the new quotation must start a
+        fresh chase cycle.
+        """
+        default = dict(default or {})
+        default.setdefault("chase_paused", False)
+        default.setdefault("chase_step", 0)
+        default.setdefault("chase_last_sent", False)
+        return super().copy(default)
 
     # ----------------------------------------------------------------------
     # Cron entry point
@@ -72,20 +87,24 @@ class SaleOrder(models.Model):
         if self._customer_replied_since(base_date):
             return
 
-        steps = self.chase_schedule_id.step_ids.sorted("sequence")
+        steps = self.chase_schedule_id.step_ids.sorted(lambda s: (s.sequence, s.id))
         next_step = None
-        for step in steps:
-            if self.chase_step >= step.sequence:
+        next_step_number = 0
+        for step_number, step in enumerate(steps, start=1):
+            # chase_step stores the functional step number, not the technical
+            # drag-handle sequence. This avoids confusing values such as 10.
+            if self.chase_step >= step_number:
                 continue
             due_at = base_date + timedelta(days=step.days_after_send)
             if due_at <= now:
                 next_step = step
+                next_step_number = step_number
                 break
 
         if not next_step:
             return
 
-        self._send_chase(next_step)
+        self._send_chase(next_step, next_step_number)
 
     def _customer_replied_since(self, since):
         """Return True if the customer (partner_id) sent an email on this SO since `since`."""
@@ -105,12 +124,16 @@ class SaleOrder(models.Model):
         )
         return bool(msg)
 
-    def _send_chase(self, step):
+    def _send_chase(self, step, step_number=False):
         """Render & send the step's template, advance counters, post chatter note."""
         self.ensure_one()
         template = step.mail_template_id
         if not template:
             return
+
+        if not step_number:
+            steps = self.chase_schedule_id.step_ids.sorted(lambda s: (s.sequence, s.id))
+            step_number = steps.ids.index(step.id) + 1 if step.id in steps.ids else step.sequence
 
         template.send_mail(
             self.id,
@@ -119,15 +142,15 @@ class SaleOrder(models.Model):
         )
 
         self.write({
-            "chase_step": step.sequence,
+            "chase_step": step_number,
             "chase_last_sent": fields.Datetime.now(),
         })
 
         self.message_post(
             body=_(
-                "Sent chase #%(num)s via <b>%(schedule)s</b>."
+                "Sent chase #%(num)s via %(schedule)s."
             ) % {
-                "num": step.sequence,
+                "num": step_number,
                 "schedule": self.chase_schedule_id.name or "",
             },
             message_type="comment",
