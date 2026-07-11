@@ -16,6 +16,8 @@
                         <group string="Window">
                             <field name="delegation_start"/>
                             <field name="delegation_end"/>
+                            <field name="delegation_manually_ended" readonly="1"/>
+                            <field name="delegation_manually_ended_at" readonly="1"/>
                         </group>
                     </group>
                     <group string="Scope">

@@ -24,20 +24,58 @@ class ResUsers(models.Model):
         string="Delegate Approvals",
         default=True,
     )
+    delegation_manually_ended = fields.Boolean(
+        string="Delegation Manually Ended",
+        default=False,
+        copy=False,
+        help="Prevents the scheduled action from reactivating a manually ended delegation while the original date range is still active.",
+    )
+    delegation_manually_ended_at = fields.Datetime(
+        string="Manually Ended At",
+        readonly=True,
+        copy=False,
+    )
     is_currently_delegating = fields.Boolean(
         compute="_compute_is_currently_delegating",
         store=False,
     )
 
-    @api.depends("delegation_start", "delegation_end")
+    @api.depends(
+        "delegate_to_id",
+        "delegation_start",
+        "delegation_end",
+        "delegation_manually_ended",
+    )
     def _compute_is_currently_delegating(self):
         today = fields.Date.context_today(self)
         for user in self:
             user.is_currently_delegating = bool(
-                user.delegation_start
+                user.delegate_to_id
+                and user.delegation_start
                 and user.delegation_end
                 and user.delegation_start <= today <= user.delegation_end
+                and not user.delegation_manually_ended
             )
+
+    def write(self, vals):
+        """Changing the delegation setup should make the rule eligible again.
+
+        When a delegation is ended manually we keep the original dates for audit
+        clarity, but we mark it as manually ended so the cron will not reactivate
+        it. If an administrator later edits the delegate or date window, the
+        manual-ended flag is cleared automatically.
+        """
+        watched = {"delegate_to_id", "delegation_start", "delegation_end"}
+        if (
+            watched.intersection(vals)
+            and not self.env.context.get("cm_sa_delegation_manual_end")
+        ):
+            vals = dict(vals)
+            vals.update({
+                "delegation_manually_ended": False,
+                "delegation_manually_ended_at": False,
+            })
+        return super().write(vals)
 
     # ------------------------------------------------------------------
     # Apply / revert
@@ -128,7 +166,7 @@ class ResUsers(models.Model):
         try:
             self.message_post(
                 body=_(
-                    "Delegation started to <b>%(to)s</b>. "
+                    "Delegation started to %(to)s. "
                     "Reassigned %(a)s activity(ies) and %(ap)s approval(s)."
                 ) % {
                     "to": self.delegate_to_id.display_name,
@@ -142,7 +180,7 @@ class ResUsers(models.Model):
             pass
         return log
 
-    def _revert_delegation(self):
+    def _revert_delegation(self, auto=True):
         """Reverse every not-yet-reverted item in this user's open log."""
         self.ensure_one()
         log = self._active_delegation_log()
@@ -173,12 +211,12 @@ class ResUsers(models.Model):
                 )
         log.write({
             "ended_at": fields.Datetime.now(),
-            "auto_reversed": True,
+            "auto_reversed": bool(auto),
         })
         try:
             self.message_post(
                 body=_(
-                    "Delegation to <b>%s</b> ended; items reverted."
+                    "Delegation to %s ended; items reverted."
                 ) % log.to_user_id.display_name,
                 message_type="comment",
                 subtype_xmlid="mail.mt_note",
@@ -198,6 +236,7 @@ class ResUsers(models.Model):
             ("delegate_to_id", "!=", False),
             ("delegation_start", "<=", today),
             ("delegation_end", ">=", today),
+            ("delegation_manually_ended", "=", False),
         ])
         for user in to_activate:
             if not user._active_delegation_log():
@@ -217,10 +256,11 @@ class ResUsers(models.Model):
                 not user.delegation_end
                 or user.delegation_end < today
                 or not user.delegate_to_id
+                or user.delegation_manually_ended
             )
             if expired:
                 try:
-                    user._revert_delegation()
+                    user._revert_delegation(auto=True)
                 except Exception:
                     _logger.exception(
                         "approval_delegate: revert failed for user %s",
@@ -231,6 +271,11 @@ class ResUsers(models.Model):
     # Manual button
     # ------------------------------------------------------------------
     def action_end_delegation_now(self):
+        now = fields.Datetime.now()
         for user in self:
-            user._revert_delegation()
+            user._revert_delegation(auto=False)
+            user.with_context(cm_sa_delegation_manual_end=True).write({
+                "delegation_manually_ended": True,
+                "delegation_manually_ended_at": now,
+            })
         return True

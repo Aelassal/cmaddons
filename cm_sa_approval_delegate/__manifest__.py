@@ -1,6 +1,6 @@
 {
     "name": "Out-of-Office Approval Delegator",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.0.1",
     "summary": "Vacation cover for activities and approvals — auto-reassign on start and reverse on return.",
     "description": """
 Out-of-Office Approval Delegator
