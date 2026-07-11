@@ -240,14 +240,16 @@ class CmSaResetAuditRule(models.Model):
                 targets_by_rule.append((rule, targets))
 
                 # Group enforcement
-                if rule.required_group_id and rule.required_group_id not in self.env.user.groups_id:
+                user_group_ids = get_user_groups(self.env.user).ids
+
+                if rule.required_group_id and rule.required_group_id.id not in user_group_ids:
                     raise UserError(_(
                         "You are not allowed to reset %(model)s records to draft. "
                         "Required group: %(group)s."
                     ) % {
-                        "model": model_name,
-                        "group": rule.required_group_id.display_name,
-                    })
+                                        "model": model_name,
+                                        "group": rule.required_group_id.display_name,
+                                    })
 
                 # Reason enforcement — open wizard if none supplied
                 if rule.require_reason and not reason_from_ctx:
@@ -301,8 +303,7 @@ class CmSaResetAuditRule(models.Model):
                         try:
                             record.message_post(
                                 body=_(
-                                    "Reset-to-Draft Audit [%(rule)s] by "
-                                    "<b>%(user)s</b>. Reason: %(reason)s"
+                                    "Reset-to-Draft Audit [%(rule)s] by %(user)s. Reason: %(reason)s"
                                 ) % {
                                     "rule": rule.name,
                                     "user": self.env.user.display_name,
@@ -318,6 +319,25 @@ class CmSaResetAuditRule(models.Model):
                                 exc_info=True,
                             )
             return result
+
+        def get_user_groups(user):
+            user = user.sudo()
+
+            if "groups_id" in user._fields:
+                return user.groups_id
+
+            if "group_ids" in user._fields:
+                return user.group_ids
+
+            Groups = user.env["res.groups"].sudo()
+            if "users" in Groups._fields:
+                return Groups.search([("users", "in", user.id)])
+
+            user.env.cr.execute(
+                "SELECT gid FROM res_groups_users_rel WHERE uid = %s",
+                (user.id,),
+            )
+            return Groups.browse([row[0] for row in user.env.cr.fetchall()])
 
         return audited
 
