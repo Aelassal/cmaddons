@@ -49,43 +49,63 @@ class SaleOrder(models.Model):
     # ----------------------------------------------------------------------
     # Cron entry point
     # ----------------------------------------------------------------------
-    def _cron_run_quotation_chase(self):
-        """Iterate every sent quotation with a schedule and send the next due chase."""
+    def _cron_run_quotation_chase(self, force=False):
+        """Iterate sent quotations with a schedule and send chase emails.
+
+        Normal scheduled mode keeps the 1/3/7 due-date logic.
+        Manual force mode is used by the dedicated manual scheduled action
+        and sends the next pending chase step immediately for every eligible
+        sent quotation.
+        """
         orders = self.search([
             ("state", "=", "sent"),
             ("chase_paused", "=", False),
             ("chase_schedule_id", "!=", False),
         ])
         now = fields.Datetime.now()
+        sent_count = 0
         for order in orders:
             try:
-                order._process_chase(now)
+                if order._process_chase(now, force=force):
+                    sent_count += 1
             except Exception:
                 _logger.exception(
                     "Quotation Chase: failed to process SO id=%s", order.id,
                 )
+        _logger.info(
+            "Quotation Chase: %s chase email(s) queued by %s run.",
+            sent_count,
+            "manual force" if force else "scheduled due",
+        )
+        return sent_count
 
     # ----------------------------------------------------------------------
     # Per-order processing
     # ----------------------------------------------------------------------
-    def _process_chase(self, now=None):
+    def _process_chase(self, now=None, force=False):
+        """Process one quotation.
+
+        Cron mode keeps the normal schedule/due-date logic.
+        Manual mode (force=True) sends the next pending chase step immediately,
+        because the user explicitly clicked Run Chase Now from the quotation.
+        """
         self.ensure_one()
         if now is None:
             now = fields.Datetime.now()
 
         # Stop conditions (defensive: cron domain already filters most of these)
         if self.state in ("sale", "done", "cancel"):
-            return
+            return False
         if self.chase_paused or not self.chase_schedule_id:
-            return
+            return False
 
         base_date = self.chase_last_sent or self.date_order
         if not base_date:
-            return
+            return False
 
         # Customer-replied-since-base-date check
         if self._customer_replied_since(base_date):
-            return
+            return False
 
         steps = self.chase_schedule_id.step_ids.sorted(lambda s: (s.sequence, s.id))
         next_step = None
@@ -95,6 +115,12 @@ class SaleOrder(models.Model):
             # drag-handle sequence. This avoids confusing values such as 10.
             if self.chase_step >= step_number:
                 continue
+
+            if force:
+                next_step = step
+                next_step_number = step_number
+                break
+
             due_at = base_date + timedelta(days=step.days_after_send)
             if due_at <= now:
                 next_step = step
@@ -102,9 +128,10 @@ class SaleOrder(models.Model):
                 break
 
         if not next_step:
-            return
+            return False
 
         self._send_chase(next_step, next_step_number)
+        return True
 
     def _customer_replied_since(self, since):
         """Return True if the customer (partner_id) sent an email on this SO since `since`."""
@@ -161,7 +188,34 @@ class SaleOrder(models.Model):
     # UI helpers
     # ----------------------------------------------------------------------
     def action_chase_run_now(self):
-        """Manual trigger from the form button — process this single SO immediately."""
+        """Manual trigger from the form button.
+
+        This must send the next pending chase immediately and should not wait
+        for the 1/3/7 day delay. The scheduled action still respects due dates.
+        """
+        sent_count = 0
         for order in self:
-            order._process_chase()
-        return True
+            if order._process_chase(force=True):
+                sent_count += 1
+
+        if sent_count:
+            message = _("%s chase email(s) queued.") % sent_count
+            notif_type = "success"
+        else:
+            message = _(
+                "No chase email was sent. Please check that the quotation has "
+                "a chase schedule, is not paused/cancelled/confirmed, has a "
+                "remaining chase step, and has no customer reply after the last chase."
+            )
+            notif_type = "warning"
+
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": _("Quotation Chase"),
+                "message": message,
+                "type": notif_type,
+                "sticky": False,
+            },
+        }
