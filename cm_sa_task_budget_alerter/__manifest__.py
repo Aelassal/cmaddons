@@ -1,6 +1,6 @@
 {
     "name": "Project Task Time-Budget Alerter",
-    "version": "19.0.1.0.1",
+    "version": "19.0.1.0.2",
     "summary": "Email alerts at 75 / 90 / 100% of project.task.planned_hours — assignee and manager. No approval ceremony, just receipts.",
     "description": """
 Project Task Time-Budget Alerter

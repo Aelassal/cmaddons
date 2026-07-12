@@ -242,14 +242,16 @@ class CmSaTaskBudgetRule(models.Model):
                     )
                     continue
 
-                if recipients:
-                    try:
-                        self._send_alert(task, t, pct, recipients, planned, effective)
-                    except Exception:
-                        _logger.exception(
-                            "TaskBudgetAlerter: email send failed for task %s",
-                            task.id,
-                        )
+                # Always post a task chatter message when an alert is generated.
+                # If recipients exist, message_post will also create notifications /
+                # email queue entries according to Odoo mail settings.
+                try:
+                    self._send_alert(task, t, pct, recipients, planned, effective)
+                except Exception:
+                    _logger.exception(
+                        "TaskBudgetAlerter: notification/chatter failed for task %s",
+                        task.id,
+                    )
 
         self.write({"last_run": fields.Datetime.now()})
         return generated
@@ -279,16 +281,25 @@ class CmSaTaskBudgetRule(models.Model):
         return partners
 
     def _send_alert(self, task, threshold, pct, partners, planned, effective):
+        """Post the alert on the task chatter and notify recipients.
+
+        Earlier versions created a mail.mail first and then posted to chatter.
+        If outgoing email sending failed, the exception prevented the chatter
+        message from being posted, so users saw no visible result after Run Now.
+
+        Using message_post makes the task chatter the source of truth. Odoo will
+        create notifications / queued emails for partner_ids according to the
+        environment mail configuration, while the chatter message remains visible
+        even if external SMTP delivery is not configured.
+        """
         self.ensure_one()
+
         body = _(
-            "<p>Task <b>%(task)s</b> (project <b>%(project)s</b>) has "
-            "crossed the <b>%(threshold)s%%</b> budget threshold.</p>"
-            "<p><b>Planned:</b> %(planned).1fh<br/>"
-            "<b>Logged:</b> %(logged).1fh<br/>"
-            "<b>Current:</b> %(pct).1f%%</p>"
-            "<p>Any extra hours logged will increase this. Consider "
-            "re-estimating the task or flagging scope creep.</p>"
+            "Task Budget Alerter [%(rule)s]: Task %(task)s in project %(project)s "
+            "crossed the %(threshold)s%% threshold. Planned: %(planned).1fh, "
+            "Logged: %(logged).1fh, Current: %(pct).1f%%."
         ) % {
+            "rule": self.name,
             "task": task.display_name or task.name or str(task.id),
             "project": (task.project_id.name if task.project_id else _("(no project)")),
             "threshold": threshold,
@@ -296,32 +307,20 @@ class CmSaTaskBudgetRule(models.Model):
             "logged": effective,
             "pct": pct,
         }
-        self.env["mail.mail"].sudo().create({
-            "subject": _("[Task Budget %s%%] %s") % (threshold, task.display_name or task.name),
-            "body_html": body,
-            "recipient_ids": [(6, 0, partners.ids)],
-            "author_id": self.env.user.partner_id.id,
-            "model": "project.task",
-            "res_id": task.id,
-        }).send()
 
-        try:
-            task.message_post(
-                body=_(
-                    "Task Budget Alerter [%(rule)s]: crossed %(t)s%% "
-                    "threshold (%(pct).1f%%, %(logged).1f / %(planned).1fh)."
-                ) % {
-                    "rule": self.name,
-                    "t": threshold,
-                    "pct": pct,
-                    "logged": effective,
-                    "planned": planned,
-                },
-                message_type="comment",
-                subtype_xmlid="mail.mt_note",
-            )
-        except Exception:
-            _logger.exception("TaskBudgetAlerter: chatter message failed")
+        post_vals = {
+            "body": body,
+            "subject": _("[Task Budget %(threshold)s%%] %(task)s") % {
+                "threshold": threshold,
+                "task": task.display_name or task.name or str(task.id),
+            },
+            "message_type": "comment",
+            "subtype_xmlid": "mail.mt_comment" if partners else "mail.mt_note",
+        }
+        if partners:
+            post_vals["partner_ids"] = partners.ids
+
+        task.message_post(**post_vals)
 
     @api.model
     def _cron_scan(self):
