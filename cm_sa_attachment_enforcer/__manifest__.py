@@ -1,6 +1,6 @@
 {
     "name": "Invoice Attachment Enforcer",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.0.1",
     "summary": "Block account.move posting when required attachments are missing. Per-journal rules, bypass group with reason wizard, full audit log.",
     "description": """
 Invoice Attachment Enforcer

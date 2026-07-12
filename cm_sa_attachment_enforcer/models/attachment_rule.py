@@ -152,6 +152,32 @@ class CmSaAttachmentRule(models.Model):
 
             reason_from_ctx = (self.env.context.get(CTX_REASON) or "").strip()
 
+            def get_user_groups(user):
+                """Return the user groups safely across Odoo versions.
+
+                Some Odoo 19 builds expose the user group relation differently
+                than older versions. Accessing user.groups_id directly can
+                raise AttributeError, so keep this lookup defensive.
+                """
+                user = user.sudo()
+
+                if "groups_id" in user._fields:
+                    return user.groups_id
+                if "group_ids" in user._fields:
+                    return user.group_ids
+
+                Groups = user.env["res.groups"].sudo()
+                if "users" in Groups._fields:
+                    return Groups.search([("users", "in", user.id)])
+
+                user.env.cr.execute(
+                    "SELECT gid FROM res_groups_users_rel WHERE uid = %s",
+                    (user.id,),
+                )
+                return Groups.browse([row[0] for row in user.env.cr.fetchall()])
+
+            user_group_ids = set(get_user_groups(self.env.user).ids)
+
             for move in self:
                 # Which rules apply to this move?
                 applicable = Rule
@@ -199,9 +225,9 @@ class CmSaAttachmentRule(models.Model):
                         continue  # rule satisfied
 
                     # Rule not satisfied — bypass?
-                    in_bypass = (
+                    in_bypass = bool(
                         rule.bypass_group_id
-                        and rule.bypass_group_id in self.env.user.groups_id
+                        and rule.bypass_group_id.id in user_group_ids
                     )
                     if not in_bypass:
                         raise UserError(
@@ -249,8 +275,8 @@ class CmSaAttachmentRule(models.Model):
                     try:
                         move.message_post(
                             body=_(
-                                "Attachment Enforcer bypass by <b>%(user)s</b>. "
-                                "Rule: <b>%(rule)s</b>. Reason: %(reason)s"
+                                "Attachment Enforcer bypass by %(user)s. "
+                                "Rule: %(rule)s. Reason: %(reason)s"
                             ) % {
                                 "user": self.env.user.display_name,
                                 "rule": rule.name,

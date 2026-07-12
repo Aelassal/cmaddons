@@ -14,4 +14,4 @@ class TestModuleSmoke(TransactionCase):
         mod = self.env["ir.module.module"].search([("name", "=", "cm_sa_attachment_enforcer")])
         self.assertTrue(mod, "cm_sa_attachment_enforcer module record missing")
         self.assertEqual(mod.state, "installed",
-                         f"{slug} not marked installed: {mod.state}")
+                         f"cm_sa_attachment_enforcer not marked installed: {mod.state}")
