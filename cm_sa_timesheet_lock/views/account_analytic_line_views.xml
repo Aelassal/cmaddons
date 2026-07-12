@@ -7,8 +7,9 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='date']" position="after">
                 <field name="cm_sa_timesheet_bypass_reason"
-                       string="Bypass Reason"
-                       optional="hide"/>
+                   string="Bypass Reason"
+                   optional="show"
+                   placeholder="Required when bypassing a locked timesheet"/>
             </xpath>
         </field>
     </record>
