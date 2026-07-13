@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Normal client-facing entry point. The wizard is restricted to Settings users
+         by access rights, so the menu is also restricted to the same group. -->
+    <menuitem id="menu_activity_reassign_root"
+              name="Janitor"
+              groups="base.group_system"
+              sequence="90"/>
+
     <menuitem id="menu_activity_reassign_wizard"
               name="Bulk Reassign Activities"
-              parent="base.menu_custom"
+              parent="menu_activity_reassign_root"
               action="action_activity_reassign_wizard"
-              sequence="90"/>
+              groups="base.group_system"
+              sequence="10"/>
 </odoo>

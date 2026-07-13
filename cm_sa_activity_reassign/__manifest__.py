@@ -1,6 +1,6 @@
 {
     "name": "Bulk Activity Reassignment",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.0.1",
     "summary": "Reassign hundreds of mail.activity records from one user to another in one click.",
     "description": """
 Bulk Activity Reassignment
@@ -49,6 +49,7 @@ safe to uninstall.
         "wizard/activity_reassign_wizard_views.xml",
         "data/server_actions.xml",
         "views/menus.xml",
+        "views/res_users_views.xml",
     ],
     "images": ["static/description/banner.png"],
     "installable": True,

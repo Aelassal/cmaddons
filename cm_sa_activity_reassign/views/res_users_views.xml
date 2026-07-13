@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_users_form_activity_reassign_button" model="ir.ui.view">
+        <field name="name">res.users.form.activity.reassign.button</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/header" position="inside">
+                <button name="action_open_activity_reassign_wizard"
+                        type="object"
+                        string="Reassign Activities"
+                        class="btn-secondary"
+                        groups="base.group_system"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
