@@ -1,10 +1,21 @@
+import logging
 from datetime import timedelta
 
 from odoo import _, api, fields, models
 
-# Skip admin (1), public (2), portal (3) and __system (4) — these are
-# infrastructure accounts, never offboarded.
-SYSTEM_USER_IDS = (1, 2, 3, 4)
+_logger = logging.getLogger(__name__)
+
+# Technical accounts are resolved dynamically by XML ID.
+# Do not hard-code user IDs because customer databases may have normal
+# internal test users with IDs 3 or 4. Hard-coding those IDs caused
+# scheduled deactivation to silently skip valid users in Odoo 19 databases.
+PROTECTED_USER_XMLIDS = (
+    "base.user_root",      # OdooBot / superuser
+    "base.user_admin",     # main administrator
+    "base.public_user",    # public website user
+    "base.default_user",   # template/default user, when present
+    "base.user_demo",      # demo user, when present
+)
 
 DORMANT_DAYS_PARAM = "cm_sa_user_offboarding_kit.dormant_days"
 DEFAULT_DORMANT_DAYS = 90
@@ -26,6 +37,40 @@ class ResUsers(models.Model):
     # ------------------------------------------------------------------
     # Helpers
     # ------------------------------------------------------------------
+    @api.model
+    def _offboarding_protected_user_ids(self):
+        """Return technical users that must never be archived automatically.
+
+        The previous implementation used a fixed tuple (1, 2, 3, 4).
+        That is unsafe on real/test databases because normal users may have
+        those IDs. Resolve the protected accounts by XML ID instead.
+        """
+        protected = set()
+        for xmlid in PROTECTED_USER_XMLIDS:
+            user = self.env.ref(xmlid, raise_if_not_found=False)
+            if user and user._name == "res.users":
+                protected.add(user.id)
+        return list(protected)
+
+    def _offboarding_archive_users(self, reason, source="scheduled"):
+        """Archive users and leave a clean chatter audit note first."""
+        today = fields.Date.context_today(self)
+        users = self.sudo().filtered(
+            lambda u: u.active and u.id not in self._offboarding_protected_user_ids()
+        )
+        for user in users:
+            user.message_post(body=_(
+                "User archived by User Offboarding Kit. "
+                "Source: %(source)s. Date: %(date)s. Reason: %(reason)s"
+            ) % {
+                "source": source,
+                "date": today,
+                "reason": reason or _("No reason provided"),
+            })
+        if users:
+            users.write({"active": False})
+        return len(users)
+
     @api.model
     def _offboarding_dormant_days(self):
         value = self.env["ir.config_parameter"].sudo().get_param(
@@ -50,20 +95,21 @@ class ResUsers(models.Model):
     def _cron_auto_deactivate_scheduled(self):
         """Archive users whose scheduled deactivation date has arrived."""
         today = fields.Date.context_today(self)
-        users = self.sudo().search([
+        protected_ids = self._offboarding_protected_user_ids()
+        users = self.sudo().with_context(active_test=False).search([
             ("active", "=", True),
             ("deactivation_date", "!=", False),
             ("deactivation_date", "<=", today),
-            ("id", "not in", list(SYSTEM_USER_IDS)),
+            ("id", "not in", protected_ids),
         ])
+        count = 0
         for user in users:
-            reason = user.deactivation_reason or _("No reason provided")
-            user.message_post(body=_(
-                "Auto-deactivated on %(date)s: %(reason)s",
-                date=today, reason=reason,
-            ))
-            user.write({"active": False})
-        return True
+            count += user._offboarding_archive_users(
+                user.deactivation_reason or _("No reason provided"),
+                source="scheduled",
+            )
+        _logger.info("UserOffboarding: scheduled deactivation archived %s user(s).", count)
+        return count
 
     @api.model
     def _cron_flag_dormant_users(self):
@@ -74,12 +120,12 @@ class ResUsers(models.Model):
         threshold parameter is read regularly, surfacing config issues).
         """
         cutoff = self._offboarding_dormant_cutoff()
-        dormant = self.sudo().search([
+        dormant = self.sudo().with_context(active_test=False).search([
             ("active", "=", True),
             ("login", "!=", False),
             ("login_date", "!=", False),
             ("login_date", "<", cutoff),
-            ("id", "not in", list(SYSTEM_USER_IDS)),
+            ("id", "not in", self._offboarding_protected_user_ids()),
         ])
         # No-op write loop intentionally avoided — just return the count for
         # cron logs. The Dormant menu uses the same domain at view time.
@@ -91,7 +137,8 @@ class ResUsers(models.Model):
     def action_open_dormant_archive_wizard(self):
         # multi-record allowed: called from a list row button or via the
         # selected ids in the list header.
-        eligible = self.filtered(lambda u: u.id not in SYSTEM_USER_IDS and u.active)
+        protected_ids = self._offboarding_protected_user_ids()
+        eligible = self.filtered(lambda u: u.id not in protected_ids and u.active)
         return {
             "type": "ir.actions.act_window",
             "name": _("Archive Dormant Users"),
