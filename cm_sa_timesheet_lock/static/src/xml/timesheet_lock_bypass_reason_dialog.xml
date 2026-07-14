@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="cm_sa_timesheet_lock.TimesheetBypassReasonDialog">
+        <Dialog title="'Invalid Operation'" size="'md'">
+            <div class="o_timesheet_lock_bypass_reason_dialog">
+                <p class="mb-3">
+                    <t t-esc="props.message"/>
+                </p>
+
+                <div class="mb-2">
+                    <label class="form-label fw-bold" for="cm_sa_timesheet_lock_bypass_reason_textarea">
+                        Bypass Reason
+                    </label>
+                    <textarea id="cm_sa_timesheet_lock_bypass_reason_textarea"
+                              t-ref="reason"
+                              class="form-control"
+                              rows="4"
+                              t-model="state.reason"
+                              placeholder="Example: Approved correction by project manager."/>
+                </div>
+
+                <div t-if="state.error" class="text-danger mt-2">
+                    <t t-esc="state.error"/>
+                </div>
+            </div>
+
+            <t t-set-slot="footer">
+                <button type="button"
+                        class="btn btn-secondary"
+                        t-att-disabled="state.saving"
+                        t-on-click="props.close">
+                    Close
+                </button>
+                <button type="button"
+                        class="btn btn-primary"
+                        t-att-disabled="state.saving"
+                        t-on-click="confirm">
+                    Save Reason and Continue
+                </button>
+            </t>
+        </Dialog>
+    </t>
+</templates>
