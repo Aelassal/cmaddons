@@ -160,11 +160,11 @@
             <p>Sales managers want a guardrail: "no salesperson confirms an order below 10% margin without explicit sign-off". Native Odoo shows margin on the form but does not block confirmation, and the paid margin-alert modules on apps.odoo.com all bake in a single threshold for a single model.</p>
             <p>Core provides no per-model configuration, no Python-expression formula, and no reason-logging override group, so margin policy stays a Slack rule.</p>
             <p><b>What this module adds:</b></p>
-            <ul><li>Rule engine: pick any model (<code>sale.order</code>, a custom quotation or contract model) and any method (<code>action_confirm</code>, a custom button).</li><li>Margin formula as a Python expression against the record, default <code>(record.amount_untaxed - record.margin_cost) / record.amount_untaxed * 100</code> for <code>sale.order</code>.</li><li>Threshold percentage per rule.</li><li>Override group: only members can confirm below-threshold orders, and they are prompted for a reason first.</li><li>Every override logged to <code>cm_sa.margin.override.log</code> with user, record, threshold, computed margin, reason, and timestamp.</li><li>Pivot view by user times month ships out of the box.</li></ul>
+            <ul><li>Rule engine: pick any model (<code>sale.order</code>, a custom quotation or contract model) and any method (<code>action_confirm</code>, a custom button).</li><li>Margin formula as a Python expression against the record, with a default gross-margin formula based on product standard cost for <code>sale.order</code>.</li><li>Threshold percentage per rule.</li><li>Override group: only members can confirm below-threshold orders, and they are prompted for a reason first.</li><li>Every override logged to <code>cm_sa.margin.override.log</code> with user, record, threshold, computed margin, reason, and timestamp.</li><li>Pivot view by user times month ships out of the box.</li></ul>
             <p><b>Who benefits</b></p>
             <p>Sales managers, CFOs, and revenue operations teams at SMB and mid-market companies who want margin discipline without a heavy approval workflow.</p>
             <p><b>How it works</b></p>
-            <p><code>_register_hook</code> wrapper at registry load, no core-model inheritance. TransactionCase tested on Odoo 17, 18, and 19. Safe to install, safe to uninstall. Pairs naturally with <code>cm_sa_so_confirm_guard</code> (required fields at confirm) and <code>cm_sa_reset_auditor</code> (reason on reset-to-draft).</p>
+            <p>Dynamic method wrappers are installed at registry load and immediately when a new active target is saved. Rule values are read at runtime, so normal configuration changes apply without a service restart. TransactionCase tested on Odoo 19.0.</p>
         </div>
     </div>
 </section>
@@ -199,7 +199,7 @@
                 <h3>Common questions</h3>
                 <details>
                     <summary>Does it inherit or patch core Odoo models?</summary>
-                    <div class="ans">No. We use <code>_register_hook</code> to wrap the target method at registry load, and the wrapper unwinds cleanly at uninstall. No schema changes to core tables, no monkey-patches, no Studio surgery.</div>
+                    <div class="ans">No core model is inherited. The module installs a controlled dynamic wrapper around the configured method and reads active rule values at runtime. No Studio changes are required.</div>
                 </details>
                 <details>
                     <summary>Does it work on Odoo Community, or only Enterprise?</summary>

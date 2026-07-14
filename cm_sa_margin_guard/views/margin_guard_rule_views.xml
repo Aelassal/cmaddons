@@ -22,6 +22,9 @@
         <field name="arch" type="xml">
             <form string="Margin Guard Rule">
                 <sheet>
+                    <div class="alert alert-info" role="alert">
+                        Active rule changes take effect immediately after saving. Rule administration is restricted to authorized technical users.
+                    </div>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_logs" type="object"
                                 class="oe_stat_button" icon="fa-history">

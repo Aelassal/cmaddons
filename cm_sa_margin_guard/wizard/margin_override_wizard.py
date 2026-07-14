@@ -17,16 +17,11 @@ class CmSaMarginOverrideWizard(models.TransientModel):
     record_id_str = fields.Char(required=True, readonly=True)
     records_preview = fields.Char(
         compute="_compute_records_preview",
-        string="Confirming",
+        string="Requiring Override",
     )
-    actual_margin = fields.Float(
-        string="Actual Margin %",
-        readonly=True,
-    )
-    threshold = fields.Float(
-        string="Threshold %",
-        readonly=True,
-    )
+    violation_summary = fields.Text(readonly=True)
+    processed_summary = fields.Text(readonly=True)
+    blocked_summary = fields.Text(readonly=True)
     min_length = fields.Integer(readonly=True, default=10)
     reason = fields.Text(required=True)
 
@@ -37,14 +32,13 @@ class CmSaMarginOverrideWizard(models.TransientModel):
                 rec.records_preview = ""
                 continue
             try:
-                ids = [int(x) for x in rec.record_id_str.split(",") if x]
-                Model = self.env[rec.model_name]
-                records = Model.browse(ids).exists()
-                names = records.mapped("display_name")[:5]
+                ids = [int(item) for item in rec.record_id_str.split(",") if item]
+                records = self.env[rec.model_name].browse(ids).exists()
+                names = records.mapped("display_name")[:10]
                 extra = len(records) - len(names)
                 preview = ", ".join(names)
                 if extra > 0:
-                    preview += _(" … (+%s more)") % extra
+                    preview += _(" ... (+%s more)") % extra
                 rec.records_preview = preview
             except Exception:
                 rec.records_preview = rec.record_id_str
@@ -53,24 +47,34 @@ class CmSaMarginOverrideWizard(models.TransientModel):
         self.ensure_one()
         reason = (self.reason or "").strip()
         if self.min_length and len(reason) < self.min_length:
-            raise UserError(_(
-                "Reason must be at least %d characters long."
-            ) % self.min_length)
+            raise UserError(
+                _("Reason must be at least %d characters long.")
+                % self.min_length
+            )
 
-        if not self.model_name or self.model_name not in self.env:
-            raise UserError(_("Target model %s is no longer available.") % self.model_name)
-        ids = [int(x) for x in (self.record_id_str or "").split(",") if x]
+        if not self.model_name or self.model_name not in self.env.registry:
+            raise UserError(
+                _("Target model %s is no longer available.") % self.model_name
+            )
+        ids = [
+            int(item)
+            for item in (self.record_id_str or "").split(",")
+            if item
+        ]
         records = self.env[self.model_name].browse(ids).exists()
         if not records:
             raise UserError(_("The selected records no longer exist."))
 
         method = getattr(records, self.method_name, None)
         if not callable(method):
-            raise UserError(_(
-                "Model %(model)s has no method %(method)s."
-            ) % {"model": self.model_name, "method": self.method_name})
+            raise UserError(
+                _("Model %(model)s has no method %(method)s.")
+                % {"model": self.model_name, "method": self.method_name}
+            )
 
-        # Re-invoke the wrapped method with the reason in context so the
-        # wrapper skips the wizard branch.
-        getattr(records.with_context(**{CTX_REASON: reason}), self.method_name)()
+        result = getattr(
+            records.with_context(**{CTX_REASON: reason}), self.method_name
+        )()
+        if isinstance(result, dict):
+            return result
         return {"type": "ir.actions.act_window_close"}

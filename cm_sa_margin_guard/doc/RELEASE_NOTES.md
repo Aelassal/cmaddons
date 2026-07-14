@@ -5,6 +5,27 @@ Versions follow the format `<odoo_version>.<major>.<minor>.<patch>`.
 
 ---
 
+## 19.0.1.1.0 - 2026-07-14
+
+Audit, security, and batch-confirmation hardening release.
+
+**Fixed**
+
+* Margin Override Log is now an immutable audit trail. Normal users cannot create, edit, duplicate, or delete entries.
+* Rules with existing override logs cannot be deleted; they must be archived.
+* Mixed multi-order confirmation now processes compliant orders normally and requests override only for affected orders.
+* Orders without override permission are listed clearly and are never skipped silently.
+* Rule administration is restricted to System Administrators and the dedicated Margin Guard Rule Administrator group.
+* New active rules and rule changes become effective immediately without a normal service restart.
+* Error-message placeholders are validated when a rule is saved.
+* Invalid target methods, formula syntax, domains, thresholds, and reason lengths are rejected during configuration.
+* Formula failures now stop confirmation instead of silently bypassing protection.
+* Override confirmation is cancelled if the mandatory audit log cannot be written.
+* Added `docs/user_manual.pdf` and its Markdown source.
+* Expanded post-install tests for audit immutability and mixed batch confirmation.
+
+---
+
 ## 19.0.1.0.0 — 2026-04-24
 
 Initial public release on the Odoo App Store.

@@ -3,17 +3,20 @@
     <menuitem id="menu_margin_guard_root"
               name="Margin Guard"
               web_icon="cm_sa_margin_guard,static/description/icon.png"
+              groups="sales_team.group_sale_salesman,base.group_system,cm_sa_margin_guard.group_margin_guard_rule_admin"
               sequence="85"/>
 
     <menuitem id="menu_margin_guard_rules"
               name="Rules"
               parent="menu_margin_guard_root"
               action="action_margin_guard_rule"
+              groups="base.group_system,cm_sa_margin_guard.group_margin_guard_rule_admin"
               sequence="10"/>
 
     <menuitem id="menu_margin_guard_logs"
               name="Override Log"
               parent="menu_margin_guard_root"
               action="action_margin_log"
+              groups="sales_team.group_sale_salesman,base.group_system,cm_sa_margin_guard.group_margin_guard_rule_admin"
               sequence="20"/>
 </odoo>

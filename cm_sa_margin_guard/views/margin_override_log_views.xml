@@ -4,10 +4,10 @@
         <field name="name">cm_sa.margin.override.log.list</field>
         <field name="model">cm_sa.margin.override.log</field>
         <field name="arch" type="xml">
-            <list string="Margin Override Log" create="false">
+            <list string="Margin Override Log" create="false" edit="false" delete="false">
                 <field name="create_date" string="When"/>
                 <field name="user_id" string="By"/>
-                <field name="rule_id"/>
+                <field name="rule_id" options="{'no_open': True}"/>
                 <field name="res_model" string="Model"/>
                 <field name="record_name" string="Record"/>
                 <field name="threshold_pct"/>
@@ -22,29 +22,32 @@
         <field name="name">cm_sa.margin.override.log.form</field>
         <field name="model">cm_sa.margin.override.log</field>
         <field name="arch" type="xml">
-            <form string="Margin Override Log" create="false" edit="false">
+            <form string="Margin Override Log" create="false" edit="false" delete="false">
                 <header>
                     <button name="action_open_source" type="object"
                             string="Open Record" class="btn-primary"/>
                 </header>
                 <sheet>
+                    <div class="alert alert-info" role="alert">
+                        This entry is a permanent, read-only audit record and cannot be edited or deleted.
+                    </div>
                     <group>
                         <group>
-                            <field name="create_date" string="When"/>
-                            <field name="user_id"/>
-                            <field name="rule_id"/>
+                            <field name="create_date" string="When" readonly="1"/>
+                            <field name="user_id" readonly="1"/>
+                            <field name="rule_id" readonly="1" options="{'no_open': True}"/>
                         </group>
                         <group>
-                            <field name="res_model"/>
-                            <field name="res_id"/>
-                            <field name="record_name"/>
-                            <field name="threshold_pct"/>
-                            <field name="actual_pct"/>
-                            <field name="gap_pct"/>
+                            <field name="res_model" readonly="1"/>
+                            <field name="res_id" readonly="1"/>
+                            <field name="record_name" readonly="1"/>
+                            <field name="threshold_pct" readonly="1"/>
+                            <field name="actual_pct" readonly="1"/>
+                            <field name="gap_pct" readonly="1"/>
                         </group>
                     </group>
                     <group string="Reason">
-                        <field name="reason" nolabel="1"/>
+                        <field name="reason" nolabel="1" readonly="1"/>
                     </group>
                 </sheet>
             </form>
@@ -88,5 +91,6 @@
         <field name="name">Margin Override Log</field>
         <field name="res_model">cm_sa.margin.override.log</field>
         <field name="view_mode">list,pivot,form</field>
+        <field name="context">{'create': False, 'edit': False, 'delete': False}</field>
     </record>
 </odoo>
