@@ -1,5 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_ts_lock_rule_mgr,cm_sa.timesheet.lock.rule manager,model_cm_sa_timesheet_lock_rule,hr_timesheet.group_hr_timesheet_approver,1,1,1,1
 access_ts_lock_rule_user,cm_sa.timesheet.lock.rule user,model_cm_sa_timesheet_lock_rule,hr_timesheet.group_hr_timesheet_user,1,0,0,0
-access_ts_lock_log_mgr,cm_sa.timesheet.lock.log manager,model_cm_sa_timesheet_lock_log,hr_timesheet.group_hr_timesheet_approver,1,1,1,1
-access_ts_lock_log_user,cm_sa.timesheet.lock.log user,model_cm_sa_timesheet_lock_log,hr_timesheet.group_hr_timesheet_user,1,1,1,0
+access_ts_lock_log_mgr,cm_sa.timesheet.lock.log manager,model_cm_sa_timesheet_lock_log,hr_timesheet.group_hr_timesheet_approver,1,0,0,0
+access_ts_lock_log_user,cm_sa.timesheet.lock.log user,model_cm_sa_timesheet_lock_log,hr_timesheet.group_hr_timesheet_user,1,0,0,0

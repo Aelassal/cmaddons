@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="cm_sa_timesheet_lock.TimesheetBypassReasonDialog">
+        <Dialog title="props.title">
+            <div class="mb-3" style="white-space: pre-line;">
+                <t t-esc="props.message"/>
+            </div>
+            <div class="mb-2">
+                <label class="form-label fw-bold" for="cm_sa_timesheet_bypass_reason">
+                    Bypass Reason
+                    <span class="text-danger">*</span>
+                </label>
+                <textarea id="cm_sa_timesheet_bypass_reason"
+                          class="form-control"
+                          rows="4"
+                          autofocus="autofocus"
+                          placeholder="Explain why this locked timesheet must be changed..."
+                          t-model="state.reason"/>
+                <div t-if="state.validationMessage" class="text-danger mt-2">
+                    <t t-esc="state.validationMessage"/>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button type="button" class="btn btn-secondary" t-on-click="onCancel">
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-primary" t-on-click="onConfirm">
+                    Save with Reason
+                </button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import _, fields, models
 
 
 class CmSaTimesheetLockLog(models.Model):
@@ -20,16 +20,15 @@ class CmSaTimesheetLockLog(models.Model):
         default=lambda self: self.env.user,
         index=True,
     )
-    line_id = fields.Many2one(
+    timesheet_id = fields.Many2one(
         "account.analytic.line",
         string="Timesheet Entry",
         ondelete="set null",
         index=True,
-        help="The timesheet entry that was created or modified using bypass.",
     )
     entry_date = fields.Date(
         string="Back-Dated Entry Date",
-        help="The 'date' field of the timesheet entry that was back-dated.",
+        help="The date of the timesheet entry that was overridden.",
     )
     window_days = fields.Integer(string="Window (days)")
     source = fields.Selection(
@@ -38,9 +37,11 @@ class CmSaTimesheetLockLog(models.Model):
             ("write-new-date", "Write (new date)"),
             ("write-same-date", "Write (existing date)"),
         ],
-        string="Source",
+        required=True,
     )
     reason = fields.Text(
         string="Bypass Reason",
-        help="Mandatory reason entered by the bypass-group user.",
+        required=True,
+        default=lambda self: _("Legacy bypass — reason was not captured."),
+        help="Mandatory justification entered by the bypass user.",
     )

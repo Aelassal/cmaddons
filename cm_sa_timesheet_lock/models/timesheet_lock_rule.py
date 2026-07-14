@@ -10,7 +10,10 @@ _MARKER = "_cm_sa_timesheet_lock_wrapper"
 _ORIGINAL = "_cm_sa_timesheet_lock_original"
 CTX_BYPASS = "cm_sa_timesheet_lock_bypass"
 CTX_BYPASS_REASON = "cm_sa_timesheet_lock_bypass_reason"
-REASON_FIELD = "cm_sa_timesheet_bypass_reason"
+
+
+class TimesheetBypassReasonRequired(UserError):
+    """Signal the web client to ask for a mandatory bypass reason."""
 
 
 class CmSaTimesheetLockRule(models.Model):
@@ -24,8 +27,10 @@ class CmSaTimesheetLockRule(models.Model):
     max_days_back = fields.Integer(
         default=14,
         required=True,
-        help="Maximum number of days in the past that an employee may log "
-             "or edit a timesheet entry. Default 14.",
+        help=(
+            "Maximum number of days in the past that an employee may log "
+            "or edit a timesheet entry. Default 14."
+        ),
     )
     applies_to_group_ids = fields.Many2many(
         "res.groups",
@@ -33,28 +38,32 @@ class CmSaTimesheetLockRule(models.Model):
         "rule_id",
         "group_id",
         string="Applies to Groups",
-        help="Limit the rule to members of these groups. Leave empty to "
-             "apply to all employees. Admins / bypass group always override.",
+        help=(
+            "Limit the rule to members of these groups. Leave empty to "
+            "apply to all employees. Members of the bypass group may only "
+            "continue after entering a mandatory reason."
+        ),
     )
     bypass_group_id = fields.Many2one(
         "res.groups",
         string="Bypass Group",
-        help="Members of this group can back-date past the window only after "
-             "entering a mandatory bypass reason. Every bypass is logged.",
+        help=(
+            "Members of this group can override the rolling-window lock, "
+            "but a mandatory reason is requested and recorded for every bypass."
+        ),
     )
     error_message = fields.Char(
-        default="Timesheet entries older than %(max)s day(s) are locked. "
-                "This entry's date is %(date)s. "
-                "Earliest allowed date is %(earliest)s. "
-                "Today is %(today)s.",
+        default=(
+            "Timesheet entries before %(earliest)s are locked. "
+            "This entry's date is %(date)s (today is %(today)s; "
+            "rolling window: %(max)s day(s))."
+        ),
         required=True,
-        help="Placeholders: %(max)s, %(date)s, %(earliest)s, %(today)s",
+        help="Placeholders: %(max)s, %(date)s, %(today)s, %(earliest)s",
     )
 
     log_ids = fields.One2many(
-        "cm_sa.timesheet.lock.log",
-        "rule_id",
-        readonly=True,
+        "cm_sa.timesheet.lock.log", "rule_id", readonly=True
     )
     log_count = fields.Integer(compute="_compute_log_count")
 
@@ -83,6 +92,7 @@ class CmSaTimesheetLockRule(models.Model):
             return
         if "account.analytic.line" not in self.env.registry:
             return
+
         cls = type(self.env["account.analytic.line"])
         for method in ("create", "write"):
             original = getattr(cls, method, None)
@@ -96,7 +106,10 @@ class CmSaTimesheetLockRule(models.Model):
             wrapper.__name__ = method
             wrapper.__qualname__ = f"{cls.__name__}.{method}"
             setattr(cls, method, wrapper)
-        _logger.info("TimesheetLock: installed wrappers on account.analytic.line.")
+
+        _logger.info(
+            "TimesheetLock: installed create/write guards on account.analytic.line."
+        )
 
     def _table_exists(self):
         try:
@@ -111,201 +124,201 @@ class CmSaTimesheetLockRule(models.Model):
     @staticmethod
     def _build_wrapper(method, original):
         def guarded(self, *args, **kwargs):
-            Rule = self.env["cm_sa.timesheet.lock.rule"].sudo()
-            Log = self.env["cm_sa.timesheet.lock.log"].sudo()
-
             if self.env.context.get(CTX_BYPASS):
                 return original(self, *args, **kwargs)
 
+            Rule = self.env["cm_sa.timesheet.lock.rule"].sudo()
+            Log = self.env["cm_sa.timesheet.lock.log"].sudo()
             rules = Rule.search([("active", "=", True)])
             if not rules:
                 return original(self, *args, **kwargs)
 
             today = fields.Date.context_today(self)
+            user = self.env.user
+            reason = (self.env.context.get(CTX_BYPASS_REASON) or "").strip()
 
-            def get_user_groups(user):
-                user = user.sudo()
+            def get_user_groups(target_user):
+                target_user = target_user.sudo()
+                if "groups_id" in target_user._fields:
+                    return target_user.groups_id
+                if "group_ids" in target_user._fields:
+                    return target_user.group_ids
 
-                if "groups_id" in user._fields:
-                    return user.groups_id
-                if "group_ids" in user._fields:
-                    return user.group_ids
-
-                Groups = user.env["res.groups"].sudo()
+                Groups = target_user.env["res.groups"].sudo()
                 if "users" in Groups._fields:
-                    return Groups.search([("users", "in", user.id)])
+                    return Groups.search([("users", "in", target_user.id)])
 
-                user.env.cr.execute(
+                target_user.env.cr.execute(
                     "SELECT gid FROM res_groups_users_rel WHERE uid = %s",
-                    (user.id,),
+                    (target_user.id,),
                 )
-                return Groups.browse([row[0] for row in user.env.cr.fetchall()])
+                return Groups.browse(
+                    [row[0] for row in target_user.env.cr.fetchall()]
+                )
 
-            def applicable_rules_for_user(user):
-                user_groups = get_user_groups(user)
-                out = []
-                for rule in rules:
-                    if (
-                        rule.applies_to_group_ids
-                        and not (rule.applies_to_group_ids & user_groups)
-                    ):
-                        continue
-                    out.append(rule)
-                return out
+            user_groups = get_user_groups(user)
+            applicable_rules = rules.filtered(
+                lambda rule: not rule.applies_to_group_ids
+                or bool(rule.applies_to_group_ids & user_groups)
+            )
+            if not applicable_rules:
+                return original(self, *args, **kwargs)
 
-            def build_error_message(rule, rule_date, cutoff):
+            def is_timesheet_vals(vals):
+                return bool(vals.get("project_id") or vals.get("task_id"))
+
+            def render_lock_message(rule, entry_date, earliest):
                 values = {
                     "max": rule.max_days_back,
-                    "date": rule_date,
-                    "earliest": cutoff,
+                    "date": entry_date,
                     "today": today,
+                    "earliest": earliest,
                 }
                 try:
-                    return rule.error_message % values
-                except Exception:
-                    _logger.exception(
-                        "TimesheetLock: invalid error_message placeholders on rule %s",
-                        rule.id,
+                    message = rule.error_message % values
+                except (KeyError, TypeError, ValueError):
+                    _logger.warning(
+                        "Invalid placeholders in timesheet lock rule %s; "
+                        "using the standard message.",
+                        rule.display_name,
                     )
-                    return _(
-                        "Timesheet entries older than %(max)s day(s) are locked. "
-                        "This entry's date is %(date)s. "
-                        "Earliest allowed date is %(earliest)s. "
-                        "Today is %(today)s."
-                    ) % values
+                    message = _(
+                        "Timesheet entries before %(earliest)s are locked. "
+                        "This entry's date is %(date)s (today is %(today)s; "
+                        "rolling window: %(max)s day(s)).",
+                        **values,
+                    )
 
-            def normalize_reason(reason):
-                if reason is None:
-                    return False
-                reason = str(reason).strip()
-                return reason or False
+                # Existing databases may still contain the old configurable
+                # message without the %(earliest)s placeholder. Always append
+                # the date so the tested requirement is met after upgrade.
+                if str(earliest) not in message:
+                    message = _(
+                        "%(message)s Earliest allowed date is %(earliest)s.",
+                        message=message,
+                        earliest=earliest,
+                    )
+                return message
 
-            def check_date(rule_date, context_source, bypass_reason=False, line=False):
-                """Validate one timesheet date and return pending bypass log rows."""
-                if not rule_date:
-                    return []
-                if isinstance(rule_date, str):
-                    rule_date = fields.Date.to_date(rule_date)
+            bypass_events = []
 
-                pending_logs = []
-                applicable = applicable_rules_for_user(self.env.user)
-                user_groups = get_user_groups(self.env.user)
-                stored_reason = False
-                if line and REASON_FIELD in line._fields:
-                    stored_reason = line[REASON_FIELD]
-                bypass_reason = normalize_reason(
-                    bypass_reason
-                    or self.env.context.get(CTX_BYPASS_REASON)
-                    or stored_reason
-                )
+            def check_date(entry_date, source, line=False, create_index=None):
+                if not entry_date:
+                    return
+                if isinstance(entry_date, str):
+                    entry_date = fields.Date.to_date(entry_date)
 
-                for rule in applicable:
-                    cutoff = today - timedelta(days=rule.max_days_back)
-                    if rule_date >= cutoff:
-                        continue  # within window
+                for rule in applicable_rules:
+                    earliest = today - timedelta(days=rule.max_days_back)
+                    if entry_date >= earliest:
+                        continue
 
-                    in_bypass = (
+                    message = render_lock_message(rule, entry_date, earliest)
+                    in_bypass_group = bool(
                         rule.bypass_group_id
                         and rule.bypass_group_id in user_groups
                     )
-                    if not in_bypass:
-                        raise UserError(build_error_message(rule, rule_date, cutoff))
+                    if not in_bypass_group:
+                        raise UserError(message)
 
-                    if not bypass_reason:
-                        raise UserError(_(
+                    if not reason:
+                        bypass_message = _(
                             "This timesheet entry is locked, but you are allowed "
-                            "to bypass it. Please enter a mandatory bypass reason."
-                        ))
+                            "to bypass it. Enter a mandatory bypass reason before "
+                            "saving.\n\n%(lock_message)s",
+                            lock_message=message,
+                        )
+                        # The JS client catches this dedicated exception and
+                        # displays the reason field in the same modal flow.
+                        raise TimesheetBypassReasonRequired(bypass_message)
 
-                    pending_logs.append({
-                        "rule_id": rule.id,
-                        "user_id": self.env.user.id,
-                        "line_id": line.id if line else False,
-                        "entry_date": rule_date,
-                        "window_days": rule.max_days_back,
-                        "source": context_source,
-                        "reason": bypass_reason,
-                    })
-
-                return pending_logs
-
-            pending_logs = []
-            records_to_clear_reason = self.env["account.analytic.line"]
+                    bypass_events.append(
+                        {
+                            "rule": rule,
+                            "entry_date": entry_date,
+                            "source": source,
+                            "line": line,
+                            "create_index": create_index,
+                        }
+                    )
 
             if method == "create":
                 vals_list = args[0] if args else kwargs.get("vals_list", [])
                 items = vals_list if isinstance(vals_list, list) else [vals_list]
-
-                # Validate first. The actual log rows are created after the
-                # timesheet lines are successfully created, so line_id can be set.
-                pending_logs_by_index = []
-                for vals in items:
-                    vals = vals or {}
-                    reason = vals.get(REASON_FIELD)
-                    logs = []
-                    if "date" in vals:
-                        logs = check_date(vals.get("date"), "create", reason)
-                    pending_logs_by_index.append(logs)
-
-                records = original(self, *args, **kwargs)
-
-                for record, logs in zip(records, pending_logs_by_index):
-                    for log_vals in logs:
-                        log_vals["line_id"] = record.id
-                        pending_logs.append(log_vals)
-                    if logs and record[REASON_FIELD]:
-                        records_to_clear_reason |= record
-
-                if pending_logs:
-                    try:
-                        Log.with_context(**{CTX_BYPASS: True}).create(pending_logs)
-                    except Exception:
-                        _logger.exception("TimesheetLock: bypass log failed")
-
-                if records_to_clear_reason:
-                    records_to_clear_reason.with_context(**{CTX_BYPASS: True}).write({
-                        REASON_FIELD: False,
-                    })
-
-                return records
-
-            # write
-            vals = args[0] if args else kwargs.get("vals", {})
-            vals = vals or {}
-            bypass_reason = vals.get(REASON_FIELD)
-
-            if "date" in vals:
-                new_date = vals.get("date")
-                for line in self:
-                    pending_logs.extend(
-                        check_date(new_date, "write-new-date", bypass_reason, line)
+                for item_index, vals in enumerate(items):
+                    if not isinstance(vals, dict) or not is_timesheet_vals(vals):
+                        continue
+                    entry_date = (
+                        vals.get("date")
+                        or self.env.context.get("default_date")
+                        or today
                     )
-                    if pending_logs and bypass_reason:
-                        records_to_clear_reason |= line
+                    check_date(
+                        entry_date,
+                        "create",
+                        create_index=item_index,
+                    )
             else:
+                vals = args[0] if args else kwargs.get("vals", {})
+                vals = vals or {}
                 for line in self:
-                    line_logs = check_date(
-                        line.date,
-                        "write-same-date",
-                        bypass_reason,
-                        line,
+                    is_timesheet = bool(
+                        line.project_id
+                        or vals.get("project_id")
+                        or vals.get("task_id")
                     )
-                    pending_logs.extend(line_logs)
-                    if line_logs and bypass_reason:
-                        records_to_clear_reason |= line
+                    if not is_timesheet:
+                        continue
+                    entry_date = vals.get("date", line.date)
+                    source = "write-new-date" if "date" in vals else "write-same-date"
+                    check_date(entry_date, source, line=line)
 
-            result = original(self, *args, **kwargs)
+            # Execute once with an internal context flag so Odoo's nested
+            # post-processing writes do not request a second reason or create
+            # duplicate log entries.
+            operation_self = (
+                self.with_context(**{CTX_BYPASS: True})
+                if bypass_events
+                else self
+            )
+            result = original(operation_self, *args, **kwargs)
 
-            if pending_logs:
-                try:
-                    Log.with_context(**{CTX_BYPASS: True}).create(pending_logs)
-                except Exception:
-                    _logger.exception("TimesheetLock: bypass log failed")
-
-            if records_to_clear_reason:
-                records_to_clear_reason.with_context(**{CTX_BYPASS: True}).write({
-                    REASON_FIELD: False,
-                })
+            if bypass_events:
+                if method == "create":
+                    created_lines = result
+                    for event in bypass_events:
+                        item_index = event["create_index"]
+                        line = (
+                            created_lines[item_index]
+                            if item_index is not None
+                            and item_index < len(created_lines)
+                            else False
+                        )
+                        Log.with_context(**{CTX_BYPASS: True}).create(
+                            {
+                                "rule_id": event["rule"].id,
+                                "user_id": user.id,
+                                "timesheet_id": line.id if line else False,
+                                "entry_date": event["entry_date"],
+                                "window_days": event["rule"].max_days_back,
+                                "source": event["source"],
+                                "reason": reason,
+                            }
+                        )
+                else:
+                    for event in bypass_events:
+                        line = event["line"]
+                        Log.with_context(**{CTX_BYPASS: True}).create(
+                            {
+                                "rule_id": event["rule"].id,
+                                "user_id": user.id,
+                                "timesheet_id": line.id,
+                                "entry_date": event["entry_date"],
+                                "window_days": event["rule"].max_days_back,
+                                "source": event["source"],
+                                "reason": reason,
+                            }
+                        )
 
             return result
 

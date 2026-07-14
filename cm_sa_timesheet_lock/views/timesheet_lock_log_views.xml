@@ -8,7 +8,7 @@
                 <field name="create_date" string="When"/>
                 <field name="user_id"/>
                 <field name="rule_id"/>
-                <field name="line_id"/>
+                <field name="timesheet_id"/>
                 <field name="entry_date"/>
                 <field name="window_days"/>
                 <field name="source"/>
@@ -28,7 +28,7 @@
                             <field name="create_date" string="When"/>
                             <field name="user_id"/>
                             <field name="rule_id"/>
-                            <field name="line_id"/>
+                            <field name="timesheet_id"/>
                         </group>
                         <group>
                             <field name="entry_date"/>
@@ -36,7 +36,7 @@
                             <field name="source"/>
                         </group>
                     </group>
-                    <group string="Bypass Reason">
+                    <group string="Mandatory Bypass Reason">
                         <field name="reason" nolabel="1"/>
                     </group>
                 </sheet>
@@ -51,8 +51,7 @@
             <search string="Bypass Log">
                 <field name="user_id"/>
                 <field name="rule_id"/>
-                <field name="line_id"/>
-                <field name="entry_date"/>
+                <field name="timesheet_id"/>
                 <field name="reason"/>
                 <group>
                     <filter name="group_user" string="User"
