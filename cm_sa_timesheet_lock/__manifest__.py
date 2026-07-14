@@ -1,6 +1,6 @@
 {
     "name": "Timesheet Back-Dating Limit (Rolling Window)",
-    "version": "19.0.1.0.1",
+    "version": "19.0.1.0.2",
     "summary": "Block timesheet entries more than N days old — rolling window that auto-advances daily. Bypass group with reason.",
     "description": """
 Timesheet Back-Dating Limit (Rolling Window)
@@ -52,6 +52,7 @@ project-time governance.
         "views/timesheet_lock_rule_views.xml",
         "views/timesheet_lock_log_views.xml",
         "views/account_analytic_line_views.xml",
+        "views/timesheet_bypass_reason_wizard_views.xml",
         "views/menus.xml",
     ],
     "images": ["static/description/banner.png"],

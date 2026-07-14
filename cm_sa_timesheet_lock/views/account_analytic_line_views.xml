@@ -7,9 +7,9 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='date']" position="after">
                 <field name="cm_sa_timesheet_bypass_reason"
-                   string="Bypass Reason"
-                   optional="show"
-                   placeholder="Required when bypassing a locked timesheet"/>
+                       string="Bypass Reason"
+                       optional="show"
+                       placeholder="Required when bypassing a locked timesheet"/>
             </xpath>
         </field>
     </record>
@@ -21,10 +21,25 @@
         <field name="arch" type="xml">
             <xpath expr="//sheet" position="inside">
                 <group string="Timesheet Lock Bypass">
+                    <button name="action_open_timesheet_bypass_reason_wizard"
+                            type="object"
+                            string="Enter Bypass Reason"
+                            class="btn-secondary"/>
                     <field name="cm_sa_timesheet_bypass_reason"
+                           string="Bypass Reason"
                            placeholder="Required only when bypassing a locked/back-dated timesheet"/>
                 </group>
             </xpath>
         </field>
+    </record>
+
+    <record id="action_timesheet_bypass_reason_wizard" model="ir.actions.act_window">
+        <field name="name">Enter Bypass Reason</field>
+        <field name="res_model">cm_sa.timesheet.lock.bypass.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'active_model': 'account.analytic.line', 'active_ids': active_ids}</field>
+        <field name="binding_model_id" ref="analytic.model_account_analytic_line"/>
+        <field name="binding_type">action</field>
     </record>
 </odoo>

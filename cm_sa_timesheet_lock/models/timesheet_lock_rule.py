@@ -210,7 +210,8 @@ class CmSaTimesheetLockRule(models.Model):
                         raise UserError(_(
                             "This timesheet entry is locked, but you are allowed "
                             "to bypass it. Please enter a mandatory bypass reason "
-                            "before saving."
+                            "before saving. Use the 'Enter Bypass Reason' button "
+                            "or fill the Bypass Reason field, then save again."
                         ))
 
                     pending_logs.append({
@@ -268,26 +269,38 @@ class CmSaTimesheetLockRule(models.Model):
             # write
             vals = args[0] if args else kwargs.get("vals", {})
             vals = vals or {}
-            bypass_reason = vals.get(REASON_FIELD)
+
+            def reason_for_line(line):
+                # Reason may be provided in the current write values, passed in
+                # context, or pre-filled by the bypass wizard on the line.
+                if REASON_FIELD in vals:
+                    return vals.get(REASON_FIELD)
+                return line[REASON_FIELD]
 
             if "date" in vals:
                 new_date = vals.get("date")
                 for line in self:
-                    pending_logs.extend(
-                        check_date(new_date, "write-new-date", bypass_reason, line)
-                    )
-                    if pending_logs and bypass_reason:
-                        records_to_clear_reason |= line
-            else:
-                for line in self:
+                    line_reason = reason_for_line(line)
                     line_logs = check_date(
-                        line.date,
-                        "write-same-date",
-                        bypass_reason,
+                        new_date,
+                        "write-new-date",
+                        line_reason,
                         line,
                     )
                     pending_logs.extend(line_logs)
-                    if line_logs and bypass_reason:
+                    if line_logs and normalize_reason(line_reason):
+                        records_to_clear_reason |= line
+            else:
+                for line in self:
+                    line_reason = reason_for_line(line)
+                    line_logs = check_date(
+                        line.date,
+                        "write-same-date",
+                        line_reason,
+                        line,
+                    )
+                    pending_logs.extend(line_logs)
+                    if line_logs and normalize_reason(line_reason):
                         records_to_clear_reason |= line
 
             result = original(self, *args, **kwargs)
