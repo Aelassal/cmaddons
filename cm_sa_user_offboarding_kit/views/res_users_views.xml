@@ -12,6 +12,12 @@
                         <group string="Scheduled Deactivation">
                             <field name="deactivation_date"/>
                             <field name="deactivation_reason"/>
+                            <button name="action_offboarding_archive_now"
+                                    type="object"
+                                    string="Archive Now"
+                                    class="btn-primary"
+                                    groups="base.group_system"
+                                    confirm="Archive this user now?"/>
                         </group>
                     </group>
                 </page>

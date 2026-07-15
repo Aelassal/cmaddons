@@ -1,6 +1,6 @@
 {
     "name": "User Offboarding Kit",
-    "version": "19.0.1.0.1",
+    "version": "19.0.1.0.3",
     "summary": "Schedule user deactivation dates, auto-archive dormant users, reclaim Enterprise seats.",
     "description": """
 User Offboarding Kit
